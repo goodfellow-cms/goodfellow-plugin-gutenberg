@@ -171,13 +171,13 @@ importers:
     dependencies:
       '@wordpress/block-editor':
         specifier: 18.1.0
-        version: 18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/blocks':
         specifier: 16.2.0
         version: 16.2.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/components':
         specifier: 42.0.0
-        version: 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/data':
         specifier: 10.57.0
         version: 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -193,16 +193,19 @@ importers:
     devDependencies:
       '@goodfellow-cms/blocks':
         specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@goodfellow-cms/core':
         specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@goodfellow-cms/react':
         specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core':
         specifier: 0.23.0
         version: 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
+      '@tailwindcss/vite':
+        specifier: 4.3.3
+        version: 4.3.3(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@types/react':
         specifier: 19.2.2
         version: 19.2.2
@@ -211,19 +214,28 @@ importers:
         version: 19.2.2(@types/react@19.2.2)
       '@vitejs/plugin-react':
         specifier: 6.1.1
-        version: 6.1.1(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 6.1.1(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      create-goodfellow:
+        specifier: 0.5.0
+        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       happy-dom:
         specifier: 21.0.4
         version: 21.0.4
+      tailwindcss:
+        specifier: 4.3.3
+        version: 4.3.3
+      tw-animate-css:
+        specifier: 1.4.0
+        version: 1.4.0
       typescript:
         specifier: 5.9.3
         version: 5.9.3
       vite:
         specifier: 8.3.4
-        version: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+        version: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
       vitest:
         specifier: 5.0.3
-        version: 5.0.3(@types/node@26.6.5)(happy-dom@21.0.4)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+        version: 5.0.3(@types/node@26.6.5)(happy-dom@21.0.4)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
 
 packages:
 
@@ -916,6 +928,100 @@ packages:
 
   '@shikijs/vscode-textmate@10.1.0':
     resolution: {integrity: sha512-cVBuhDQjBZaNMTwBquYfPydrUP+E3hE6oYGasx8h6ZrODIM7/r+gxLDXdd66oszbrggZHEntdE6j+5gYIVyMWQ==}
+
+  '@tailwindcss/node@4.3.3':
+    resolution: {integrity: sha512-/T8IKEsf9VTU6tLjgC7+sv2mOPtQxzE2jMw7u4Tt40Tx+QSZxpzh95/H6cMKoja9XuW7iMdLJYBB0o9G1CaAgg==}
+
+  '@tailwindcss/oxide-android-arm64@4.3.3':
+    resolution: {integrity: sha512-Y85A2gmPSkl5Ve5qR86GL4HT509cFqQh1aes9p3sSkyTPwt0Pppf3GkwGe4JPACcRYjgJIEhQgM6dBClnr0NYw==}
+    engines: {node: '>= 20'}
+    cpu: [arm64]
+    os: [android]
+
+  '@tailwindcss/oxide-darwin-arm64@4.3.3':
+    resolution: {integrity: sha512-BiaWatpBcERQFDlOjRDpIVXuFK5PJez5SA4JMg6VYZdBYU+qKfV/vqjcIs+IYmtitf1xYQZTwXvU/8y4lfZUGw==}
+    engines: {node: '>= 20'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@tailwindcss/oxide-darwin-x64@4.3.3':
+    resolution: {integrity: sha512-fAeUqfV5ndhxRwai8cXGzdLvul9utWOmeTkv69unv4ZXixjn61Z+p9lCWdwOwA3TYboG3BwdVuN/RDjhBRl0mw==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@tailwindcss/oxide-freebsd-x64@4.3.3':
+    resolution: {integrity: sha512-iyf5bV6+wnAlflVeEy7R25dupxTNECZN5QMI0qNT6eT+EgaGdZcKhGkr5SdoaWiLJ3spLqIY9VCeSGrwmtg4kw==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@tailwindcss/oxide-linux-arm-gnueabihf@4.3.3':
+    resolution: {integrity: sha512-aAYUprJAJQWWbRrPvtjdroZ56Md+JM8pMiopS6xGEwDfLhqj+2ver2p4nU4Mb3CRqcMmNBjo8KkUgcxhkzVQGQ==}
+    engines: {node: '>= 20'}
+    cpu: [arm]
+    os: [linux]
+
+  '@tailwindcss/oxide-linux-arm64-gnu@4.3.3':
+    resolution: {integrity: sha512-nDxldcEENOxZRzC2uu9jrutZdAAQtb+8WWDCSnWL1zvBk1+FN+x6MtDViPB5AJMfttVCUhehGWus3XBPgatM/w==}
+    engines: {node: '>= 20'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@tailwindcss/oxide-linux-arm64-musl@4.3.3':
+    resolution: {integrity: sha512-Md44bD6veX/PC5iyF8cDVnw4HBIANZepRZZ7a8DQOvkfo5WUBwcp6iAuCUz23u+4SUkhJlD3eL7hNdW8ezd/kA==}
+    engines: {node: '>= 20'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@tailwindcss/oxide-linux-x64-gnu@4.3.3':
+    resolution: {integrity: sha512-tx7us1muwOKAKWao2v/GaafFeQboE6aj88vC6ziN2NCGcRm8gWUhwjzg+YdVB1e4boAtdtma4L43onunI6NS4w==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@tailwindcss/oxide-linux-x64-musl@4.3.3':
+    resolution: {integrity: sha512-SJxX60smvHgasZoBy11dX6YRjXJFovwWBoedhbQPOBzgFWBHGB+TVPWB9BxzR7TTxU8FQZAI2AyiNCMzFm8Img==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@tailwindcss/oxide-wasm32-wasi@4.3.3':
+    resolution: {integrity: sha512-jx1+rPhY/5Ympkktd656HBWEBLxP7dH06losBLjjf5vgCODXvi9KhtftWcMIwTFIDqBr7cRnQkdLnAG+IOlGvQ==}
+    engines: {node: '>=14.0.0'}
+    cpu: [wasm32]
+    bundledDependencies:
+      - '@napi-rs/wasm-runtime'
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - '@tybys/wasm-util'
+      - '@emnapi/wasi-threads'
+      - tslib
+
+  '@tailwindcss/oxide-win32-arm64-msvc@4.3.3':
+    resolution: {integrity: sha512-3rc292Ca2ceK6Ulcc/bAVnTs/3nDtoPhyEKlgPv+yQJQi/JS/AMJlqzxvlDacL1nekbrcf6bTqp/jV4qgnPxNQ==}
+    engines: {node: '>= 20'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@tailwindcss/oxide-win32-x64-msvc@4.3.3':
+    resolution: {integrity: sha512-yJ0pwIVc/nYeGoV02WtsN8KYyLQv7kyI2wDnkezyJlGGjkd4QLwDGAwl47YpPJeuI0M0ObaXGSPjvWDPeTPggw==}
+    engines: {node: '>= 20'}
+    cpu: [x64]
+    os: [win32]
+
+  '@tailwindcss/oxide@4.3.3':
+    resolution: {integrity: sha512-krXjAikiaFSPaK/FkAQT5UTx3VormQaiZ5hBFlJZ9UFQGB/rwg1MZIhHAG9smMQRTdyJxP6Qt5MwMtdyU5FWrA==}
+    engines: {node: '>= 20'}
+
+  '@tailwindcss/vite@4.3.3':
+    resolution: {integrity: sha512-yYU8cogLeSh/ms2jh8Fj7jaba/EWa7Ja6GoUqYZaraEuCI5YS6ms6ObZgjjedm+jm6XZjdNRWBpPP6Z86oOxcw==}
+    peerDependencies:
+      vite: ^5.2.0 || ^6 || ^7 || ^8
 
   '@tannin/compile@1.1.0':
     resolution: {integrity: sha512-n8m9eNDfoNZoxdvWiTfW/hSPhehzLJ3zW7f8E7oT6mCROoMNWCB4TYtv041+2FMAxweiE0j7i1jubQU4MEC/Gg==}
@@ -1639,6 +1745,11 @@ packages:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
 
+  create-goodfellow@0.5.0:
+    resolution: {integrity: sha512-5wSj16w9wCUpGgtKkCSMJMN2mkamNod6h9VNrqWpNclpft7knrNA50xsdtkQro0NTblkScVHNN6Ih+eGDpFgBg==}
+    engines: {node: ^22.23.4 || ^24.22.1 || >=26.12.1}
+    hasBin: true
+
   css-tree@3.2.1:
     resolution: {integrity: sha512-X7sjQzceUhu1u7Y/ylrRZFU2FS6LRiFVp6rKLPg23y3x3c3DOKAwuXGDp+PAGjh6CSnCjYeAul8pcT8bAl+lSA==}
     engines: {node: ^10 || ^12.20.0 || ^14.13.0 || >=15.0.0}
@@ -1709,6 +1820,10 @@ packages:
   encoding@0.1.14:
     resolution: {integrity: sha512-pqH+jIxIhwX5U4w+Tnu3jjowTo5QTACbqef2C5Cw2RhApr7COQqgnai53u8VbtqjWRcSoAcTf7uZ62dO5kC8Iw==}
     engines: {node: '>=20.0.0'}
+
+  enhanced-resolve@5.26.0:
+    resolution: {integrity: sha512-9vhedylFonb2YGogzUKX6+Ja72gOJbN1QHAqdrvqLwhdl/QWbKopzoUC9EbQNVsAns/bx/4uyqalrQAoy1IByw==}
+    engines: {node: '>=10.13.0'}
 
   entities@7.0.1:
     resolution: {integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==}
@@ -1811,6 +1926,9 @@ packages:
   gettext-parser@1.4.0:
     resolution: {integrity: sha512-sedZYLHlHeBop/gZ1jdg59hlUEcpcZJofLq2JFwJT1zTqAU3l2wFv6IsuwFHGqbiT9DWzMUW4/em2+hspnmMMA==}
 
+  graceful-fs@4.2.11:
+    resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
+
   gradient-parser@1.2.0:
     resolution: {integrity: sha512-6ABGa9CR7WR/0pAJicBy5SJkiikbFM6kf/JjykwX7x+t+s8ORWVnlbi6FkHeFFb36yWsjUpHqSYrygd7ofEUqA==}
     engines: {node: '>=0.10.0'}
@@ -1873,6 +1991,10 @@ packages:
   is-promise@4.0.0:
     resolution: {integrity: sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==}
 
+  jiti@2.7.0:
+    resolution: {integrity: sha512-AC/7JofJvZGrrneWNaEnJeOLUx+JlGt7tNa0wZiRPT4MY1wmfKjt2+6O2p2uz2+skll8OZZmJMNqeke7kKbNgQ==}
+    hasBin: true
+
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
@@ -1884,16 +2006,34 @@ packages:
   json-parse-even-better-errors@2.3.1:
     resolution: {integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==}
 
+  lightningcss-android-arm64@1.32.0:
+    resolution: {integrity: sha512-YK7/ClTt4kAK0vo6w3X+Pnm0D2cf2vPHbhOXdoNti1Ga0al1P4TBZhwjATvjNwLEBCnKvjJc2jQgHXH0NEwlAg==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm64]
+    os: [android]
+
   lightningcss-android-arm64@1.33.0:
     resolution: {integrity: sha512-gEpRTalKdosp4Bb8qWtc2iOgE5SeIHlpS1up9bFq2wAyYhl1UdTObYiHe98zEM9SQvSoqQZ1IQD0JNpg3Ml5pg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [android]
 
+  lightningcss-darwin-arm64@1.32.0:
+    resolution: {integrity: sha512-RzeG9Ju5bag2Bv1/lwlVJvBE3q6TtXskdZLLCyfg5pt+HLz9BqlICO7LZM7VHNTTn/5PRhHFBSjk5lc4cmscPQ==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm64]
+    os: [darwin]
+
   lightningcss-darwin-arm64@1.33.0:
     resolution: {integrity: sha512-Sciaz8eenNTKn9b3t7+xr0ipTp9YxKQY4npwQ3mrRuL0BAVHBLyZxofhaKBAVtzmtRZ/zTyo0/to4B1uWG/Djg==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
+    os: [darwin]
+
+  lightningcss-darwin-x64@1.32.0:
+    resolution: {integrity: sha512-U+QsBp2m/s2wqpUYT/6wnlagdZbtZdndSmut/NJqlCcMLTWp5muCrID+K5UJ6jqD2BFshejCYXniPDbNh73V8w==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [x64]
     os: [darwin]
 
   lightningcss-darwin-x64@1.33.0:
@@ -1902,17 +2042,36 @@ packages:
     cpu: [x64]
     os: [darwin]
 
+  lightningcss-freebsd-x64@1.32.0:
+    resolution: {integrity: sha512-JCTigedEksZk3tHTTthnMdVfGf61Fky8Ji2E4YjUTEQX14xiy/lTzXnu1vwiZe3bYe0q+SpsSH/CTeDXK6WHig==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [x64]
+    os: [freebsd]
+
   lightningcss-freebsd-x64@1.33.0:
     resolution: {integrity: sha512-QQM/Ti/hQajJwCY+RiWuCZ9sdtI/XQk7nDK5vC8kkdwixezOlDgvDx7+RT+QjK6FcFT4MpsuoBnHIo/O3StRRg==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [freebsd]
 
+  lightningcss-linux-arm-gnueabihf@1.32.0:
+    resolution: {integrity: sha512-x6rnnpRa2GL0zQOkt6rts3YDPzduLpWvwAF6EMhXFVZXD4tPrBkEFqzGowzCsIWsPjqSK+tyNEODUBXeeVHSkw==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm]
+    os: [linux]
+
   lightningcss-linux-arm-gnueabihf@1.33.0:
     resolution: {integrity: sha512-N7FVBe6iS24MlM6R/4RBTxGhQheZGs7tiQ9U32UtF75NzP5Q7xWPRqLBCKxlRQRk3rY1jCIPLzx7WzOhuUIRLQ==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm]
     os: [linux]
+
+  lightningcss-linux-arm64-gnu@1.32.0:
+    resolution: {integrity: sha512-0nnMyoyOLRJXfbMOilaSRcLH3Jw5z9HDNGfT/gwCPgaDjnx0i8w7vBzFLFR1f6CMLKF8gVbebmkUN3fa/kQJpQ==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-arm64-gnu@1.33.0:
     resolution: {integrity: sha512-j2v/itmy4HlNxlc6voKXYgBqNi0Ng2LShg4z7GufpEgs05P+2suBVyi9I6YHq5uoVFx9ETin3eCEhLVyXGQnKg==}
@@ -1921,12 +2080,26 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  lightningcss-linux-arm64-musl@1.32.0:
+    resolution: {integrity: sha512-UpQkoenr4UJEzgVIYpI80lDFvRmPVg6oqboNHfoH4CQIfNA+HOrZ7Mo7KZP02dC6LjghPQJeBsvXhJod/wnIBg==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
   lightningcss-linux-arm64-musl@1.33.0:
     resolution: {integrity: sha512-yiO5ROMuYQgXbC60yjZU5CYSFZGKXL0HFATXt9mHJn1+zW55oCtMI9NfcVhYLMFDL7gV7oBPon/EmMMGg2OvtQ==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
+
+  lightningcss-linux-x64-gnu@1.32.0:
+    resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
 
   lightningcss-linux-x64-gnu@1.33.0:
     resolution: {integrity: sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg==}
@@ -1935,6 +2108,13 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  lightningcss-linux-x64-musl@1.32.0:
+    resolution: {integrity: sha512-bYcLp+Vb0awsiXg/80uCRezCYHNg1/l3mt0gzHnWV9XP1W5sKa5/TCdGWaR/zBM2PeF/HbsQv/j2URNOiVuxWg==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
   lightningcss-linux-x64-musl@1.33.0:
     resolution: {integrity: sha512-RYiYbkokw0trfKqqzfF55lginwEPrD3OJDfTuJzFs1MK6iFnDenaz1fqLLtX4ITG3OktJQXOeTaw1awrBAlZPw==}
     engines: {node: '>= 12.0.0'}
@@ -1942,10 +2122,22 @@ packages:
     os: [linux]
     libc: [musl]
 
+  lightningcss-win32-arm64-msvc@1.32.0:
+    resolution: {integrity: sha512-8SbC8BR40pS6baCM8sbtYDSwEVQd4JlFTOlaD3gWGHfThTcABnNDBda6eTZeqbofalIJhFx0qKzgHJmcPTnGdw==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [arm64]
+    os: [win32]
+
   lightningcss-win32-arm64-msvc@1.33.0:
     resolution: {integrity: sha512-1K+MPfLSFVpphzpdbfkhlWk6wBrTObBzS2T6db10PNOZgR9GoVsAWzwNyuhUYYbTp23j+4RrncfujZ4uAzXvwA==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
+    os: [win32]
+
+  lightningcss-win32-x64-msvc@1.32.0:
+    resolution: {integrity: sha512-Amq9B/SoZYdDi1kFrojnoqPLxYhQ4Wo5XiL8EVJrVsB8ARoC1PWW6VGtT0WKCemjy8aC+louJnjS7U18x3b06Q==}
+    engines: {node: '>= 12.0.0'}
+    cpu: [x64]
     os: [win32]
 
   lightningcss-win32-x64-msvc@1.33.0:
@@ -1953,6 +2145,10 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [win32]
+
+  lightningcss@1.32.0:
+    resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
+    engines: {node: '>= 12.0.0'}
 
   lightningcss@1.33.0:
     resolution: {integrity: sha512-WkUDrojuJs0xkgGf2udWxa3yGBRxPtxUkB79i6aCZLRgc7PM8fZe9TosfPDcvEpQZbuFASnHYmRLBLUbmLOIIA==}
@@ -2339,8 +2535,15 @@ packages:
   tailwind-merge@3.7.0:
     resolution: {integrity: sha512-XPPUyAc+cvspz3lHTcR/QgPfW2A0lv/xQNIjX3HGhLR+Nq2lHaLq5MtTesHn8GUr3W3DguT2KT5x3NVgRtYwmA==}
 
+  tailwindcss@4.3.3:
+    resolution: {integrity: sha512-gOhV3P7ufE62QDGg1zVaTgCR+EtPv92k2nIhVcVKcLmxT1sUBsQGhnZj175j+MqRt4zLF7ic+sCYjfhxMxj7YQ==}
+
   tannin@1.2.0:
     resolution: {integrity: sha512-U7GgX/RcSeUETbV7gYgoz8PD7Ni4y95pgIP/Z6ayI3CfhSujwKEBlGFTCRN+Aqnuyf4AN2yHL+L8x+TCGjb9uA==}
+
+  tapable@2.3.3:
+    resolution: {integrity: sha512-uxc/zpqFg6x7C8vOE7lh6Lbda8eEL9zmVm/PLeTPBRhh1xCgdWaQ+J1CUieGpIfm2HdtsUpRv+HshiasBMcc6A==}
+    engines: {node: '>=6'}
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
@@ -2362,6 +2565,9 @@ packages:
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+
+  tw-animate-css@1.4.0:
+    resolution: {integrity: sha512-7bziOlRqH0hJx80h/3mbicLW7o8qLsH5+RaLR2t+OHM3D0JlWGODQKQ4cxbK7WlvmUxpcj6Kgu6EKqjrGFe3QQ==}
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
@@ -2918,10 +3124,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@goodfellow-cms/blocks@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@goodfellow-cms/blocks@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
-      '@goodfellow-cms/react': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@goodfellow-cms/react': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       react: 19.3.0
       shiki: 4.5.0
@@ -2941,12 +3147,12 @@ snapshots:
       - vite
       - webpack
 
-  '@goodfellow-cms/core@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@goodfellow-cms/core@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       axe-core: 4.14.0
       domhandler: 6.0.1
-      fontaine: 1.0.0(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      fontaine: 1.0.0(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       happy-dom: 21.0.4
       htmlparser2: 12.0.0
       ical.js: 2.2.1
@@ -2970,9 +3176,9 @@ snapshots:
       - vite
       - webpack
 
-  '@goodfellow-cms/react@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@goodfellow-cms/react@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
@@ -3415,6 +3621,74 @@ snapshots:
 
   '@shikijs/vscode-textmate@10.1.0': {}
 
+  '@tailwindcss/node@4.3.3':
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      enhanced-resolve: 5.26.0
+      jiti: 2.7.0
+      lightningcss: 1.32.0
+      magic-string: 0.30.21
+      source-map-js: 1.2.2
+      tailwindcss: 4.3.3
+
+  '@tailwindcss/oxide-android-arm64@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-darwin-arm64@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-darwin-x64@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-freebsd-x64@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-linux-arm-gnueabihf@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-linux-arm64-gnu@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-linux-arm64-musl@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-linux-x64-gnu@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-linux-x64-musl@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-wasm32-wasi@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-win32-arm64-msvc@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide-win32-x64-msvc@4.3.3':
+    optional: true
+
+  '@tailwindcss/oxide@4.3.3':
+    optionalDependencies:
+      '@tailwindcss/oxide-android-arm64': 4.3.3
+      '@tailwindcss/oxide-darwin-arm64': 4.3.3
+      '@tailwindcss/oxide-darwin-x64': 4.3.3
+      '@tailwindcss/oxide-freebsd-x64': 4.3.3
+      '@tailwindcss/oxide-linux-arm-gnueabihf': 4.3.3
+      '@tailwindcss/oxide-linux-arm64-gnu': 4.3.3
+      '@tailwindcss/oxide-linux-arm64-musl': 4.3.3
+      '@tailwindcss/oxide-linux-x64-gnu': 4.3.3
+      '@tailwindcss/oxide-linux-x64-musl': 4.3.3
+      '@tailwindcss/oxide-wasm32-wasi': 4.3.3
+      '@tailwindcss/oxide-win32-arm64-msvc': 4.3.3
+      '@tailwindcss/oxide-win32-x64-msvc': 4.3.3
+
+  '@tailwindcss/vite@4.3.3(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
+    dependencies:
+      '@tailwindcss/node': 4.3.3
+      '@tailwindcss/oxide': 4.3.3
+      tailwindcss: 4.3.3
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
+
   '@tannin/compile@1.1.0':
     dependencies:
       '@tannin/evaluate': 1.2.0
@@ -3627,19 +3901,19 @@ snapshots:
       '@use-gesture/core': 10.3.1
       react: 19.3.0
 
-  '@vitejs/plugin-react@6.1.1(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@vitejs/plugin-react@6.1.1(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
 
-  '@vitest/mocker@5.0.3(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@vitest/mocker@5.0.3(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.3
       estree-walker: 3.0.3
       magic-string: 1.4.3
     optionalDependencies:
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
 
   '@vitest/spy@5.0.3': {}
 
@@ -3654,7 +3928,7 @@ snapshots:
 
   '@wordpress/blob@4.57.0': {}
 
-  '@wordpress/block-editor@18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/block-editor@18.1.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@react-spring/web': 10.1.2(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/a11y': 4.57.0
@@ -3662,11 +3936,11 @@ snapshots:
       '@wordpress/blob': 4.57.0
       '@wordpress/block-serialization-default-parser': 5.57.0
       '@wordpress/blocks': 16.2.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/commands': 1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/commands': 1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/compose': 8.10.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/data': 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/dataviews': 20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/dataviews': 20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/date': 5.57.0
       '@wordpress/deprecated': 4.57.0
       '@wordpress/dom': 4.57.0
@@ -3676,21 +3950,21 @@ snapshots:
       '@wordpress/html-entities': 4.57.0
       '@wordpress/i18n': 6.30.0
       '@wordpress/icons': 18.0.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      '@wordpress/image-cropper': 1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/image-cropper': 1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/interactivity': 7.0.0
       '@wordpress/is-shallow-equal': 5.57.0
       '@wordpress/kebab-case': 1.4.0
       '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/keycodes': 4.57.0(@types/react@19.2.2)
-      '@wordpress/notices': 5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
-      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/notices': 5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/priority-queue': 3.57.0
       '@wordpress/private-apis': 2.0.0
       '@wordpress/react-inert-value': 1.0.0(@types/react@19.2.2)(react@19.3.0)
       '@wordpress/rich-text': 7.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/style-engine': 2.57.0(@types/react@19.2.2)
       '@wordpress/token-list': 3.57.0
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/upload-media': 0.42.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/url': 4.57.0
       '@wordpress/warning': 3.57.0
@@ -3757,17 +4031,17 @@ snapshots:
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
 
-  '@wordpress/commands@1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/commands@1.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/data': 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/element': 9.0.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/i18n': 6.30.0
       '@wordpress/icons': 18.0.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/keyboard-shortcuts': 5.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/keycodes': 4.57.0(@types/react@19.2.2)
-      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/preferences': 4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/private-apis': 2.0.0
       clsx: 2.1.1
       cmdk: 1.1.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -3785,7 +4059,7 @@ snapshots:
       - supports-color
       - vite
 
-  '@wordpress/components@42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/components@42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@ariakit/react': 0.4.42(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@date-fns/utc': 2.1.1
@@ -3819,7 +4093,7 @@ snapshots:
       '@wordpress/react-inert-value': 1.0.0(@types/react@19.2.2)(react@19.3.0)
       '@wordpress/rich-text': 7.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/style-runtime': 0.13.0
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       clsx: 2.1.1
@@ -3893,7 +4167,7 @@ snapshots:
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
 
-  '@wordpress/dataviews@20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/dataviews@20.0.0(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@ariakit/react': 0.4.42(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.2.2)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -3908,7 +4182,7 @@ snapshots:
       '@use-gesture/react': 10.3.1(react@19.3.0)
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/compose': 8.10.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/data': 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/date': 5.57.0
@@ -3920,7 +4194,7 @@ snapshots:
       '@wordpress/kebab-case': 1.4.0
       '@wordpress/keycodes': 4.57.0(@types/react@19.2.2)
       '@wordpress/react-inert-value': 1.0.0(@types/react@19.2.2)(react@19.3.0)
-      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/ui': 0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       change-case: 4.1.2
       clsx: 2.1.1
@@ -4019,9 +4293,9 @@ snapshots:
       '@types/react': 19.2.2
       '@types/react-dom': 19.2.2(@types/react@19.2.2)
 
-  '@wordpress/image-cropper@1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/image-cropper@1.21.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/element': 9.0.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/i18n': 6.30.0
       dequal: 2.0.3
@@ -4072,10 +4346,10 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.2
 
-  '@wordpress/notices@5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/notices@5.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@wordpress/a11y': 4.57.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/data': 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       clsx: 2.1.1
       react: 19.3.0
@@ -4093,11 +4367,11 @@ snapshots:
       - supports-color
       - vite
 
-  '@wordpress/preferences@4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/preferences@4.57.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@wordpress/a11y': 4.57.0
       '@wordpress/base-styles': 13.3.0
-      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/components': 42.0.0(@date-fns/tz@1.5.0)(@emotion/is-prop-valid@1.4.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/compose': 8.10.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/data': 10.57.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@wordpress/deprecated': 4.57.0
@@ -4180,7 +4454,7 @@ snapshots:
 
   '@wordpress/style-runtime@0.13.0': {}
 
-  '@wordpress/theme@2.3.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/theme@2.3.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@babel/parser': 7.29.11
       '@babel/types': 7.29.11
@@ -4200,13 +4474,13 @@ snapshots:
       postcss: 8.5.31
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@types/react-dom'
 
   '@wordpress/token-list@3.57.0': {}
 
-  '@wordpress/ui@0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))':
+  '@wordpress/ui@0.24.0(@date-fns/tz@1.5.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@base-ui/react': 1.9.0(@date-fns/tz@1.5.0)(@types/react@19.2.2)(date-fns@4.4.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
       '@daypicker/react': 10.0.2(@types/react@19.2.2)(react@19.3.0)
@@ -4220,7 +4494,7 @@ snapshots:
       '@wordpress/private-apis': 2.0.0
       '@wordpress/react-inert-value': 1.0.0(@types/react@19.2.2)(react@19.3.0)
       '@wordpress/style-runtime': 0.13.0
-      '@wordpress/theme': 2.3.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@wordpress/theme': 2.3.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lightningcss@1.33.0)(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@wordpress/warning': 3.57.0
       clsx: 2.1.1
       date-fns: 4.4.0
@@ -4375,6 +4649,25 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.3
 
+  create-goodfellow@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
+    dependencies:
+      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+    transitivePeerDependencies:
+      - '@farmfe/core'
+      - '@puckeditor/core'
+      - '@rsbuild/core'
+      - '@rspack/core'
+      - bufferutil
+      - bun-types-no-globals
+      - esbuild
+      - postcss
+      - rolldown
+      - rollup
+      - unloader
+      - utf-8-validate
+      - vite
+      - webpack
+
   css-tree@3.2.1:
     dependencies:
       mdn-data: 2.27.1
@@ -4433,6 +4726,11 @@ snapshots:
     dependencies:
       iconv-lite: 0.7.3
 
+  enhanced-resolve@5.26.0:
+    dependencies:
+      graceful-fs: 4.2.11
+      tapable: 2.3.3
+
   entities@7.0.1: {}
 
   entities@8.1.0: {}
@@ -4469,12 +4767,12 @@ snapshots:
 
   flat@5.0.2: {}
 
-  fontaine@1.0.0(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1)):
+  fontaine@1.0.0(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
       '@capsizecss/unpack': 4.0.1
       css-tree: 3.2.1
       magic-string: 1.4.3
-      unplugin: 3.4.0(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      unplugin: 3.4.0(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
     optionalDependencies:
       postcss: 8.5.31
     transitivePeerDependencies:
@@ -4514,6 +4812,8 @@ snapshots:
     dependencies:
       encoding: 0.1.14
       safe-buffer: 5.2.1
+
+  graceful-fs@4.2.11: {}
 
   gradient-parser@1.2.0: {}
 
@@ -4595,44 +4895,95 @@ snapshots:
 
   is-promise@4.0.0: {}
 
+  jiti@2.7.0: {}
+
   js-tokens@4.0.0: {}
 
   jsesc@3.1.0: {}
 
   json-parse-even-better-errors@2.3.1: {}
 
+  lightningcss-android-arm64@1.32.0:
+    optional: true
+
   lightningcss-android-arm64@1.33.0:
+    optional: true
+
+  lightningcss-darwin-arm64@1.32.0:
     optional: true
 
   lightningcss-darwin-arm64@1.33.0:
     optional: true
 
+  lightningcss-darwin-x64@1.32.0:
+    optional: true
+
   lightningcss-darwin-x64@1.33.0:
+    optional: true
+
+  lightningcss-freebsd-x64@1.32.0:
     optional: true
 
   lightningcss-freebsd-x64@1.33.0:
     optional: true
 
+  lightningcss-linux-arm-gnueabihf@1.32.0:
+    optional: true
+
   lightningcss-linux-arm-gnueabihf@1.33.0:
+    optional: true
+
+  lightningcss-linux-arm64-gnu@1.32.0:
     optional: true
 
   lightningcss-linux-arm64-gnu@1.33.0:
     optional: true
 
+  lightningcss-linux-arm64-musl@1.32.0:
+    optional: true
+
   lightningcss-linux-arm64-musl@1.33.0:
+    optional: true
+
+  lightningcss-linux-x64-gnu@1.32.0:
     optional: true
 
   lightningcss-linux-x64-gnu@1.33.0:
     optional: true
 
+  lightningcss-linux-x64-musl@1.32.0:
+    optional: true
+
   lightningcss-linux-x64-musl@1.33.0:
+    optional: true
+
+  lightningcss-win32-arm64-msvc@1.32.0:
     optional: true
 
   lightningcss-win32-arm64-msvc@1.33.0:
     optional: true
 
+  lightningcss-win32-x64-msvc@1.32.0:
+    optional: true
+
   lightningcss-win32-x64-msvc@1.33.0:
     optional: true
+
+  lightningcss@1.32.0:
+    dependencies:
+      detect-libc: 2.1.2
+    optionalDependencies:
+      lightningcss-android-arm64: 1.32.0
+      lightningcss-darwin-arm64: 1.32.0
+      lightningcss-darwin-x64: 1.32.0
+      lightningcss-freebsd-x64: 1.32.0
+      lightningcss-linux-arm-gnueabihf: 1.32.0
+      lightningcss-linux-arm64-gnu: 1.32.0
+      lightningcss-linux-arm64-musl: 1.32.0
+      lightningcss-linux-x64-gnu: 1.32.0
+      lightningcss-linux-x64-musl: 1.32.0
+      lightningcss-win32-arm64-msvc: 1.32.0
+      lightningcss-win32-x64-msvc: 1.32.0
 
   lightningcss@1.33.0:
     dependencies:
@@ -5063,9 +5414,13 @@ snapshots:
 
   tailwind-merge@3.7.0: {}
 
+  tailwindcss@4.3.3: {}
+
   tannin@1.2.0:
     dependencies:
       '@tannin/plural-forms': 1.1.0
+
+  tapable@2.3.3: {}
 
   tiny-inflate@1.0.3: {}
 
@@ -5081,6 +5436,8 @@ snapshots:
   trim-lines@3.0.1: {}
 
   tslib@2.8.1: {}
+
+  tw-animate-css@1.4.0: {}
 
   typescript@5.9.3: {}
 
@@ -5109,14 +5466,14 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.1.0
 
-  unplugin@3.4.0(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1)):
+  unplugin@3.4.0(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       picomatch: 4.0.7
       webpack-virtual-modules: 0.6.2
     optionalDependencies:
       rolldown: 1.2.15
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
 
   upper-case-first@2.0.2:
     dependencies:
@@ -5161,7 +5518,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1):
+  vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -5171,12 +5528,13 @@ snapshots:
     optionalDependencies:
       '@types/node': 26.6.5
       fsevents: 2.3.3
+      jiti: 2.7.0
       yaml: 2.9.1
 
-  vitest@5.0.3(@types/node@26.6.5)(happy-dom@21.0.4)(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1)):
+  vitest@5.0.3(@types/node@26.6.5)(happy-dom@21.0.4)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.3(vite@8.3.4(@types/node@26.6.5)(yaml@2.9.1))
+      '@vitest/mocker': 5.0.3(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       chai: 6.3.0
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -5187,7 +5545,7 @@ snapshots:
       tinybench: 6.2.2
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
-      vite: 8.3.4(@types/node@26.6.5)(yaml@2.9.1)
+      vite: 8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)
       why-is-node-running: 3.2.1
     optionalDependencies:
       '@types/node': 26.6.5

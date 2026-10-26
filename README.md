@@ -4,7 +4,7 @@ A [Goodfellow](https://github.com/goodfellow-cms/goodfellow-cms) plugin that wil
 
 ## Status
 
-This is a prototype, not a plugin yet. Nothing here is published, and it doesn't plug into the admin panel yet. It works with Goodfellow 0.5.0's published packages and the three sites in Goodfellow's repository (the starter, the parish example and the docs), whose `goodfellow-site.json` and content files are in `test/fixtures/`.
+This is a prototype, not a plugin yet. Nothing here is published, and it doesn't plug into the admin panel yet. It works with Goodfellow 0.5.0's published packages, and with the starter and the parish example as `create-goodfellow@0.5.0` bundles them (`sites.ts`), a dev dependency: the tests make each site's description from its own config, as its builds make `goodfellow-site.json`, and read its content from the package. The Next.js starter has the same content and blocks as the starter. Moving to a newer Goodfellow is a matter of updating those versions.
 
 ## What the prototype found
 
@@ -23,14 +23,14 @@ What works:
 
 The plugin is GPL-licensed, like Gutenberg, so it never bundles the site's blocks. It knows them only through the site's description, `goodfellow-site.json`, which has their fields but not their code. The prototype tries both ways of drawing them.
 
-- **From the render frame's HTML (`BlockRenderer`).** A separate frame that has the site's code draws one block at a time, with Goodfellow's own MIT-licensed renderer (`preparePage()` and `PageContent`), with each slot replaced by a placeholder block. The editor asks it over `postMessage` and puts the HTML in place (`prototype/render.tsx`, `prototype/render-client.ts`). In the plugin, the admin panel's render frame would answer, so the plugin's own frame never loads a block's code. With the site's compiled CSS and `themeToCss()` in Gutenberg's canvas, the page looks as it does on the site (`prototype/results/home.png` after `pnpm check`).
+- **From the render frame's HTML (`BlockRenderer`).** A separate frame that has the site's code draws one block at a time, with Goodfellow's own MIT-licensed renderer (`preparePage()` and `PageContent`), with each slot replaced by a placeholder block. The editor asks it over `postMessage` and puts the HTML in place (`prototype/render.tsx`, `prototype/render-client.ts`). In the plugin, the admin panel's render frame would answer, so the plugin's own frame never loads a block's code. The render frame also gives the editor the site's description, settings and page, as the admin panel would, so the editor never loads the site's files. With the starter's stylesheet compiled by Tailwind (`prototype/site.css`) and `themeToCss()` in Gutenberg's canvas, the page looks as it does on the site (`prototype/results/home.png` after `pnpm check`).
 - **From their fields alone (`outlineRenderer()`, `src/outline.ts`).** Each block is drawn as a box with its name and the words in its text fields, and its slots one under another. This needs nothing but the description, so it always works, but nothing looks like the site: Columns' items are stacked, and rich text, images and colors don't show (`home-fields.png`).
 
 **Recommendation:** draw from the render frame, and fall back to fields alone for a block the frame can't draw, or while the frame loads.
 
 ### Losing nothing
 
-A page's data goes into Gutenberg and comes back exactly as it was, keys and all: a block's props are kept as one `props` attribute, and nothing is saved as Gutenberg's HTML. This holds for every page, header, footer and template of the three sites, in Gutenberg's own data store (`test/round-trip.test.ts`, 38 tests), and in the browser, before and after a change, where the only difference is the prop that was changed.
+A page's data goes into Gutenberg and comes back exactly as it was, keys and all: a block's props are kept as one `props` attribute, and nothing is saved as Gutenberg's HTML. This holds for every page, header, footer and template of both sites, in Gutenberg's own data store (`test/round-trip.test.ts`, 29 tests), and in the browser, before and after a change, where the only difference is the prop that was changed.
 
 ### What's left for the plugin
 
@@ -55,5 +55,3 @@ pnpm check       # the browser checks, with screenshots in prototype/results/
 ## License
 
 GPL-2.0-or-later, like Gutenberg, whose code the plugin will bundle (see `LICENSE`). Sites that use it keep their own licenses: the plugin never bundles a site's blocks, and draws them through a separate frame over messages.
-
-`test/fixtures/` and `prototype/site.css` are copied from Goodfellow's repository, which is MIT-licensed.

@@ -1,10 +1,12 @@
 import { defineConfig } from "vitest/config";
+import { SITE_PACKAGES } from "./sites.js";
 
 export default defineConfig({
+  resolve: { dedupe: SITE_PACKAGES },
   test: {
-    // Gutenberg's packages expect a browser's globals, even for their stores.
     environment: "happy-dom",
-    // Its packages import JSON without the attribute Node needs, so they go through Vite.
-    server: { deps: { inline: [/@wordpress\//] } },
+    // Gutenberg's packages import JSON without import attributes, which Node refuses, and the sites' configs are
+    // TypeScript inside `create-goodfellow`, so Vite loads both.
+    server: { deps: { inline: [/@wordpress\//, /create-goodfellow/] } },
   },
 });

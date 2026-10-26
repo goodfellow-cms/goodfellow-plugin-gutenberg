@@ -1,11 +1,12 @@
 /**
- * Every page, header, footer and collection template of Goodfellow's starter,
- * its parish example and its docs, from Goodfellow to Gutenberg's blocks, into
+ * Every page, header, footer and collection template of Goodfellow's starter
+ * and its parish example, from Goodfellow to Gutenberg's blocks, into
  * Gutenberg's editor store and back, must come out exactly as it went in.
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import type { SiteDescription } from "@goodfellow-cms/core";
+import type { GoodfellowConfig, SiteDescription } from "@goodfellow-cms/core";
+import { describeSite } from "@goodfellow-cms/react";
 import type { ComponentData } from "@puckeditor/core";
 import { store as blockEditorStore } from "@wordpress/block-editor";
 import { dispatch, select } from "@wordpress/data";
@@ -13,8 +14,7 @@ import { describe, expect, it } from "vitest";
 import { fromGutenberg, toGutenberg } from "../src/convert.js";
 import { SLOT_BLOCK } from "../src/names.js";
 import { registerBlocks } from "../src/register.js";
-
-const fixtures = join(import.meta.dirname, "fixtures");
+import { SITES, type SiteName, siteDir } from "../sites.js";
 
 function files(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
@@ -22,9 +22,10 @@ function files(dir: string): string[] {
   );
 }
 
-/** Each fixture site's content with blocks: pages, the header and footer, and collections' templates. */
-function contentOf(site: string): { file: string; content: ComponentData[] }[] {
-  return files(join(fixtures, site, "content"))
+/** A site's content with blocks: pages, the header and footer, and collections' templates. */
+function contentOf(site: SiteName): { file: string; content: ComponentData[] }[] {
+  const dir = siteDir(site);
+  return files(join(dir, "content"))
     .filter((file) => file.endsWith(".json"))
     .flatMap((file) => {
       const json = JSON.parse(readFileSync(file, "utf8")) as {
@@ -32,16 +33,24 @@ function contentOf(site: string): { file: string; content: ComponentData[] }[] {
         template?: { content?: ComponentData[] };
       };
       const content = json.data?.content ?? json.template?.content;
-      return Array.isArray(content) ? [{ file: relative(fixtures, file), content }] : [];
+      return Array.isArray(content) ? [{ file: relative(dir, file), content }] : [];
     });
 }
 
 const edit = () => null;
 
-describe.each(["starter", "parish", "docs"])("the %s site", (site) => {
-  const description = JSON.parse(
-    readFileSync(join(fixtures, site, "goodfellow-site.json"), "utf8"),
-  ) as SiteDescription;
+/** Each site's description, made from its own config as its builds make `goodfellow-site.json`. */
+const descriptions = Object.fromEntries(
+  await Promise.all(
+    SITES.map(async (site) => {
+      const config = (await import(join(siteDir(site), "goodfellow.config.tsx"))) as { default: GoodfellowConfig };
+      return [site, describeSite(config.default)] as const;
+    }),
+  ),
+) as Record<SiteName, SiteDescription>;
+
+describe.each(SITES)("the %s site", (site) => {
+  const description = descriptions[site];
   const names = registerBlocks(description, { edit, slotEdit: edit, templates: true });
   const pages = contentOf(site);
 
