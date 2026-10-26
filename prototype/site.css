@@ -1,0 +1,11 @@
+/*
+ * The starter's stylesheet (its `src/styles.css`), compiled by Tailwind as the
+ * site's build compiles it, for Gutenberg's canvas.
+ */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@goodfellow-cms/react/theme.css";
+@import "@goodfellow-cms/blocks/styles.css";
+
+/* Lets Tailwind find class names typed into the editor. */
+@source "../node_modules/create-goodfellow/templates/starter/content";

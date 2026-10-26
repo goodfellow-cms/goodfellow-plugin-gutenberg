@@ -1,0 +1,39 @@
+/*
+ * The prototype's own styles in Gutenberg's canvas: slots, and the places the
+ * renderer left for them, take no box of their own, so the blocks in them are
+ * laid out by the block around them, as in a column of Columns.
+ */
+gf-slot,
+.gf-slot {
+  display: contents;
+}
+
+.gf-slot-list {
+  display: none;
+}
+
+/* Blocks drawn from their fields alone (`?draw=fields`): a box each, slots one under another. */
+.gf-outline {
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-family: system-ui, sans-serif;
+}
+
+.gf-outline-name {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #50575e;
+  text-transform: uppercase;
+}
+
+.gf-outline-words {
+  margin: 0 0 4px;
+}
+
+.gf-outline-slot {
+  border-left: 3px solid #dcdcde;
+  padding-left: 8px;
+}
