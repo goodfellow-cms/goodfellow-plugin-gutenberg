@@ -1,7 +1,6 @@
 import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
 import { describe, expect, it } from "vitest";
-import { SLOT_PLACEHOLDER } from "../src/edit.js";
 import { outlineRenderer } from "../src/outline.js";
 
 const description = {
@@ -20,8 +19,6 @@ describe("drawing blocks from their fields alone", () => {
       props: {
         id: "s",
         title: "Fish & <chips>",
-        content: [{ type: SLOT_PLACEHOLDER, props: { id: "s-content", slot: "content" } }],
-        aside: [{ type: SLOT_PLACEHOLDER, props: { id: "s-aside", slot: "aside" } }],
       },
     } as ComponentData);
     expect(html).toContain('<p class="gf-outline-name">Section</p>');

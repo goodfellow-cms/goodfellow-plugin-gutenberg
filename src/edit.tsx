@@ -10,17 +10,21 @@
 import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
 import { useBlockProps, useInnerBlocksProps } from "@wordpress/block-editor";
-import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { GoodfellowAttributes, SlotAttributes } from "./convert.js";
 import { BlockFields } from "./fields.js";
-import { type BlockNames, slotNames } from "./names.js";
+import type { BlockNames } from "./names.js";
 import type { EditProps } from "./register.js";
 
-/** The block the renderer draws in each slot's place: an empty `<gf-slot data-slot="…">`. */
-export const SLOT_PLACEHOLDER = "GoodfellowSlotPlaceholder";
+/** What a drawn block leaves in each slot's place, as Goodfellow's `DRAWN_SLOT_ELEMENT`: `<gf-slot data-slot="…">`. */
+export const SLOT_ELEMENT = "gf-slot";
 
-/** Draws one block, with its slots as placeholders, as the site would: the frame with the site's code answers. */
+/**
+ * Draws one block as the site draws it, with each of its slots left as an
+ * empty `SLOT_ELEMENT` where the slot's blocks go, as an editor plugin's
+ * `session.draw()` does: the admin panel's frame with the site's code answers.
+ */
 export interface BlockRenderer {
   render(block: ComponentData): Promise<string>;
 }
@@ -29,32 +33,24 @@ export interface BlockRenderer {
 const SlotPlaces = createContext<ReadonlyMap<string, Element>>(new Map());
 
 
-/** The block as the renderer is asked to draw it: its props, and a placeholder in each slot. */
-function withPlaceholders(type: string, props: Record<string, unknown>, slots: string[]): ComponentData {
-  const placeholders = Object.fromEntries(
-    slots.map((slot) => [slot, [{ type: SLOT_PLACEHOLDER, props: { id: `${String(props.id)}-${slot}`, slot } }]]),
-  );
-  return { type, props: { ...props, ...placeholders } } as ComponentData;
-}
-
 /** The `edit` and `slotEdit` components for `registerBlocks()`, drawing blocks with `renderer`. */
 export function blockEditors(description: Pick<SiteDescription, "blocks">, names: BlockNames, renderer: BlockRenderer) {
   function GoodfellowEdit({ name, attributes, setAttributes }: EditProps) {
     const type = names.fromGutenberg(name) as string;
-    const slots = useMemo(() => slotNames(description.blocks[type]), [type]);
     const props = (attributes as GoodfellowAttributes).props;
     const key = JSON.stringify(props);
     const [html, setHtml] = useState<string>();
     useEffect(() => {
       let current = true;
-      renderer.render(withPlaceholders(type, JSON.parse(key), slots)).then(
+      // Its props alone: the blocks in its slots are Gutenberg's, drawn into the places the drawing leaves.
+      renderer.render({ type, props: JSON.parse(key) } as ComponentData).then(
         (drawn) => current && setHtml(drawn),
         () => current && setHtml(`<p>${description.blocks[type]?.label ?? type}</p>`),
       );
       return () => {
         current = false;
       };
-    }, [type, key, slots]);
+    }, [type, key]);
 
     // The drawn HTML is the renderer's, not React's, so it's put in place by hand, then its slots found.
     const drawn = useRef<HTMLDivElement>(null);
@@ -65,7 +61,7 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
       element.innerHTML = html;
       setPlaces(
         new Map(
-          [...element.querySelectorAll("gf-slot[data-slot]")].map((place) => [
+          [...element.querySelectorAll(`${SLOT_ELEMENT}[data-slot]`)].map((place) => [
             place.getAttribute("data-slot") as string,
             place,
           ]),
