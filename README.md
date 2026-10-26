@@ -1,10 +1,37 @@
 # goodfellow-plugin-gutenberg
 
-A [Goodfellow](https://github.com/goodfellow-cms/goodfellow-cms) plugin that will let people edit pages in WordPress's block editor, Gutenberg, in place of Puck. For now it's a prototype: it tries out the two questions step 37 of Goodfellow's roadmap asks before the plugin is built.
+A [Goodfellow](https://github.com/goodfellow-cms/goodfellow-cms) plugin that lets people edit pages in WordPress's block editor, Gutenberg, in place of Puck: each person editing the site chooses **Gutenberg** or the standard editor in the editor's header, and the admin panel remembers it in their browser. Content stays in Goodfellow's files as it is, so the plugin can be added to or removed from a site at any time.
 
 ## Status
 
-This is a prototype, not a plugin yet. Nothing here is published, and it doesn't plug into the admin panel yet. It works with Goodfellow 0.5.0's published packages, and with the starter and the parish example as `create-goodfellow@0.5.0` bundles them (`sites.ts`), a dev dependency: the tests make each site's description from its own config, as its builds make `goodfellow-site.json`, and read its content from the package. The Next.js starter has the same content and blocks as the starter. Moving to a newer Goodfellow is a matter of updating those versions.
+An early version, not published yet. It works with Goodfellow 0.6.0, for pages, the header and footer, and collections' templates:
+
+- **Every block of the site** is a Gutenberg block of its own, made from the site's description, drawn by the site's own code (`session.draw()`) with the site's styles (`session.styles()`), and drawn from its fields alone where the site's code can't draw it.
+- **Slots** are Gutenberg's inner blocks, each drawn where it belongs in its block's layout. Blocks added in Gutenberg start with the site's defaults for them, and each gets an id of its own, as do the copies Gutenberg duplicates.
+- **The canvas** is drawn in the plugin's own frame rather than an iframe of Gutenberg's, since the frame is sandboxed already and its policy allows no frames, with the site's styles scoped to it.
+- **The sidebar** has the page's settings and the selected block's: text, textarea, select, radio and number fields.
+- **The admin panel's header** works as with Puck: Undo and Redo, unsaved changes, Publish, drafts, and the AI assistant, which gets the selected block.
+
+`pnpm check:site` tries it in a real site: a starter site from `create-goodfellow`, with the plugin installed from its packed files, under `goodfellow dev`, where it chooses Gutenberg, changes a heading, undoes and redoes it, publishes, and reads the change from the page's file.
+
+## Using it
+
+```sh
+npm install goodfellow-plugin-gutenberg
+```
+
+Then add it to the site's `goodfellow.config.tsx`:
+
+```tsx
+import gutenberg from "goodfellow-plugin-gutenberg";
+
+export default defineConfig({
+  // ...
+  plugins: [...installedPlugins, gutenberg],
+});
+```
+
+The plugin asks for nothing: its frame reaches no other address, reads no files and holds no secrets.
 
 ## What the prototype found
 
@@ -34,23 +61,26 @@ A page's data goes into Gutenberg and comes back exactly as it was, keys and all
 
 ### What's left for the plugin
 
-- **The plugin itself.** An admin module whose `editor.mount()` (Goodfellow's `PluginEditorSession`) runs this editor in the plugin's frame, drawing blocks with `session.draw()` and styling the canvas with `session.styles()`. Goodfellow has both, but they, like editor plugins themselves, aren't in a release yet, so the plugin waits for the next one.
-- **Fields.** The sidebar edits text, textarea, select, radio and number fields with Gutenberg's own controls (`src/fields.tsx`). Rich text, lists of items, media and the site's own custom fields come next.
-- **Gutenberg's styling options** (colors, spacing, typography), kept as Tailwind classes in each block's `className`, as planned.
+- **Fields.** Rich text, lists of items, media (with the media library's chooser), and the site's own custom fields, which the sidebar doesn't edit yet.
+- **Gutenberg's styling options** (colors, spacing, typography), kept as Tailwind classes in each block's `className`, compiled in the canvas from `session.styles()`'s Tailwind source.
 - **Text edited in place,** for fields marked `contentEditable`, such as a heading's text.
-- **Fonts.** The canvas doesn't load the theme's Google Fonts yet, so headings fall back to the computer's fonts.
+- **Pasted HTML** as the site's blocks, with `htmlBlocks()` from `@goodfellow-cms/core/wordpress`.
+- **Fonts.** The frame's policy allows fonts from the site's own address only, so the theme's Google Fonts don't load in the canvas yet.
+- **Rendering while it loads.** Each block is drawn once the site's code answers, rather than from its fields first.
 
 ## Trying it
 
 ```sh
 pnpm install
-pnpm test        # the data's round trip through Gutenberg's data store
+pnpm test        # the data's round trip through Gutenberg's data store, and the editor's history and ids
 pnpm typecheck
-pnpm dev         # the editor at http://localhost:5173/index.html (add ?draw=fields to draw from fields alone)
-pnpm check       # the browser checks, with screenshots in prototype/results/
+pnpm build       # dist/ and goodfellow-plugin.json
+pnpm check:site  # the plugin in a starter site under goodfellow dev, with screenshots in .site-check/
+pnpm dev         # the prototype's editor at http://localhost:5173/index.html (add ?draw=fields to draw from fields alone)
+pnpm check       # the prototype's browser checks, with screenshots in prototype/results/
 ```
 
-`pnpm check` uses Playwright as the computer has it. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to use a Chromium that's already installed.
+`pnpm check:site` makes the site in `.site/` the first time, which needs npm to reach the registry. Both checks use Playwright as the computer has it; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to use a Chromium that's already installed.
 
 ## License
 

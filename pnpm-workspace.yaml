@@ -1,3 +1,10 @@
+# Goodfellow's own releases, which pnpm would otherwise wait a day to install. pnpm wrote these itself.
+minimumReleaseAgeExclude:
+  - "@goodfellow-cms/blocks@0.6.0"
+  - "@goodfellow-cms/core@0.6.0"
+  - "@goodfellow-cms/react@0.6.0"
+  - create-goodfellow@0.6.0
+
 overrides:
   # As in Goodfellow's own workspace: Puck renders rich text on the server with
   # @tiptap/html, which asks for happy-dom 20; only 21.0.4 and later fix

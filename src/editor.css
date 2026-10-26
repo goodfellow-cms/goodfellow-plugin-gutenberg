@@ -1,0 +1,78 @@
+/*
+ * The plugin's own styles in Gutenberg's canvas: slots, and the places the
+ * renderer left for them, take no box of their own, so the blocks in them are
+ * laid out by the block around them, as in a column of Columns.
+ */
+gf-slot,
+.gf-slot {
+  display: contents;
+}
+
+.gf-slot-list {
+  display: none;
+}
+
+/* Blocks drawn from their fields alone, while the site draws them or where it can't: a box each, slots one under another. */
+.gf-outline {
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-family: system-ui, sans-serif;
+}
+
+.gf-outline-name {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #50575e;
+  text-transform: uppercase;
+}
+
+.gf-outline-words {
+  margin: 0 0 4px;
+}
+
+.gf-outline-slot {
+  border-left: 3px solid #dcdcde;
+  padding-left: 8px;
+}
+
+/*
+ * The editor in the plugin's frame: the canvas, and the settings beside it,
+ * filling the frame, rather than spaced as a plugin's screen is.
+ */
+html body.gfa-plugin-frame {
+  padding: 0;
+  max-width: none;
+}
+
+html,
+body,
+#goodfellow-plugin {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  background: #fff;
+}
+
+.gf-editor {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.gf-editor-canvas {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+}
+
+.gf-editor-sidebar {
+  width: 280px;
+  flex: none;
+  overflow: auto;
+  border-left: 1px solid #e0e0e0;
+  background: #fff;
+}

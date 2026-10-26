@@ -6,7 +6,7 @@
  */
 import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
-import { type Block as BlockInstance, createBlock } from "@wordpress/blocks";
+import { type Block as BlockInstance, cloneBlock, createBlock } from "@wordpress/blocks";
 import { type BlockNames, SLOT_BLOCK, slotNames } from "./names.js";
 
 /** A block's attributes: its props without its slots, which are blocks of their own. */
@@ -57,4 +57,37 @@ export function fromGutenberg(blocks: BlockInstance[], description: Description,
     }
     return { type, props } as ComponentData;
   });
+}
+
+/** A new id for a block of a type, as Puck gives them: the type, then something no other block has. */
+export function newBlockId(type: string): string {
+  const unique =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  return `${type}-${unique}`;
+}
+
+/**
+ * Gives each of the site's blocks an id of its own, as content needs: blocks
+ * just added in Gutenberg have none, and ones it duplicated have their
+ * original's. Blocks that already have one of their own are left as they are,
+ * so it's the same list when nothing needed one.
+ */
+export function withBlockIds(blocks: BlockInstance[], names: BlockNames, seen = new Set<string>()): BlockInstance[] {
+  let changed = false;
+  const result = blocks.map((block) => {
+    const innerBlocks = withBlockIds(block.innerBlocks, names, seen);
+    const type = names.fromGutenberg(block.name);
+    const props = (block.attributes as Partial<GoodfellowAttributes>).props;
+    const id = props?.id;
+    const needsId = type !== undefined && (typeof id !== "string" || id === "" || seen.has(id));
+    const ownId = needsId ? newBlockId(type) : (id as string | undefined);
+    if (type !== undefined && ownId) seen.add(ownId);
+    if (!needsId && innerBlocks === block.innerBlocks) return block;
+    changed = true;
+    const attributes = needsId ? { ...block.attributes, props: { ...props, id: ownId } } : block.attributes;
+    return { ...cloneBlock(block, attributes, innerBlocks), clientId: block.clientId };
+  });
+  return changed ? result : blocks;
 }

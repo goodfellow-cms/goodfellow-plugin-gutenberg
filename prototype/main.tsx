@@ -23,7 +23,7 @@ import { type BlockRenderer, blockEditors } from "../src/edit.js";
 import { blockNames } from "../src/names.js";
 import { outlineRenderer } from "../src/outline.js";
 import { registerBlocks } from "../src/register.js";
-import editorCss from "./editor.css?raw";
+import editorCss from "../src/editor.css?raw";
 import { renderFrame } from "./render-client.js";
 import siteCss from "./site.css?inline";
 

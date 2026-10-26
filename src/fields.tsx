@@ -85,13 +85,15 @@ function FieldControl({
   }
 }
 
-/** The block's fields in the sidebar, changing its `props` one at a time. */
-export function BlockFields({
+/** Fields in a panel of Gutenberg's sidebar, changing `props` one at a time. */
+export function FieldsPanel({
+  title,
   fields,
   props,
   onChange,
 }: {
-  fields: Fields;
+  title: string;
+  fields: Fields | Record<string, unknown>;
   props: Record<string, unknown>;
   onChange: (props: Record<string, unknown>) => void;
 }) {
@@ -100,18 +102,29 @@ export function BlockFields({
   );
   if (shown.length === 0) return null;
   return (
+    <PanelBody title={title}>
+      {shown.map(([name, field]) => (
+        <FieldControl
+          key={name}
+          name={name}
+          field={field}
+          value={props[name]}
+          onChange={(value) => onChange({ ...props, [name]: value })}
+        />
+      ))}
+    </PanelBody>
+  );
+}
+
+/** The block's fields in the sidebar, where Gutenberg shows the selected block's settings. */
+export function BlockFields(props: {
+  fields: Fields;
+  props: Record<string, unknown>;
+  onChange: (props: Record<string, unknown>) => void;
+}) {
+  return (
     <InspectorControls>
-      <PanelBody title="Settings">
-        {shown.map(([name, field]) => (
-          <FieldControl
-            key={name}
-            name={name}
-            field={field}
-            value={props[name]}
-            onChange={(value) => onChange({ ...props, [name]: value })}
-          />
-        ))}
-      </PanelBody>
+      <FieldsPanel title="Settings" {...props} />
     </InspectorControls>
   );
 }

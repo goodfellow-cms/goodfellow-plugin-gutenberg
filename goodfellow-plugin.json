@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "title": "Gutenberg",
+  "description": "Edit pages in WordPress's block editor, Gutenberg, in place of Puck.",
+  "permissions": {},
+  "admin": true,
+  "editor": {
+    "title": "Gutenberg",
+    "kinds": [
+      "page",
+      "header",
+      "footer",
+      "template"
+    ]
+  }
+}

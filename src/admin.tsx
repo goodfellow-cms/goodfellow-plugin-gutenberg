@@ -1,0 +1,92 @@
+/**
+ * The plugin's admin module, which runs in its own sandboxed frame in the
+ * admin panel: Gutenberg's block editor for whoever chooses it in the editor's
+ * header. It never has the site's code. It knows the site's blocks by their
+ * fields (`session.blocks`), has the site's own code draw each one
+ * (`session.draw()`), falling back to drawing it from its fields alone, and
+ * hands back what's edited, which the admin panel checks before publishing.
+ */
+import "@wordpress/components/build-style/style.css";
+import "@wordpress/block-editor/build-style/style.css";
+import "@wordpress/block-editor/build-style/content.css";
+import "./editor.css";
+import type { PluginAdmin, PluginEditorData, PluginEditorSession } from "@goodfellow-cms/core";
+import { createRoot } from "react-dom/client";
+import { fromGutenberg, toGutenberg } from "./convert.js";
+import { type BlockRenderer, blockEditors } from "./edit.js";
+import { type EditedPage, Editor } from "./editor.js";
+import { editHistory } from "./history.js";
+import { blockNames } from "./names.js";
+import { outlineRenderer } from "./outline.js";
+import { registerBlocks } from "./register.js";
+
+/** Draws blocks as the site does, or from their fields alone where the site's code can't. */
+export function sessionRenderer(session: Pick<PluginEditorSession, "blocks" | "draw">): BlockRenderer {
+  const fallback = outlineRenderer({ blocks: session.blocks });
+  return {
+    render: (block) => session.draw(block).catch(() => fallback.render(block)),
+  };
+}
+
+const admin: PluginAdmin = {
+  editor: {
+    async mount(element, session) {
+      const description = { blocks: session.blocks };
+      const names = blockNames(description);
+      registerBlocks(description, { ...blockEditors(description, names, sessionRenderer(session)), templates: true });
+
+      const toPage = (data: PluginEditorData): EditedPage => ({
+        blocks: toGutenberg(data.content, description, names),
+        root: data.root,
+      });
+      const toData = (page: EditedPage): PluginEditorData => ({
+        // Puck's older drop zones are edited only in Puck, so they go back as they came.
+        ...(session.data.zones && { zones: session.data.zones }),
+        root: page.root,
+        content: fromGutenberg(page.blocks, description, names),
+      });
+
+      const history = editHistory(toPage(session.data));
+      let selected: string | null = null;
+      const tell = () =>
+        session.change(toData(history.present), { past: history.canUndo, future: history.canRedo, selected });
+      history.subscribe(tell);
+
+      // The site's stylesheets, with its theme, scoped to the canvas: blocks are drawn as they are until they come.
+      const root = createRoot(element as HTMLElement);
+      const draw = (styles: { css: string }[]) =>
+        root.render(
+          <Editor
+            history={history}
+            names={names}
+            rootFields={session.kind === "header" || session.kind === "footer" ? {} : session.root.fields}
+            styles={styles}
+            onSelect={(id) => {
+              if (id === selected) return;
+              selected = id;
+              tell();
+            }}
+          />,
+        );
+      draw([]);
+      session.styles().then(
+        ({ stylesheets }) => draw(stylesheets.map((css) => ({ css }))),
+        () => {},
+      );
+
+      return {
+        data: () => toData(history.present),
+        set: (data) => history.push(toPage(data)),
+        undo: () => {
+          history.undo();
+        },
+        redo: () => {
+          history.redo();
+        },
+        destroy: () => root.unmount(),
+      };
+    },
+  },
+};
+
+export default admin;

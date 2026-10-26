@@ -192,14 +192,14 @@ importers:
         version: 19.3.0(react@19.3.0)
     devDependencies:
       '@goodfellow-cms/blocks':
-        specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: 0.6.0
+        version: 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@goodfellow-cms/core':
-        specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: 0.6.0
+        version: 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@goodfellow-cms/react':
-        specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: 0.6.0
+        version: 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core':
         specifier: 0.23.0
         version: 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
@@ -216,8 +216,8 @@ importers:
         specifier: 6.1.1
         version: 6.1.1(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       create-goodfellow:
-        specifier: 0.5.0
-        version: 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+        specifier: 0.6.0
+        version: 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       happy-dom:
         specifier: 21.0.4
         version: 21.0.4
@@ -461,21 +461,21 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@goodfellow-cms/blocks@0.5.0':
-    resolution: {integrity: sha512-fDWYlckZ3lqKMKPAyAZT1P2yF5QtBhAztervTa8H+YYi6w3obHA0gTWd9iC2Ijd9Qw31p3tT5+mQ3IWItU5y4w==}
+  '@goodfellow-cms/blocks@0.6.0':
+    resolution: {integrity: sha512-EwwXJPp7DIiXBgo4AzJPR6HmaRfl5tb/ox249+SvMmGn5tpN1MlcakYX5BS2s/DBUPXGER+xUR2WVNxFbehJkw==}
     engines: {node: ^22.23.4 || ^24.22.1 || >=26.12.1}
     peerDependencies:
       '@puckeditor/core': 0.23.0
       react: ^19.0.0
 
-  '@goodfellow-cms/core@0.5.0':
-    resolution: {integrity: sha512-pXE6Bd/Z9Z+dNQJKE/1bi5R8Ul8ApKzSVk9qlYo5eoQQ6gpd+1c/tGMjCIorfhukZwQhJ3Ug+xHQolczz1TIpQ==}
+  '@goodfellow-cms/core@0.6.0':
+    resolution: {integrity: sha512-fEOGukZ/S6QS7KPm/LwRq65YFe77KC3dc929Vd2MfVYJTyV9OSq/7DzchK1Xrs2DY0GM9jTta3jooWNrtwH17A==}
     engines: {node: ^22.23.4 || ^24.22.1 || >=26.12.1}
     peerDependencies:
       '@puckeditor/core': 0.23.0
 
-  '@goodfellow-cms/react@0.5.0':
-    resolution: {integrity: sha512-shVzJvcVGTAjQs6gNdUiYHyGjxiAsjLvGmm15+fHScdHOmcwn1y6bUokIY7bCmPufO6046oVO07hZg3fwwRc3w==}
+  '@goodfellow-cms/react@0.6.0':
+    resolution: {integrity: sha512-4a2OWHKT2K9mX/G7oEGHd6VlwNCLCi3XizpQ78+qg11hA23KB/vIEGbmD2HUdxk+DZq6qV9xbjlO9ePUdnrUCw==}
     engines: {node: ^22.23.4 || ^24.22.1 || >=26.12.1}
     peerDependencies:
       '@puckeditor/core': 0.23.0
@@ -1745,8 +1745,8 @@ packages:
     resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
 
-  create-goodfellow@0.5.0:
-    resolution: {integrity: sha512-5wSj16w9wCUpGgtKkCSMJMN2mkamNod6h9VNrqWpNclpft7knrNA50xsdtkQro0NTblkScVHNN6Ih+eGDpFgBg==}
+  create-goodfellow@0.6.0:
+    resolution: {integrity: sha512-viTP2eGXXAEx/Jp8eLTP7MDnVv01t+4xHf3dq+9bsKD8PWDuR/7IwlRus8QHg/zsYNbJj8wUQXKDCgrH7EW5dA==}
     engines: {node: ^22.23.4 || ^24.22.1 || >=26.12.1}
     hasBin: true
 
@@ -3124,10 +3124,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@goodfellow-cms/blocks@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
+  '@goodfellow-cms/blocks@0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
-      '@goodfellow-cms/react': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@goodfellow-cms/core': 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@goodfellow-cms/react': 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       react: 19.3.0
       shiki: 4.5.0
@@ -3147,7 +3147,7 @@ snapshots:
       - vite
       - webpack
 
-  '@goodfellow-cms/core@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
+  '@goodfellow-cms/core@0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       axe-core: 4.14.0
@@ -3176,9 +3176,9 @@ snapshots:
       - vite
       - webpack
 
-  '@goodfellow-cms/react@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
+  '@goodfellow-cms/react@0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))':
     dependencies:
-      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@goodfellow-cms/core': 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
       '@puckeditor/core': 0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
       react: 19.3.0
       react-dom: 19.3.0(react@19.3.0)
@@ -4649,9 +4649,9 @@ snapshots:
       path-type: 4.0.0
       yaml: 1.10.3
 
-  create-goodfellow@0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
+  create-goodfellow@0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1)):
     dependencies:
-      '@goodfellow-cms/core': 0.5.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
+      '@goodfellow-cms/core': 0.6.0(@puckeditor/core@0.23.0(@floating-ui/dom@1.8.0)(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0)))(postcss@8.5.31)(rolldown@1.2.15)(vite@8.3.4(@types/node@26.6.5)(jiti@2.7.0)(yaml@2.9.1))
     transitivePeerDependencies:
       - '@farmfe/core'
       - '@puckeditor/core'
