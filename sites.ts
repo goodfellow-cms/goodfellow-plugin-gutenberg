@@ -1,6 +1,6 @@
 /**
  * Goodfellow's starter and its parish example, as `create-goodfellow` bundles
- * them, which the tests and the prototype use as the sites to edit. The
+ * them, which the tests use as the sites to edit. The
  * Next.js starter has the same content and blocks as the starter.
  */
 import { createRequire } from "node:module";
