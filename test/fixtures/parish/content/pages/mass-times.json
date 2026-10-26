@@ -1,0 +1,168 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-mass-times",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-mass-times",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Mass times"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-mass-times",
+                "align": "left",
+                "className": "mt-4 max-w-2xl text-lg text-muted-foreground",
+                "content": "<p>All Masses are in the church unless noted. The church is open every day from 7:30 am to 7:00 pm for quiet prayer.</p>"
+              }
+            },
+            {
+              "type": "Grid",
+              "props": {
+                "id": "Grid-mass-times",
+                "className": "mt-10",
+                "columns": "2",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "MassTimes",
+                    "props": {
+                      "id": "MassTimes-weekend",
+                      "className": "",
+                      "times": [
+                        {
+                          "day": "Saturday",
+                          "note": "Vigil Mass",
+                          "time": "5:00 pm"
+                        },
+                        {
+                          "day": "Sunday",
+                          "note": "",
+                          "time": "8:00 am"
+                        },
+                        {
+                          "day": "Sunday",
+                          "note": "With the parish choir",
+                          "time": "10:30 am"
+                        },
+                        {
+                          "day": "Sunday",
+                          "note": "Youth Mass",
+                          "time": "6:00 pm"
+                        }
+                      ],
+                      "title": "Weekend Masses"
+                    }
+                  },
+                  {
+                    "type": "MassTimes",
+                    "props": {
+                      "id": "MassTimes-weekday",
+                      "className": "",
+                      "times": [
+                        {
+                          "day": "Monday to Friday",
+                          "note": "",
+                          "time": "8:00 am"
+                        },
+                        {
+                          "day": "Wednesday",
+                          "note": "Followed by adoration until 8:00 pm",
+                          "time": "6:30 pm"
+                        },
+                        {
+                          "day": "Saturday",
+                          "note": "",
+                          "time": "9:00 am"
+                        }
+                      ],
+                      "title": "Weekday Masses"
+                    }
+                  },
+                  {
+                    "type": "MassTimes",
+                    "props": {
+                      "id": "MassTimes-confession",
+                      "className": "",
+                      "times": [
+                        {
+                          "day": "Saturday",
+                          "note": "",
+                          "time": "3:30 to 4:30 pm"
+                        },
+                        {
+                          "day": "Wednesday",
+                          "note": "During adoration",
+                          "time": "7:00 to 8:00 pm"
+                        },
+                        {
+                          "day": "Any time",
+                          "note": "Call the parish office",
+                          "time": "By appointment"
+                        }
+                      ],
+                      "title": "Confession"
+                    }
+                  },
+                  {
+                    "type": "MassTimes",
+                    "props": {
+                      "id": "MassTimes-holy-days",
+                      "className": "",
+                      "times": [
+                        {
+                          "day": "The evening before",
+                          "note": "Vigil Mass",
+                          "time": "7:00 pm"
+                        },
+                        {
+                          "day": "The day itself",
+                          "note": "",
+                          "time": "8:00 am and 7:00 pm"
+                        }
+                      ],
+                      "title": "Holy days"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Notice",
+              "props": {
+                "id": "Notice-holidays",
+                "className": "mt-10",
+                "text": "<p>Times change for Christmas, Holy Week and Easter. The <a href=\"/bulletins\">bulletin</a> has each year's schedule a few weeks ahead.</p>",
+                "title": "Christmas and Easter",
+                "tone": "highlight"
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "Weekend, weekday and holy day Masses, and times for confession.",
+        "image": "",
+        "title": "Mass times"
+      }
+    }
+  }
+}

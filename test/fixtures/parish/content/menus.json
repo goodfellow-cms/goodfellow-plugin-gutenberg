@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "languages": {
+    "es": {
+      "footer": [
+        {
+          "href": "/es/horarios-de-misa",
+          "label": "Horarios de misa"
+        },
+        {
+          "href": "/contact",
+          "label": "Contacto"
+        }
+      ],
+      "main": [
+        {
+          "href": "/es",
+          "label": "Inicio"
+        },
+        {
+          "href": "/es/horarios-de-misa",
+          "label": "Horarios de misa"
+        },
+        {
+          "href": "/contact",
+          "label": "Contacto"
+        }
+      ]
+    }
+  },
+  "menus": {
+    "footer": [
+      {
+        "href": "/mass-times",
+        "label": "Mass times"
+      },
+      {
+        "href": "/bulletins",
+        "label": "Bulletins"
+      },
+      {
+        "href": "/sacraments",
+        "label": "Sacraments"
+      },
+      {
+        "href": "/contact",
+        "label": "Contact us"
+      }
+    ],
+    "main": [
+      {
+        "href": "/",
+        "label": "Home"
+      },
+      {
+        "href": "/mass-times",
+        "label": "Mass times"
+      },
+      {
+        "href": "/sacraments",
+        "label": "Sacraments"
+      },
+      {
+        "children": [
+          {
+            "href": "/events",
+            "label": "Events"
+          },
+          {
+            "href": "/calendar",
+            "label": "Calendar"
+          },
+          {
+            "href": "/news",
+            "label": "News"
+          },
+          {
+            "href": "/bulletins",
+            "label": "Bulletins"
+          }
+        ],
+        "href": "/events",
+        "label": "Parish life"
+      },
+      {
+        "href": "/about",
+        "label": "About us"
+      },
+      {
+        "href": "/contact",
+        "label": "Contact"
+      }
+    ]
+  }
+}

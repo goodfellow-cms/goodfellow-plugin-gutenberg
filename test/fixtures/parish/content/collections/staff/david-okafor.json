@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "fields": {
+    "order": 3,
+    "photo": "/media/person.svg",
+    "role": "Director of music",
+    "title": "David Okafor"
+  }
+}

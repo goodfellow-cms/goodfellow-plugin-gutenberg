@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-43",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-41",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Page not found"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-42",
+                "align": "left",
+                "className": "mt-4",
+                "content": "<p>There's no page at this address. Try the search above, or start from <a href=\"/docs/introduction\">the introduction</a>.</p>"
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "",
+        "image": "",
+        "title": "Page not found"
+      }
+    }
+  }
+}

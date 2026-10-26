@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "menus": {
+    "main": [
+      {
+        "href": "/docs/introduction",
+        "label": "Docs"
+      },
+      {
+        "href": "/new-site",
+        "label": "Create a site"
+      },
+      {
+        "href": "/docs/why-goodfellow",
+        "label": "Why Goodfellow"
+      },
+      {
+        "href": "https://github.com/goodfellow-cms/goodfellow-cms",
+        "label": "GitHub"
+      }
+    ]
+  }
+}

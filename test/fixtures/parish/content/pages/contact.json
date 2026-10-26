@@ -1,0 +1,180 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-contact",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-contact",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Contact us"
+              }
+            },
+            {
+              "type": "Grid",
+              "props": {
+                "id": "Grid-contact",
+                "className": "mt-8",
+                "columns": "2",
+                "gap": "lg",
+                "items": [
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-office",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-office",
+                            "align": "left",
+                            "className": "",
+                            "level": "h2",
+                            "text": "Parish office"
+                          }
+                        },
+                        {
+                          "type": "ContactDetails",
+                          "props": {
+                            "id": "ContactDetails-contact",
+                            "address": true,
+                            "className": "text-lg",
+                            "email": true,
+                            "layout": "stacked",
+                            "phone": true
+                          }
+                        },
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-hours",
+                            "align": "left",
+                            "className": "mt-4",
+                            "level": "h3",
+                            "text": "Office hours"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-hours",
+                            "align": "left",
+                            "className": "",
+                            "content": "<p>Monday to Thursday, 9 am to 4 pm<br>Friday, 9 am to noon</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": true
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-directions",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-directions",
+                            "align": "left",
+                            "className": "",
+                            "level": "h2",
+                            "text": "Getting here"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-directions",
+                            "align": "left",
+                            "className": "",
+                            "content": "<p>The church is on Church Street, two blocks from the town square. There's free parking behind the parish hall, and the main entrance has a ramp. Large-print missals and hearing loops are available; just ask an usher.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": true
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      },
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-register",
+          "background": "muted",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-register",
+                "align": "left",
+                "className": "",
+                "level": "h2",
+                "text": "Join the parish"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-register",
+                "align": "left",
+                "className": "mt-2 max-w-2xl",
+                "content": "<p>New to St. Joseph? Welcome! Stop by the office, or email us, and we'll help you register and find your way around.</p>"
+              }
+            },
+            {
+              "type": "Button",
+              "props": {
+                "id": "Button-email",
+                "className": "mt-6",
+                "href": "mailto:office@example.org",
+                "label": "Email the parish office",
+                "newTab": false,
+                "size": "md",
+                "variant": "primary"
+              }
+            }
+          ],
+          "padding": "md",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "How to reach the parish office, office hours and directions.",
+        "image": "",
+        "title": "Contact us"
+      }
+    }
+  }
+}

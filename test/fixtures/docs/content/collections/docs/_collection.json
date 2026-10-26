@@ -1,0 +1,145 @@
+{
+  "version": 1,
+  "entryName": "Page",
+  "fields": [
+    {
+      "type": "text",
+      "label": "Title",
+      "name": "title",
+      "required": true
+    },
+    {
+      "type": "textarea",
+      "hint": "One or two sentences, shown in search engines and link previews.",
+      "label": "Description",
+      "name": "description"
+    },
+    {
+      "type": "select",
+      "label": "Section",
+      "name": "section",
+      "options": [
+        {
+          "label": "Getting started",
+          "value": "start"
+        },
+        {
+          "label": "For editors",
+          "value": "editors"
+        },
+        {
+          "label": "For site owners",
+          "value": "owners"
+        },
+        {
+          "label": "For developers",
+          "value": "developers"
+        }
+      ],
+      "required": true
+    },
+    {
+      "type": "number",
+      "label": "Order in its section",
+      "name": "order"
+    },
+    {
+      "type": "richtext",
+      "label": "Text",
+      "name": "body"
+    }
+  ],
+  "markdown": {
+    "body": "body"
+  },
+  "name": "Docs",
+  "path": "/docs/{slug}",
+  "sort": {
+    "field": "order",
+    "order": "asc"
+  },
+  "template": {
+    "content": [
+      {
+        "type": "DocsLayout",
+        "props": {
+          "id": "DocsLayout-50",
+          "aside": [
+            {
+              "type": "OnThisPage",
+              "props": {
+                "id": "OnThisPage-49",
+                "className": "",
+                "depth": "3",
+                "heading": "On this page"
+              }
+            }
+          ],
+          "className": "",
+          "content": [
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-45",
+                "className": "",
+                "copyLabel": "Copy code",
+                "field": "title",
+                "style": "title"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-46",
+                "className": "mt-4 text-lg text-muted-foreground",
+                "copyLabel": "Copy code",
+                "field": "description",
+                "style": "text"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-47",
+                "className": "mt-8",
+                "copyLabel": "Copy code",
+                "field": "body",
+                "style": "text"
+              }
+            },
+            {
+              "type": "EntryPager",
+              "props": {
+                "id": "EntryPager-48",
+                "className": "mt-12",
+                "groupBy": "section",
+                "nextLabel": "Next",
+                "previousLabel": "Previous"
+              }
+            }
+          ],
+          "sidebar": [
+            {
+              "type": "CollectionNav",
+              "props": {
+                "id": "CollectionNav-44",
+                "className": "",
+                "collection": "",
+                "groupBy": "section",
+                "heading": ""
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "{description}",
+        "image": "",
+        "title": "{title}"
+      }
+    }
+  }
+}

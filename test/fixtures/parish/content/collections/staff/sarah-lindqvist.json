@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "fields": {
+    "order": 4,
+    "photo": "/media/person.svg",
+    "role": "Director of religious education",
+    "title": "Sarah Lindqvist"
+  }
+}

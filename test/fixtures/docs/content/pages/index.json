@@ -1,0 +1,401 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-14",
+          "background": "primary",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-9",
+                "align": "left",
+                "className": "max-w-3xl",
+                "level": "h1",
+                "text": "Websites anyone can edit, with nothing to run"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-10",
+                "align": "left",
+                "className": "mt-6 max-w-2xl text-lg opacity-90",
+                "content": "<p>Goodfellow is a drag-and-drop website builder for churches, clubs, small businesses and anyone else without a developer on hand, and for larger organizations whose marketing team runs the content while developers own the code. Its pages are files in your own GitHub or GitLab repository, and free hosts put them online, so there's no server, database or monthly bill.</p>"
+              }
+            },
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-13",
+                "align": "center",
+                "className": "mt-8 grid max-w-2xl grid-cols-2 gap-3 md:grid-cols-4",
+                "direction": "row",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-11",
+                      "className": "w-full px-0",
+                      "href": "/docs/introduction",
+                      "label": "Get started",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "secondary"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-create",
+                      "className": "w-full px-0",
+                      "href": "/new-site",
+                      "label": "Create a site",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "secondary"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-12",
+                      "className": "w-full px-0",
+                      "href": "/docs/why-goodfellow",
+                      "label": "Why Goodfellow?",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "outline"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-demo",
+                      "className": "w-full px-0",
+                      "href": "https://goodfellow-cms.github.io/goodfellow-demo/admin/",
+                      "label": "Try the demo",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "outline"
+                    }
+                  }
+                ],
+                "justify": "start",
+                "wrap": true
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      },
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-34",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Grid",
+              "props": {
+                "id": "Grid-33",
+                "className": "",
+                "columns": "3",
+                "gap": "lg",
+                "items": [
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-17",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-15",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "Edit by dragging and dropping"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-16",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>Editors build pages from blocks in a visual editor at /admin, and see them exactly as visitors will before publishing.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-20",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-18",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "No server to look after"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-19",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>The site is static files on a free host. There's nothing to update, patch or back up besides the repository itself.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-23",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-21",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "Your content, in plain files"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-22",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>Every page is a file in your repository, with its whole history. Nothing is locked in a database or a company's servers.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-26",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-24",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "Collections and Markdown"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-25",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>Groups of similar pages, such as news, events or these docs, share one design. Their text can be stored as Markdown.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-29",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-27",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "AI that writes into the page"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-28",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>Describe what you want and the assistant drafts it into the editor, with each editor's own AI service or a free one.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  },
+                  {
+                    "type": "Flex",
+                    "props": {
+                      "id": "Flex-32",
+                      "align": "start",
+                      "className": "",
+                      "direction": "column",
+                      "gap": "sm",
+                      "items": [
+                        {
+                          "type": "Heading",
+                          "props": {
+                            "id": "Heading-30",
+                            "align": "left",
+                            "className": "text-2xl md:text-2xl font-semibold tracking-normal",
+                            "level": "h2",
+                            "text": "Blocks for more"
+                          }
+                        },
+                        {
+                          "type": "Text",
+                          "props": {
+                            "id": "Text-31",
+                            "align": "left",
+                            "className": "text-muted-foreground",
+                            "content": "<p>Built-in blocks need nothing but Tailwind. Admins can add more, built with shadcn/ui, without a developer.</p>"
+                          }
+                        }
+                      ],
+                      "justify": "start",
+                      "wrap": false
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "wide"
+        }
+      },
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-40",
+          "background": "muted",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-35",
+                "align": "center",
+                "className": "",
+                "level": "h2",
+                "text": "Try it"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-36",
+                "align": "center",
+                "className": "mt-4 text-muted-foreground",
+                "content": "<p>Create a site in a minute on your own computer, or read how Goodfellow compares with WordPress and TinaCMS.</p>"
+              }
+            },
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-39",
+                "align": "center",
+                "className": "mx-auto mt-6 grid grid-cols-2 gap-3 sm:max-w-82.5",
+                "direction": "row",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-37",
+                      "className": "w-full px-0",
+                      "href": "/docs/create-a-site",
+                      "label": "Create a site",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "primary"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-38",
+                      "className": "w-full px-0",
+                      "href": "/docs/why-goodfellow#how-goodfellow-compares",
+                      "label": "Compare",
+                      "newTab": false,
+                      "size": "lg",
+                      "variant": "outline"
+                    }
+                  }
+                ],
+                "justify": "center",
+                "wrap": true
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "A website builder with no server or database: pages are files in your own GitHub or GitLab repository.",
+        "image": "",
+        "title": "Goodfellow"
+      }
+    }
+  }
+}

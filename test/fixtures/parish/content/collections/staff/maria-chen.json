@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "fields": {
+    "order": 2,
+    "photo": "/media/person.svg",
+    "role": "Parish office manager",
+    "title": "Maria Chen"
+  }
+}

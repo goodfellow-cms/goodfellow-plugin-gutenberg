@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "fields": {
+    "date": "2026-09-14",
+    "image": "/media/placeholder.svg",
+    "summary": "Six new singers joined the parish choir this fall, and there is room for more.",
+    "text": "<p>The choir rehearses on Thursday evenings in the church. No experience is needed, only a love of singing. Speak to the music director after any Sunday Mass.</p>",
+    "title": "Choir welcomes new voices",
+    "topics": [
+      "music",
+      "parish-life"
+    ]
+  }
+}

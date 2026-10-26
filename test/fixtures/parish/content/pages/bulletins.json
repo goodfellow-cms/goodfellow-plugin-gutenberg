@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-bulletins",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-bulletins",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Bulletins"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-bulletins",
+                "align": "left",
+                "className": "mt-4 text-lg text-muted-foreground",
+                "content": "<p>The bulletin comes out every weekend, with announcements, Mass intentions and the week's calendar. Paper copies are at the church doors.</p>"
+              }
+            },
+            {
+              "type": "CollectionList",
+              "props": {
+                "id": "CollectionList-bulletins",
+                "className": "mt-8",
+                "collection": "bulletins",
+                "columns": "3",
+                "dateField": "date",
+                "emptyText": "No bulletins yet.",
+                "imageField": "",
+                "layout": "list",
+                "limit": 12,
+                "order": "default",
+                "show": "all",
+                "summaryField": ""
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "narrow"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "This week's bulletin and earlier ones.",
+        "image": "",
+        "title": "Bulletins"
+      }
+    }
+  }
+}

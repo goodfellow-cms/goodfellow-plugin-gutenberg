@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-events",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-events",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Events"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-events",
+                "align": "left",
+                "className": "mt-4 text-lg text-muted-foreground",
+                "content": "<p>Everyone is welcome at parish events, whether or not you're a parishioner.</p>"
+              }
+            },
+            {
+              "type": "Calendar",
+              "props": {
+                "id": "Calendar-upcoming",
+                "addLabel": "Add to calendar",
+                "className": "mt-10",
+                "collection": "events",
+                "days": 90,
+                "emptyText": "Nothing on the calendar right now. Check back soon.",
+                "feed": "",
+                "limit": 12,
+                "monthsAfter": 12,
+                "monthsBefore": 1,
+                "nextLabel": "Next month",
+                "otherCalendarsLabel": "Apple Calendar and others",
+                "previousLabel": "Previous month",
+                "subscribeLabel": "Subscribe to the parish calendar",
+                "view": "list",
+                "weekStart": "sunday"
+              }
+            },
+            {
+              "type": "Button",
+              "props": {
+                "id": "Button-calendar",
+                "className": "mt-8",
+                "href": "/calendar",
+                "label": "See the month at a glance",
+                "newTab": false,
+                "size": "md",
+                "variant": "outline"
+              }
+            },
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-past",
+                "align": "left",
+                "className": "mt-16 mb-6",
+                "level": "h2",
+                "text": "Past events"
+              }
+            },
+            {
+              "type": "CollectionList",
+              "props": {
+                "id": "CollectionList-past",
+                "className": "",
+                "collection": "events",
+                "columns": "3",
+                "dateField": "when",
+                "emptyText": "No past events yet.",
+                "imageField": "",
+                "layout": "list",
+                "limit": 10,
+                "order": "newest",
+                "show": "past",
+                "summaryField": "summary"
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "Upcoming events at St. Joseph Parish.",
+        "image": "",
+        "title": "Events"
+      }
+    }
+  }
+}

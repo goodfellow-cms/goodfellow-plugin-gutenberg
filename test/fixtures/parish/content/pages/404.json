@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-not-found",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-not-found",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "Page not found"
+              }
+            },
+            {
+              "type": "Text",
+              "props": {
+                "id": "Text-not-found",
+                "align": "left",
+                "className": "mt-4 text-lg text-muted-foreground",
+                "content": "<p>Sorry, there's no page at this address. It may have moved.</p>"
+              }
+            },
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-not-found",
+                "align": "center",
+                "className": "mt-8",
+                "direction": "row",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-home",
+                      "className": "",
+                      "href": "/",
+                      "label": "Go to the home page",
+                      "newTab": false,
+                      "size": "md",
+                      "variant": "primary"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-times",
+                      "className": "",
+                      "href": "/mass-times",
+                      "label": "Mass times",
+                      "newTab": false,
+                      "size": "md",
+                      "variant": "outline"
+                    }
+                  }
+                ],
+                "justify": "start",
+                "wrap": true
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "narrow"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "",
+        "image": "",
+        "title": "Page not found"
+      }
+    }
+  }
+}

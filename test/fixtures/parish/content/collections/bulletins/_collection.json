@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "entryName": "Bulletin",
+  "fields": [
+    {
+      "type": "text",
+      "hint": "Such as the Sunday's name.",
+      "label": "Title",
+      "name": "title",
+      "required": true
+    },
+    {
+      "type": "date",
+      "label": "Date",
+      "name": "date",
+      "required": true
+    },
+    {
+      "type": "link",
+      "hint": "Choose the bulletin's PDF, or upload it.",
+      "label": "Bulletin file",
+      "name": "file",
+      "required": true
+    }
+  ],
+  "name": "Bulletins",
+  "path": "/bulletins/{slug}",
+  "sort": {
+    "field": "date",
+    "order": "desc"
+  },
+  "template": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-bulletin",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-date",
+                "className": "",
+                "field": "date",
+                "style": "small"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-title",
+                "className": "mt-2",
+                "field": "title",
+                "style": "title"
+              }
+            },
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-bulletin",
+                "align": "center",
+                "className": "mt-8",
+                "direction": "row",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-download",
+                      "className": "",
+                      "href": "{file}",
+                      "label": "Open the bulletin (PDF)",
+                      "newTab": false,
+                      "size": "md",
+                      "variant": "primary"
+                    }
+                  },
+                  {
+                    "type": "Button",
+                    "props": {
+                      "id": "Button-bulletins",
+                      "className": "",
+                      "href": "/bulletins",
+                      "label": "All bulletins",
+                      "newTab": false,
+                      "size": "md",
+                      "variant": "outline"
+                    }
+                  }
+                ],
+                "justify": "start",
+                "wrap": true
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "narrow"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "The parish bulletin for {title}.",
+        "image": "",
+        "title": "{title}"
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "fields": {
+    "order": 1,
+    "photo": "/media/person.svg",
+    "role": "Pastor",
+    "title": "Fr. Thomas Reed"
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-about",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-about",
+                "align": "left",
+                "className": "",
+                "level": "h1",
+                "text": "About us"
+              }
+            },
+            {
+              "type": "Grid",
+              "props": {
+                "id": "Grid-about",
+                "className": "mt-8",
+                "columns": "2",
+                "gap": "lg",
+                "items": [
+                  {
+                    "type": "Text",
+                    "props": {
+                      "id": "Text-history",
+                      "align": "left",
+                      "className": "",
+                      "content": "<p>St. Joseph Parish began in 1921, when a handful of families started meeting for Mass in a rented hall on Main Street. The church they built a few years later still stands at the corner of Church Street, and today the parish is home to families from all over Anytown.</p><p>We're a parish of all ages: young families, students, longtime parishioners and newcomers. Together we worship, serve our neighbors through the food pantry and visiting the sick, and support the parish school.</p>"
+                    }
+                  },
+                  {
+                    "type": "Image",
+                    "props": {
+                      "id": "Image-about",
+                      "alt": "The church at night",
+                      "aspect": "landscape",
+                      "caption": "",
+                      "className": "",
+                      "rounded": true,
+                      "src": "/media/church.svg"
+                    }
+                  }
+                ]
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      },
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-staff",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-staff",
+                "align": "left",
+                "className": "mb-8",
+                "level": "h2",
+                "text": "Parish staff"
+              }
+            },
+            {
+              "type": "CollectionLoop",
+              "props": {
+                "id": "CollectionLoop-staff",
+                "allLabel": "All",
+                "choicePages": "",
+                "className": "",
+                "collection": "staff",
+                "columns": "4",
+                "dateField": "",
+                "design": [
+                  {
+                    "type": "Image",
+                    "props": {
+                      "id": "Image-staff-photo",
+                      "alt": "{title}",
+                      "aspect": "square",
+                      "caption": "",
+                      "className": "",
+                      "rounded": true,
+                      "src": "{photo}"
+                    }
+                  },
+                  {
+                    "type": "Heading",
+                    "props": {
+                      "id": "Heading-staff-name",
+                      "align": "left",
+                      "className": "text-lg",
+                      "level": "h3",
+                      "text": "{title}"
+                    }
+                  },
+                  {
+                    "type": "Text",
+                    "props": {
+                      "id": "Text-staff-role",
+                      "align": "left",
+                      "className": "text-muted-foreground",
+                      "content": "<p>{role}</p>"
+                    }
+                  }
+                ],
+                "emptyText": "",
+                "filterField": "",
+                "filterValue": "",
+                "gap": "md",
+                "items": [],
+                "limit": 0,
+                "linkToPage": false,
+                "nextLabel": "Next",
+                "order": "default",
+                "pageTitle": "Page {number}",
+                "pagesLabel": "Pages",
+                "paginate": false,
+                "previousLabel": "Previous",
+                "show": "all",
+                "sortField": ""
+              }
+            }
+          ],
+          "padding": "md",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "The history of St. Joseph Parish, and the people who serve it.",
+        "image": "",
+        "title": "About us"
+      }
+    }
+  }
+}

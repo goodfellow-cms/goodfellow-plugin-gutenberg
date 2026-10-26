@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "fields": {
+    "date": "2026-07-19",
+    "image": "/media/placeholder.svg",
+    "summary": "After a summer of scaffolding, the bells ring again every Sunday morning.",
+    "text": "<p>Thank you for your patience while the tower was repaired, and to everyone who gave to the building fund to make it possible.</p>",
+    "title": "Bell tower repairs are finished",
+    "topics": [
+      "parish-life"
+    ]
+  }
+}

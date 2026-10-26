@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-header",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-header",
+                "align": "center",
+                "className": "",
+                "direction": "row",
+                "gap": "md",
+                "items": [
+                  {
+                    "type": "SiteBrand",
+                    "props": {
+                      "id": "SiteBrand-header",
+                      "className": "",
+                      "show": "both"
+                    }
+                  },
+                  {
+                    "type": "Menu",
+                    "props": {
+                      "id": "Menu-main",
+                      "className": "",
+                      "menu": "main",
+                      "orientation": "horizontal"
+                    }
+                  },
+                  {
+                    "type": "LanguageSwitch",
+                    "props": {
+                      "id": "LanguageSwitch-header",
+                      "className": "",
+                      "display": "links",
+                      "label": "Languages"
+                    }
+                  }
+                ],
+                "justify": "between",
+                "wrap": true
+              }
+            }
+          ],
+          "padding": "sm",
+          "width": "wide"
+        }
+      }
+    ],
+    "root": {
+      "props": {}
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "fields": {
+    "image": "/media/candles.svg",
+    "place": "Church",
+    "summary": "Prepare for Christmas with a short service and individual confession, with several priests available.",
+    "text": "<p>The service begins with readings and an examination of conscience, followed by the chance to go to confession. It usually ends by 8:30 pm.</p>",
+    "title": "Advent penance service",
+    "when": {
+      "end": "2026-12-09T20:30",
+      "start": "2026-12-09T19:00"
+    }
+  }
+}

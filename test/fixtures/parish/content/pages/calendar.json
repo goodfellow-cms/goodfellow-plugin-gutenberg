@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "data": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-calendar",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "Heading",
+              "props": {
+                "id": "Heading-calendar",
+                "align": "left",
+                "className": "mb-8",
+                "level": "h1",
+                "text": "Calendar"
+              }
+            },
+            {
+              "type": "Calendar",
+              "props": {
+                "id": "Calendar-month",
+                "addLabel": "Add to calendar",
+                "className": "",
+                "collection": "events",
+                "days": 90,
+                "emptyText": "Nothing is planned this month yet.",
+                "feed": "",
+                "limit": 0,
+                "monthsAfter": 12,
+                "monthsBefore": 1,
+                "nextLabel": "Next month",
+                "otherCalendarsLabel": "Apple Calendar and others",
+                "previousLabel": "Previous month",
+                "subscribeLabel": "Subscribe to the parish calendar",
+                "view": "month",
+                "weekStart": "sunday"
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "normal"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "St. Joseph Parish's events, a month at a time.",
+        "image": "",
+        "title": "Calendar"
+      }
+    }
+  }
+}

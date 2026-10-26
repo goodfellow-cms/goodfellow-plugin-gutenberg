@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "calendar": {
+    "place": "place",
+    "summary": "summary",
+    "when": "when"
+  },
+  "entryName": "Event",
+  "fields": [
+    {
+      "type": "text",
+      "label": "Title",
+      "name": "title",
+      "required": true
+    },
+    {
+      "type": "event",
+      "label": "Date and time",
+      "name": "when",
+      "required": true
+    },
+    {
+      "type": "text",
+      "hint": "Such as the church or the parish hall.",
+      "label": "Place",
+      "name": "place"
+    },
+    {
+      "type": "textarea",
+      "hint": "One or two sentences, shown in lists of events.",
+      "label": "Summary",
+      "name": "summary"
+    },
+    {
+      "type": "image",
+      "label": "Picture",
+      "name": "image"
+    },
+    {
+      "type": "richtext",
+      "label": "Details",
+      "name": "text"
+    }
+  ],
+  "languagePaths": {
+    "es": "/es/eventos/{slug}"
+  },
+  "name": "Events",
+  "path": "/events/{slug}",
+  "sort": {
+    "field": "when",
+    "order": "asc"
+  },
+  "template": {
+    "content": [
+      {
+        "type": "Section",
+        "props": {
+          "id": "Section-event",
+          "background": "none",
+          "backgroundImage": "",
+          "className": "",
+          "content": [
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-date",
+                "className": "",
+                "field": "when",
+                "style": "small"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-title",
+                "className": "mt-2",
+                "field": "title",
+                "style": "title"
+              }
+            },
+            {
+              "type": "Flex",
+              "props": {
+                "id": "Flex-event-when",
+                "align": "center",
+                "className": "mt-4 text-lg",
+                "direction": "row",
+                "gap": "lg",
+                "items": [
+                  {
+                    "type": "EntryField",
+                    "props": {
+                      "id": "EntryField-place",
+                      "className": "",
+                      "field": "place",
+                      "style": "text"
+                    }
+                  }
+                ],
+                "justify": "start",
+                "wrap": true
+              }
+            },
+            {
+              "type": "AddToCalendar",
+              "props": {
+                "id": "AddToCalendar-event",
+                "addLabel": "Add to calendar",
+                "className": "mt-4",
+                "otherCalendarsLabel": "Apple Calendar and others"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-image",
+                "className": "mt-8",
+                "field": "image",
+                "style": "text"
+              }
+            },
+            {
+              "type": "EntryField",
+              "props": {
+                "id": "EntryField-text",
+                "className": "mt-8",
+                "field": "text",
+                "style": "text"
+              }
+            },
+            {
+              "type": "Button",
+              "props": {
+                "id": "Button-events",
+                "className": "mt-10",
+                "href": "/events",
+                "label": "All events",
+                "newTab": false,
+                "size": "md",
+                "variant": "outline"
+              }
+            }
+          ],
+          "padding": "lg",
+          "width": "narrow"
+        }
+      }
+    ],
+    "root": {
+      "props": {
+        "className": "",
+        "description": "{summary}",
+        "image": "{image}",
+        "title": "{title}"
+      }
+    }
+  }
+}

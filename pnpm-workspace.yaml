@@ -1,0 +1,9 @@
+overrides:
+  # As in Goodfellow's own workspace: Puck renders rich text on the server with
+  # @tiptap/html, which asks for happy-dom 20; only 21.0.4 and later fix
+  # GHSA-834v-8h66-3h79.
+  "@puckeditor/core>happy-dom": "^21.0.4"
+
+peerDependencyRules:
+  allowedVersions:
+    "@tiptap/html>happy-dom": "21"
