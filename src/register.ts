@@ -6,7 +6,11 @@
 import type { SiteDescription } from "@goodfellow-cms/core";
 import { type BlockConfiguration, getBlockType, registerBlockType, unregisterBlockType } from "@wordpress/blocks";
 import type { ComponentType } from "react";
-import { type BlockNames, blockNames, SLOT_BLOCK } from "./names.js";
+import { type BlockNames, blockNames, SLOT_BLOCK, slotNames } from "./names.js";
+
+function withoutSlots(props: Record<string, unknown>, slots: string[]): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(props).filter(([key]) => !slots.includes(key)));
+}
 
 /** What Gutenberg gives a block's `edit` component, as far as the plugin uses it. */
 export interface EditProps {
@@ -40,7 +44,10 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       apiVersion: 3,
       title: block?.label ?? type,
       category: "design",
-      attributes: { props: { type: "object", default: {} } },
+      // A block just added starts with the site's defaults for it, without its slots, which are blocks of their own,
+      // one for each slot, which then stay as they are (`templateLock: "all"`).
+      attributes: { props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) } },
+      template: slotNames(block).map((slot) => [SLOT_BLOCK, { slot }]),
       // Every block's look is the site's own, so Gutenberg's own options for it stay off for now.
       supports: { html: false, reusable: false, customClassName: false, className: false },
       edit: options.edit,
