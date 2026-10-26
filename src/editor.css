@@ -76,3 +76,192 @@ body,
   border-left: 1px solid #e0e0e0;
   background: #fff;
 }
+
+/*
+ * The drawn blocks as the site styles them. Goodfellow 0.6.0 styles plugin
+ * frames' headings, paragraphs, lists, links and form elements for screens,
+ * outside any layer, which would win over the site's own layered styles; later
+ * releases leave editor plugins' frames alone. Gutenberg's own controls in
+ * slots keep their styles.
+ */
+.gf-block-html
+  :is(h1, h2, h3, section, p, a, label, input, select, textarea, button, small, ol, ul, li, code, pre, details, summary):not(
+    [class*="block-editor"],
+    [class*="components-"]
+  ) {
+  all: revert-layer;
+}
+
+/* Text edited in place: where it is in the block, with what it's for while it's empty. */
+.gf-block-html .gf-in-place {
+  outline: none;
+  cursor: text;
+}
+
+.gf-block-html .gf-in-place:focus {
+  box-shadow: 0 0 0 1px var(--wp-admin-theme-color, #3858e9);
+  border-radius: 2px;
+}
+
+.gf-block-html .gf-in-place:empty::before {
+  content: attr(data-placeholder);
+  opacity: 0.6;
+}
+
+.gf-block-html .gf-in-place-textarea {
+  white-space: pre-wrap;
+}
+
+/* The sidebar's own fields: lists of items, tables, media, rich text and notes. */
+.gf-field + .gf-field {
+  margin-top: 16px;
+}
+
+.gf-group {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.gf-group-label {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.gf-list-items {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+}
+
+.gf-list-item {
+  border: 1px solid #ddd;
+  border-radius: 2px;
+  margin-bottom: 4px;
+}
+
+.gf-list-item-head {
+  display: flex;
+  align-items: center;
+}
+
+.gf-list-item-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  justify-content: flex-start;
+}
+
+.gf-list-item-fields {
+  padding: 8px 12px 12px;
+  border-top: 1px solid #ddd;
+}
+
+.gf-table-grid {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.gf-table-cell {
+  min-width: 0;
+  padding: 4px 6px;
+  border: 1px solid #949494;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 13px;
+}
+
+.gf-table-actions,
+.gf-media-actions,
+.gf-link-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.gf-media-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 120px;
+  border-radius: 2px;
+}
+
+.gf-media-name {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.gf-rich-text-toolbar {
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.gf-rich-text-field {
+  min-height: 80px;
+  padding: 6px 8px;
+  border: 1px solid #949494;
+  border-radius: 2px;
+  font-size: 13px;
+}
+
+.gf-rich-text-field:focus {
+  outline: 2px solid var(--wp-admin-theme-color, #3858e9);
+  outline-offset: -1px;
+}
+
+.gf-field-note {
+  margin: 0;
+  font-size: 12px;
+  color: #50575e;
+}
+
+.gf-link-form {
+  width: 280px;
+  padding: 12px;
+}
+
+.gf-link-pages {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+}
+
+.gf-link-path {
+  margin-left: 6px;
+  color: #757575;
+}
+
+.gf-share-preview {
+  margin: 16px 0 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.gf-share-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1.91;
+  object-fit: cover;
+}
+
+.gf-share-preview figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px;
+}
+
+.gf-share-host {
+  color: #757575;
+  text-transform: uppercase;
+}
