@@ -28,6 +28,15 @@ export function sessionRenderer(session: Pick<PluginEditorSession, "blocks" | "d
   };
 }
 
+/** Adds a stylesheet to the frame's page, once. */
+function loadStylesheet(doc: Document, href: string) {
+  if ([...doc.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]')].some((link) => link.href === href)) return;
+  const link = doc.createElement("link");
+  link.rel = "stylesheet";
+  link.href = href;
+  doc.head.append(link);
+}
+
 const admin: PluginAdmin = {
   editor: {
     async mount(element, session) {
@@ -70,7 +79,12 @@ const admin: PluginAdmin = {
         );
       draw([]);
       session.styles().then(
-        ({ stylesheets }) => draw(stylesheets.map((css) => ({ css }))),
+        (styles) => {
+          draw(styles.stylesheets.map((css) => ({ css })));
+          // The theme's Google Fonts, which Goodfellow after 0.6.0 gives and lets editor plugins' frames load.
+          const fonts = (styles as { fonts?: string }).fonts;
+          if (fonts) loadStylesheet((element as HTMLElement).ownerDocument, fonts);
+        },
         () => {},
       );
 

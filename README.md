@@ -65,7 +65,7 @@ A page's data goes into Gutenberg and comes back exactly as it was, keys and all
 - **Gutenberg's styling options** (colors, spacing, typography), kept as Tailwind classes in each block's `className`, compiled in the canvas from `session.styles()`'s Tailwind source.
 - **Text edited in place,** for fields marked `contentEditable`, such as a heading's text.
 - **Pasted HTML** as the site's blocks, with `htmlBlocks()` from `@goodfellow-cms/core/wordpress`.
-- **Fonts.** The frame's policy allows fonts from the site's own address only, so the theme's Google Fonts don't load in the canvas yet.
+- **Fonts.** The plugin loads the theme's Google Fonts where Goodfellow gives them (`session.styles().fonts`, after 0.6.0, goodfellow-cms/goodfellow-cms#113), whose editor plugins' frames may load them; with 0.6.0, headings fall back to the computer's fonts.
 - **Rendering while it loads.** Each block is drawn once the site's code answers, rather than from its fields first.
 
 ## Trying it
