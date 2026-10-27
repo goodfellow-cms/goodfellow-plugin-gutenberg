@@ -28,6 +28,11 @@ const description: Pick<SiteDescription, "blocks"> = {
       },
       defaultProps: { text: "Heading", level: "h2", className: "" },
     },
+    Button: {
+      label: "Button",
+      fields: { label: { type: "text", contentEditable: true }, href: { type: "text" } },
+      defaultProps: { label: "Learn more", href: "" },
+    },
     Section: {
       label: "Section",
       fields: { content: { type: "slot" }, className: { type: "text" } },
@@ -60,11 +65,12 @@ describe("transforms", () => {
     expect(transformed(back, "Text")[0]?.props.text).toBe("<p>Fish &amp; &lt;chips&gt;</p>");
   });
 
-  it("offers none to or from blocks with slots, or whose words aren't one field", () => {
+  it("offers none to or from blocks with slots, or that need a link or file as well as words", () => {
     const transforms = (type: string) =>
       (getBlockType(name(type)) as { transforms?: { to?: { blocks: string[] }[] } }).transforms?.to ?? [];
     expect(transforms("Text").map((transform) => transform.blocks)).toEqual([[name("Heading")]]);
     expect(transforms("Section")).toEqual([]);
+    expect(transforms("Button")).toEqual([]);
   });
 
   it("keeps paragraphs and lines apart going into rich text, and one line going into a heading", () => {

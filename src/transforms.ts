@@ -15,9 +15,20 @@ import { stylesFromClasses } from "./styles.js";
 
 type Description = Pick<SiteDescription, "blocks">;
 
-/** The field a block's words are in, where they're in one: rich text before plain, as Text has. */
+/** A link's or a file's field, which words alone can't fill in, as a button's or a download's need. */
+function needsMore(name: string, field: unknown): boolean {
+  const metadata = (field as { metadata?: { media?: unknown } } | undefined)?.metadata;
+  return metadata?.media !== undefined || /^(href|url|link|src|file)$/i.test(name);
+}
+
+/**
+ * The field a block's words are in, where they're all it needs: rich text
+ * before plain, as Text has. Blocks with slots, or a link or file of their
+ * own, such as a button or a download, aren't made from words alone.
+ */
 export function wordsField(block: Description["blocks"][string] | undefined): InPlaceField | undefined {
   if (!block || slotNames(block).length > 0) return undefined;
+  if (Object.entries(block.fields).some(([name, field]) => needsMore(name, field))) return undefined;
   const fields = inPlaceFields(block.fields);
   return fields.find((field) => field.type === "richtext") ?? fields[0];
 }
