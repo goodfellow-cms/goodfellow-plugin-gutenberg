@@ -44,6 +44,7 @@
     }
   },
   "dependencies": {
+    "@tailwindcss/browser": "4.3.3",
     "@wordpress/block-editor": "18.1.0",
     "@wordpress/blocks": "16.2.0",
     "@wordpress/components": "42.0.0",

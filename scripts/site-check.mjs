@@ -4,8 +4,8 @@
 // Gutenberg in the editor's header, checks the page is drawn as the site draws
 // it, changes a heading in the sidebar, takes it back and forward with the
 // header's Undo and Redo, types in the heading where it shows, makes a word of
-// rich text bold, pastes HTML, publishes, and reads the changes from the
-// page's file.
+// rich text bold, gives the heading a theme color in the Styles tab, pastes
+// HTML, publishes, and reads the changes from the page's file.
 //
 //   pnpm build && node scripts/site-check.mjs
 //
@@ -150,6 +150,26 @@ try {
   await text.locator(":is(b, strong)", { hasText: "This" }).waitFor();
   check(true, "a word is made bold with the block's toolbar");
 
+  // Gutenberg's styling options: a theme color chosen for the heading's text is a Tailwind class, compiled in the
+  // frame though the site's last build hasn't seen it, and drawn on the canvas.
+  await heading.focus();
+  const before = await heading.evaluate((element) => getComputedStyle(element).color);
+  await sidebar.getByRole("tab", { name: "Styles" }).click();
+  await sidebar.getByRole("button", { name: "Color", exact: true }).first().click();
+  await frame.getByRole("option", { name: "Highlight", exact: true }).click();
+  await page.keyboard.press("Escape");
+  await frame.locator(".editor-styles-wrapper h1.text-accent").waitFor();
+  await frame.locator(".editor-styles-wrapper h1.text-accent").evaluate(
+    (element, color) =>
+      new Promise((done) => {
+        const wait = () => (getComputedStyle(element).color !== color ? done() : setTimeout(wait, 100));
+        wait();
+      }),
+    before,
+  );
+  check(true, "a theme color chosen in the Styles tab is a Tailwind class, drawn on the canvas");
+  await sidebar.getByRole("tab", { name: "Settings" }).click();
+
   // Pasted HTML becomes the site's blocks, after the block selected: the heading, pasted on as a block rather than
   // into its text (focused rather than clicked, since the toolbar of the block beside it can be over it).
   await heading.focus();
@@ -174,9 +194,12 @@ try {
   check(first.props.content[1].props.text === "Pasted heading", "the pasted heading's text was published");
   check(first.props.content[0].props.text === "Typed in place", "the text typed in place was published");
   check(first.props.content[3].props.content.startsWith("<p><strong>This</strong> page"), "the bold word was published");
+  const className = first.props.content[0].props.className;
+  check(className.split(" ").includes("text-accent"), `the color was published as a class (${className})`);
   // Without what was changed, the page is as it was.
   first.props.content.splice(1, 2);
   first.props.content[0].props.text = "Welcome to my site";
+  first.props.content[0].props.className = original.data.content[0].props.content[0].props.className;
   first.props.content[1].props.content = original.data.content[0].props.content[1].props.content;
   check(JSON.stringify(saved) === JSON.stringify(original), "Publish saved those changes, and nothing else");
 } finally {

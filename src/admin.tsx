@@ -19,6 +19,8 @@ import { editHistory } from "./history.js";
 import { blockNames } from "./names.js";
 import { outlineRenderer } from "./outline.js";
 import { registerBlocks } from "./register.js";
+import { styleFeatures } from "./styles.js";
+import { compileTailwind } from "./tailwind.js";
 
 /** Draws blocks as the site does, or from their fields alone where the site's code can't. */
 export function sessionRenderer(session: Pick<PluginEditorSession, "blocks" | "draw">): BlockRenderer {
@@ -63,6 +65,7 @@ const admin: PluginAdmin = {
 
       // The site's stylesheets, with its theme, scoped to the canvas: blocks are drawn as they are until they come.
       const root = createRoot(element as HTMLElement);
+      const features = styleFeatures(session.settings.theme?.colors);
       const draw = (styles: { css: string }[]) =>
         root.render(
           <Editor
@@ -73,6 +76,7 @@ const admin: PluginAdmin = {
             styles={styles}
             services={{ chooseMedia: (kind, value) => session.chooseMedia(kind, value), pages: session.pages }}
             sharePreview={session.kind === "header" || session.kind === "footer" ? undefined : (root) => session.sharePreview(root)}
+            features={features}
             onSelect={(id) => {
               if (id === selected) return;
               selected = id;
@@ -81,9 +85,16 @@ const admin: PluginAdmin = {
           />,
         );
       draw([]);
+      let stopTailwind: (() => void) | undefined;
       session.styles().then(
         (styles) => {
-          draw(styles.stylesheets.map((css) => ({ css })));
+          const site = styles.stylesheets.map((css) => ({ css }));
+          draw(site);
+          // Classes the site's last build hasn't seen, such as ones just chosen in Gutenberg's styling options,
+          // compiled in the frame from the site's Tailwind source and scoped to the canvas with the site's own.
+          stopTailwind = compileTailwind((element as HTMLElement).ownerDocument, styles.tailwind, (css) =>
+            draw([...site, { css }]),
+          );
           // The theme's Google Fonts, which Goodfellow after 0.6.0 gives and lets editor plugins' frames load.
           const fonts = (styles as { fonts?: string }).fonts;
           if (fonts) loadStylesheet((element as HTMLElement).ownerDocument, fonts);
@@ -100,7 +111,10 @@ const admin: PluginAdmin = {
         redo: () => {
           history.redo();
         },
-        destroy: () => root.unmount(),
+        destroy: () => {
+          stopTailwind?.();
+          root.unmount();
+        },
       };
     },
   },

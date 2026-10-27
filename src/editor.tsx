@@ -16,7 +16,7 @@ import {
 } from "@wordpress/block-editor";
 import type { Block as BlockInstance } from "@wordpress/blocks";
 import { useRegistry, useSelect } from "@wordpress/data";
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useSyncExternalStore } from "react";
 import { withBlockIds } from "./convert.js";
 import { FieldsPanel } from "./fields.js";
 import type { EditHistory } from "./history.js";
@@ -45,6 +45,8 @@ export interface EditorProps {
   services: EditorServices;
   /** How a link to the page looks when it's shared; the header and footer have none. */
   sharePreview?(root: PluginEditorData["root"]): Promise<PluginSharePreview>;
+  /** What Gutenberg's styling options offer (its theme.json features), from the site's theme: `styleFeatures()`. */
+  features?: Record<string, unknown>;
 }
 
 /** The selected block's id, as content has it, for the AI assistant. */
@@ -112,7 +114,9 @@ export function Editor({
   onSelect,
   services,
   sharePreview,
+  features,
 }: EditorProps) {
+  const settings = useMemo(() => ({ __experimentalFeatures: features ?? {} }), [features]);
   const page = useSyncExternalStore(history.subscribe, () => history.present);
   const setBlocks = (changed: BlockInstance[], keep: boolean) => {
     if (changed === history.present.blocks) return;
@@ -126,7 +130,7 @@ export function Editor({
       value={page.blocks}
       onInput={(blocks) => setBlocks(blocks, false)}
       onChange={(blocks) => setBlocks(blocks, true)}
-      settings={{}}
+      settings={settings}
     >
       <Services.Provider value={services}>
         <div className="gf-editor">
