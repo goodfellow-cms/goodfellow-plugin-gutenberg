@@ -7,6 +7,7 @@ import type { SiteDescription } from "@goodfellow-cms/core";
 import { InnerBlocks } from "@wordpress/block-editor";
 import { type BlockConfiguration, getBlockType, registerBlockType, unregisterBlockType } from "@wordpress/blocks";
 import { type ComponentType, createElement } from "react";
+import { blockIcon } from "./icons.js";
 import { type BlockNames, blockNames, SLOT_BLOCK, slotNames } from "./names.js";
 import { STYLE_SUPPORTS } from "./styles.js";
 
@@ -65,6 +66,7 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       apiVersion: 3,
       title: block?.label ?? type,
       category: "design",
+      icon: blockIcon((block as { icon?: unknown } | undefined)?.icon),
       // A block just added starts with the site's defaults for it, without its slots, which are blocks of their own,
       // one for each slot, which then stay as they are (`templateLock: "all"`).
       attributes: { props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) } },
@@ -81,11 +83,22 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       save: saveInnerBlocks,
     } as unknown as BlockConfiguration);
   }
+  // In the document overview, a slot is named as its field is, such as "Columns" or "Content".
+  const slotLabels = new Map<string, string>();
+  for (const type of blocks) {
+    const fields = description.blocks[type]?.fields ?? {};
+    for (const slot of slotNames(description.blocks[type])) {
+      const label = (fields[slot] as { label?: unknown } | undefined)?.label;
+      if (typeof label === "string" && !slotLabels.has(slot)) slotLabels.set(slot, label);
+    }
+  }
   registerBlockType(SLOT_BLOCK, {
     apiVersion: 3,
     title: "Slot",
     category: "design",
     parent: all,
+    __experimentalLabel: ({ slot = "" }: { slot?: string }) =>
+      slotLabels.get(slot) ?? (slot ? slot.charAt(0).toUpperCase() + slot.slice(1) : "Slot"),
     attributes: { slot: { type: "string", default: "" } },
     supports: { html: false, reusable: false, inserter: false, customClassName: false, className: false, lock: false },
     edit: options.slotEdit,

@@ -56,16 +56,107 @@ body,
   background: #fff;
 }
 
+/*
+ * The frame stays the size the admin panel gives it: only the canvas and the
+ * sidebars scroll. The page itself can't, even when something in Gutenberg
+ * scrolls an element into view, as its Styles tab does.
+ */
+html,
+body {
+  overflow: clip;
+}
+
 .gf-editor {
+  position: fixed;
+  inset: 0;
   display: flex;
-  width: 100%;
-  height: 100vh;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.gf-editor-toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  height: 48px;
+  padding: 0 8px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.gf-editor-main {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.gf-editor-left {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  flex: none;
+  border-right: 1px solid #e0e0e0;
+  background: #fff;
+}
+
+.gf-editor-left-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: none;
+  height: 48px;
+  padding: 0 8px 0 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.gf-editor-left-head h2 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.gf-editor-left-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.gf-editor-left-body > .block-editor-list-view-tree {
+  padding: 8px;
+}
+
+/* "/" in text: the blocks it finds. */
+.gf-slash .components-popover__content {
+  min-width: 220px;
+  padding: 4px;
+}
+
+.gf-slash-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 2px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.gf-slash-item.is-active {
+  background: var(--wp-admin-theme-color, #3858e9);
+  color: #fff;
+}
+
+.gf-slash-none {
+  margin: 0;
+  padding: 8px;
+  font-size: 13px;
 }
 
 .gf-editor-canvas {
   flex: 1;
   min-width: 0;
+  min-height: 0;
   position: relative;
 }
 

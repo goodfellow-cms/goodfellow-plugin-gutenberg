@@ -1,7 +1,7 @@
 /** Rich text keeps only what Puck's rich text editor makes, whatever a browser or a paste adds. */
 import { describe, expect, it } from "vitest";
 import { escapeText, itemSummary, tableRows } from "../src/fields.js";
-import { cleanRichText, isSafeAddress } from "../src/rich-text.js";
+import { cleanRichText, isSafeAddress, tidyRichText } from "../src/rich-text.js";
 
 const clean = (html: string) => cleanRichText(html, document);
 
@@ -55,5 +55,53 @@ describe("the sidebar's fields", () => {
       ["c", ""],
     ]);
     expect(tableRows(undefined)).toEqual([]);
+  });
+});
+
+describe("rich text being edited", () => {
+  const editing = (html: string) => {
+    const element = document.createElement("div");
+    element.contentEditable = "true";
+    element.innerHTML = html;
+    document.body.append(element);
+    return element;
+  };
+
+  it("puts lists and headings a browser leaves in a paragraph beside it", () => {
+    expect(clean("<p>Before<ul><li>One</li></ul>after</p>")).toBe("<p>Before</p><ul><li>One</li></ul><p>after</p>");
+    expect(clean("<p><ol><li>One</li></ol></p>")).toBe("<ol><li>One</li></ol>");
+    // As a browser's editing leaves it in the page, and as reading it back as HTML does.
+    expect(cleanRichText("<p></p><ol><li>One</li></ol><p></p>", document, { keepEmpty: true })).toBe("<ol><li>One</li></ol>");
+  });
+
+  it("keeps the line just started while it's edited, but not in what's kept", () => {
+    expect(cleanRichText("<p>One</p><p><br></p>", document, { keepEmpty: true })).toBe("<p>One</p><p><br></p>");
+    expect(clean("<p>One</p><p><br></p>")).toBe("<p>One</p>");
+  });
+
+  it("takes out what the browser's editing wraps text in, keeping the selection where it was", () => {
+    const element = editing(
+      '<ul><li><span style="background-color: rgb(255, 255, 255); font-family: &quot;Source Sans 3&quot;;">First</span> item</li></ul>',
+    );
+    const text = element.querySelector("span")?.firstChild as Text;
+    const selection = document.getSelection() as Selection;
+    const range = document.createRange();
+    range.setStart(text, 2);
+    range.setEnd(text, 4);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    expect(tidyRichText(element)).toBe(true);
+    expect(element.innerHTML).toBe("<ul><li>First item</li></ul>");
+    expect(selection.toString()).toBe("rs");
+    expect(tidyRichText(element)).toBe(false);
+    element.remove();
+  });
+
+  it("leaves rich text that's as it's kept alone", () => {
+    const element = editing("<p>One <strong>two</strong></p><p><br></p>");
+    expect(tidyRichText(element)).toBe(false);
+    expect(element.innerHTML).toBe("<p>One <strong>two</strong></p><p><br></p>");
+    element.remove();
   });
 });

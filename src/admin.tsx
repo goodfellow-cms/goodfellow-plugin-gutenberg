@@ -11,6 +11,7 @@ import "@wordpress/block-editor/build-style/style.css";
 import "@wordpress/block-editor/build-style/content.css";
 import "./editor.css";
 import type { PluginAdmin, PluginEditorData, PluginEditorSession } from "@goodfellow-cms/core";
+import { setDefaultBlockName } from "@wordpress/blocks";
 import { createRoot } from "react-dom/client";
 import { fromGutenberg, toGutenberg } from "./convert.js";
 import { type BlockRenderer, blockEditors } from "./edit.js";
@@ -45,6 +46,8 @@ const admin: PluginAdmin = {
       const description = { blocks: session.blocks };
       const names = blockNames(description);
       registerBlocks(description, { ...blockEditors(description, names, sessionRenderer(session)), templates: true });
+      // "Type / to choose a block" at the end of the page adds the site's Text, as it adds a paragraph in WordPress.
+      if (description.blocks.Text) setDefaultBlockName(names.toGutenberg("Text") as string);
 
       const toPage = (data: PluginEditorData): EditedPage => ({
         blocks: toGutenberg(data.content, description, names),

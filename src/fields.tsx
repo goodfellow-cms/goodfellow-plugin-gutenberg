@@ -18,7 +18,7 @@ import {
 } from "@wordpress/components";
 import { arrowDown, arrowUp, plus, trash } from "@wordpress/icons";
 import { type ReactNode, useContext, useEffect, useId, useRef, useState } from "react";
-import { cleanRichText } from "./rich-text.js";
+import { cleanRichText, tidyRichText } from "./rich-text.js";
 import { RichTextTools, Services } from "./rich-text-tools.js";
 
 /** A field as the site's description has it: Puck's field, as JSON. */
@@ -147,7 +147,10 @@ function RichTextControl({ name, field, value, onChange }: ControlProps) {
         role="textbox"
         aria-multiline="true"
         tabIndex={0}
-        onInput={(event) => onChange(cleanRichText(event.currentTarget.innerHTML, event.currentTarget.ownerDocument))}
+        onInput={(event) => {
+          tidyRichText(event.currentTarget);
+          onChange(cleanRichText(event.currentTarget.innerHTML, event.currentTarget.ownerDocument));
+        }}
         onPaste={pasteRichText}
       />
     </BaseControl>

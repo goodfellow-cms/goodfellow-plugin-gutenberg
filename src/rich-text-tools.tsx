@@ -42,7 +42,10 @@ function format(elements: readonly HTMLElement[], command: string, value?: strin
   const found = selectionIn(elements);
   if (!found) return;
   found.element.focus();
-  found.element.ownerDocument.execCommand(command, false, value);
+  const doc = found.element.ownerDocument;
+  // Formatting as elements (`<b>`), never as styles, which rich text doesn't keep.
+  doc.execCommand("styleWithCSS", false, "false");
+  doc.execCommand(command, false, value);
 }
 
 /** The link the selection is in, if any. */
