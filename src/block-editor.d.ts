@@ -40,6 +40,19 @@ declare module "@wordpress/block-editor" {
     tabIndex?: number;
     style?: CSSProperties;
   }>;
+  /** A block type's icon, as Gutenberg's lists show it. */
+  export const BlockIcon: ComponentType<{ icon?: unknown; showColors?: boolean; className?: string }>;
+  /** The inserter's list of blocks, as Gutenberg's sidebar shows it. */
+  export const __experimentalLibrary: ComponentType<{
+    rootClientId?: string;
+    showInserterHelpPanel?: boolean;
+    showMostUsedBlocks?: boolean;
+    shouldFocusBlock?: boolean;
+    onSelect?: () => void;
+    onClose?: () => void;
+  }>;
+  /** The document overview: every block, nested as they are. */
+  export const __experimentalListView: ComponentType<{ showBlockMovers?: boolean; isExpanded?: boolean }>;
   /** Puts styles in the page, scoped to `scope`, as the canvas does without its iframe. */
   export const __unstableEditorStyles: ComponentType<{ styles: { css: string }[]; scope?: string }>;
 }

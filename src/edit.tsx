@@ -9,13 +9,15 @@
  */
 import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
-import { BlockControls, useBlockProps, useInnerBlocksProps } from "@wordpress/block-editor";
+import { BlockControls, store as blockEditorStore, useBlockProps, useInnerBlocksProps } from "@wordpress/block-editor";
+import { createBlock, getDefaultBlockName } from "@wordpress/blocks";
+import { useRegistry } from "@wordpress/data";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { type GoodfellowAttributes, type SlotAttributes, withStyleClasses } from "./convert.js";
 import { BlockFields, pasteRichText } from "./fields.js";
 import { type InPlaceField, inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "./in-place.js";
-import { cleanRichText } from "./rich-text.js";
+import { cleanRichText, tidyRichText } from "./rich-text.js";
 import { RichTextTools } from "./rich-text-tools.js";
 import type { BlockNames } from "./names.js";
 import { type EditProps, hasClassName } from "./register.js";
@@ -47,9 +49,51 @@ function stayOnCanvas(event: { target: EventTarget | null; type: string; prevent
   if (event.type === "submit" || target?.closest?.("a[href]")) event.preventDefault();
 }
 
+/** How soon after a block is added its text is ready to type in, in milliseconds: the site draws it first. */
+const JUST_ADDED = 5_000;
+
+interface BlockStore {
+  getBlockRootClientId(clientId: string): string | null;
+  getBlockIndex(clientId: string): number;
+  canInsertBlockType(name: string, rootClientId?: string | null): boolean;
+}
+
+interface BlockChanges {
+  insertBlocks(
+    blocks: unknown[],
+    index: number,
+    rootClientId?: string | null,
+    updateSelection?: boolean,
+    initialPosition?: number,
+  ): void;
+}
+
 /** The `edit` and `slotEdit` components for `registerBlocks()`, drawing blocks with `renderer`. */
 export function blockEditors(description: Pick<SiteDescription, "blocks">, names: BlockNames, renderer: BlockRenderer) {
-  function GoodfellowEdit({ name, attributes, setAttributes, isSelected }: EditProps) {
+  /**
+   * Enter at the end of a one-line field, such as a heading's, adds the
+   * site's Text after the block, empty, as Enter adds a paragraph in WordPress.
+   */
+  function addAfter(registry: ReturnType<typeof useRegistry>, clientId: string) {
+    const name = getDefaultBlockName();
+    const store = registry.select(blockEditorStore) as unknown as BlockStore;
+    const rootClientId = store.getBlockRootClientId(clientId);
+    if (!name || !store.canInsertBlockType(name, rootClientId)) return;
+    const block = createBlock(name) as { attributes: { props?: Record<string, unknown> } };
+    const fields = description.blocks[names.fromGutenberg(name) as string]?.fields ?? {};
+    const empty = Object.fromEntries(inPlaceFields(fields).map((field) => [field.name, ""]));
+    block.attributes.props = { ...block.attributes.props, ...empty };
+    (registry.dispatch(blockEditorStore) as unknown as BlockChanges).insertBlocks(
+      [block],
+      store.getBlockIndex(clientId) + 1,
+      rootClientId,
+      true,
+      0,
+    );
+  }
+
+  function GoodfellowEdit({ name, attributes, setAttributes, isSelected, clientId }: EditProps) {
+    const registry = useRegistry();
     const type = names.fromGutenberg(name) as string;
     const props = (attributes as GoodfellowAttributes).props;
     const fields = description.blocks[type]?.fields ?? {};
@@ -74,8 +118,9 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
     }, [type, key]);
 
     // The latest props, for edits made in the drawn HTML, which isn't React's.
-    const latest = useRef({ props, setAttributes });
-    latest.current = { props, setAttributes };
+    const latest = useRef({ props, setAttributes, clientId });
+    latest.current = { props, setAttributes, clientId };
+    const added = useRef(Date.now());
 
     // The drawn HTML is the renderer's, not React's, so it's put in place by hand, then its slots and text found.
     const drawn = useRef<HTMLDivElement>(null);
@@ -103,20 +148,60 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
           "input",
           () => {
             const { props: now, setAttributes: set } = latest.current;
+            // What the browser's editing wrapped the text in comes out of the element too, not only what's kept.
+            if (field.type === "richtext") tidyRichText(editable);
             const value = editedValue(editable, field);
             if (value !== now[field.name]) set({ props: { ...now, [field.name]: value } });
           },
           { signal },
         );
-        if (field.type === "text") {
-          // One line: Enter ends it, as in the sidebar.
-          editable.addEventListener("keydown", (event) => event.key === "Enter" && event.preventDefault(), { signal });
-        }
+        editable.addEventListener(
+          "keydown",
+          (event) => {
+            if (event.key !== "Enter" || event.shiftKey || event.isComposing) return;
+            // Gutenberg's own Enter, which adds a block after this one, is the plugin's to decide on.
+            event.stopPropagation();
+            if (field.type !== "text") return;
+            // One line: Enter ends it, and starts the next block.
+            event.preventDefault();
+            addAfter(registry, latest.current.clientId);
+          },
+          { signal },
+        );
+        // Gutenberg makes a new block of a new paragraph, as it does in its own paragraphs; here it's a new line.
+        editable.addEventListener(
+          "beforeinput",
+          (event) => {
+            if (event.inputType === "insertParagraph" || event.inputType === "insertLineBreak") event.stopPropagation();
+          },
+          { signal },
+        );
         if (field.type === "richtext") editable.addEventListener("paste", pasteRichText, { signal });
       }
       setEditing(placed);
       return () => listening.abort();
-    }, [html, inPlace]);
+    }, [html, inPlace, registry]);
+
+    // A block just added, once the site has drawn it, has its first text ready to type in, as Gutenberg's blocks do;
+    // where that's still the block's own example text, it's selected, so typing replaces it.
+    useEffect(() => {
+      if (!isSelected || Date.now() - added.current > JUST_ADDED) return;
+      const field = inPlace.find((candidate) => editing.has(candidate.name));
+      const element = field && editing.get(field.name);
+      const wrapper = drawn.current?.closest("[data-block]");
+      if (!field || !element || !wrapper) return;
+      const doc = element.ownerDocument;
+      const active = doc.activeElement;
+      if (active && active !== wrapper && active !== doc.body && wrapper.contains(active)) return;
+      added.current = 0;
+      element.focus();
+      const range = doc.createRange();
+      range.selectNodeContents(element);
+      const example = description.blocks[type]?.defaultProps?.[field.name];
+      if (!(typeof example === "string" && example && latest.current.props[field.name] === example)) range.collapse(false);
+      doc.getSelection()?.removeAllRanges();
+      doc.getSelection()?.addRange(range);
+    }, [isSelected, editing, inPlace, type]);
 
     // Changes made elsewhere (the sidebar, Undo, the AI assistant) shown where the text is edited.
     useEffect(() => {

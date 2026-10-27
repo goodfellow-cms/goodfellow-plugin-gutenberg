@@ -5,7 +5,9 @@
 // it, changes a heading in the sidebar, takes it back and forward with the
 // header's Undo and Redo, types in the heading where it shows, makes a word of
 // rich text bold, gives the heading a theme color in the Styles tab, pastes
-// HTML, publishes, and reads the changes from the page's file.
+// HTML, publishes, and reads the changes from the page's file. Then it opens the
+// document overview and the inserter, finds the + between two blocks, makes
+// lists of rich text, and adds blocks by typing "/", without publishing them.
 //
 //   pnpm build && node scripts/site-check.mjs
 //
@@ -202,6 +204,89 @@ try {
   first.props.content[0].props.className = original.data.content[0].props.content[0].props.className;
   first.props.content[1].props.content = original.data.content[0].props.content[1].props.content;
   check(JSON.stringify(saved) === JSON.stringify(original), "Publish saved those changes, and nothing else");
+
+  // The frame stays its size: the Styles tab, opened above, scrolled nothing but the sidebar.
+  const scrolled = await frame.locator("html").evaluate((html) => html.scrollTop + document.body.scrollTop);
+  check(scrolled === 0, "the frame's page doesn't scroll; only the canvas and sidebars do");
+
+  // The panel on the left: the document overview, and the blocks to add.
+  await frame.getByRole("button", { name: "Document overview" }).click();
+  await frame.locator(".gf-editor-left .block-editor-list-view-leaf").first().waitFor();
+  check(true, "the document overview lists the page's blocks");
+  await frame.getByRole("button", { name: "Add a block" }).first().click();
+  await frame.locator(".gf-editor-left .block-editor-block-types-list__item", { hasText: "Heading" }).waitFor();
+  check(true, "the inserter lists the site's blocks");
+  await page.screenshot({ path: join(results, "inserter.png") });
+  await frame.getByRole("button", { name: /Close add a block/ }).click();
+
+  // The + between two blocks, where the site draws them flush against each other.
+  const top = await frame.locator(".is-root-container > [data-block]").first().boundingBox();
+  await page.mouse.move(top.x + top.width / 2, top.y + top.height - 4);
+  await page.mouse.move(top.x + top.width / 2 + 2, top.y + top.height - 3);
+  await frame.locator(".block-editor-block-list__insertion-point-inserter").first().waitFor();
+  check(true, "a + to add a block shows between two blocks");
+  // Away from the gap, it goes.
+  await page.mouse.move(top.x + top.width - 20, top.y + top.height / 2);
+  await frame.locator(".block-editor-block-list__insertion-point-inserter").waitFor({ state: "detached" });
+
+  // Lists made of rich text keep none of what the browser wraps text in to keep its look.
+  const words = frame.locator(".gf-in-place-richtext").first();
+  // Focused rather than clicked, since the toolbar of the heading above it can be over it.
+  await words.focus();
+  await page.screenshot({ path: join(results, "list.png") });
+  await words.evaluate((element) => {
+    const range = element.ownerDocument.createRange();
+    range.selectNodeContents(element);
+    element.ownerDocument.getSelection().removeAllRanges();
+    element.ownerDocument.getSelection().addRange(range);
+  });
+  await frame.getByRole("button", { name: "List", exact: true }).click();
+  await frame.getByRole("button", { name: "Numbered list" }).click();
+  await words.locator("ol").waitFor();
+  const listed = await words.innerHTML();
+  check(!/<span|style=|<p><\/p>/.test(listed) && listed.startsWith("<ol>"), "a list made of rich text has no styled wrappers");
+  await frame.getByRole("button", { name: "Numbered list" }).click();
+  await words.locator("p").first().waitFor();
+  check(!/<span|style=/.test(await words.innerHTML()), "nor does it when it's made words again");
+
+  // "/" on a new line lists blocks, and the one chosen goes after the text.
+  await words.evaluate((element) => {
+    const walker = element.ownerDocument.createTreeWalker(element, 4);
+    let last;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) last = node;
+    const range = element.ownerDocument.createRange();
+    range.setStart(last, last.data.length);
+    element.ownerDocument.getSelection().removeAllRanges();
+    element.ownerDocument.getSelection().addRange(range);
+  });
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("/hea");
+  await frame.locator(".gf-slash-item", { hasText: "Heading" }).waitFor();
+  const headings = await frame.locator("[data-type='goodfellow/heading']").count();
+  await page.keyboard.press("Enter");
+  await frame.locator(`[data-type='goodfellow/heading'] >> nth=${headings}`).waitFor();
+  check(!(await words.innerHTML()).includes("/hea"), "typing / chooses a block, which goes after the text");
+
+  // Enter at the end of a heading starts an empty Text, ready to type in, where "/" puts another block in its place.
+  const added = frame.locator(".is-selected .gf-in-place").first();
+  await added.waitFor();
+  await added.evaluate((element) => {
+    const range = element.ownerDocument.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    element.ownerDocument.getSelection().removeAllRanges();
+    element.ownerDocument.getSelection().addRange(range);
+  });
+  const texts = await frame.locator("[data-type='goodfellow/text']").count();
+  await page.keyboard.press("Enter");
+  await frame.locator("[data-type='goodfellow/text'].is-selected .gf-in-place:focus").waitFor();
+  check((await frame.locator("[data-type='goodfellow/text']").count()) === texts + 1, "Enter after a heading starts an empty Text, ready to type in");
+  await page.keyboard.type("/ima");
+  await frame.locator(".gf-slash-item", { hasText: "Image" }).waitFor();
+  await page.keyboard.press("Enter");
+  await frame.locator("[data-type='goodfellow/image']").first().waitFor();
+  check((await frame.locator("[data-type='goodfellow/text']").count()) === texts, "the block chosen takes the empty Text's place");
+  await page.screenshot({ path: join(results, "added.png") });
 } finally {
   writeFileSync(homeFile, home);
   await browser.close();
