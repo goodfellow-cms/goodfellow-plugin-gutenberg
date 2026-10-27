@@ -4,7 +4,7 @@
  * settings and the selected block's. What's edited lives in an `EditHistory`,
  * which the admin panel's Undo and Redo, and the AI assistant, change too.
  */
-import type { PluginEditorData } from "@goodfellow-cms/core";
+import type { PluginEditorData, PluginSharePreview, SiteDescription } from "@goodfellow-cms/core";
 import {
   BlockEditorProvider,
   BlockInspector,
@@ -15,12 +15,15 @@ import {
   WritingFlow,
 } from "@wordpress/block-editor";
 import type { Block as BlockInstance } from "@wordpress/blocks";
-import { useSelect } from "@wordpress/data";
+import { useRegistry, useSelect } from "@wordpress/data";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { withBlockIds } from "./convert.js";
 import { FieldsPanel } from "./fields.js";
 import type { EditHistory } from "./history.js";
 import type { BlockNames } from "./names.js";
+import { type EditorRegistry, insertPasted, isIntoText, pastedBlocks } from "./paste.js";
+import { type EditorServices, Services } from "./rich-text-tools.js";
+import { SharePreview } from "./share-preview.js";
 
 /** What's edited, as the editor holds it: the page's blocks as Gutenberg's, and the rest as it came. */
 export interface EditedPage {
@@ -30,6 +33,7 @@ export interface EditedPage {
 
 export interface EditorProps {
   history: EditHistory<EditedPage>;
+  description: Pick<SiteDescription, "blocks">;
   names: BlockNames;
   /** The page settings' fields; the header and footer have none. */
   rootFields: Record<string, unknown>;
@@ -37,6 +41,10 @@ export interface EditorProps {
   styles: { css: string }[];
   /** Told the selected block's id, or `null`, as it changes. */
   onSelect(id: string | null): void;
+  /** What fields need from the admin panel: the media library, and the site's pages for links. */
+  services: EditorServices;
+  /** How a link to the page looks when it's shared; the header and footer have none. */
+  sharePreview?(root: PluginEditorData["root"]): Promise<PluginSharePreview>;
 }
 
 /** The selected block's id, as content has it, for the AI assistant. */
@@ -56,8 +64,30 @@ function Selection({ onSelect }: Pick<EditorProps, "onSelect">) {
  * same parts `BlockCanvas` puts together when told not to use one, with the
  * site's styles scoped to the canvas.
  */
-function Canvas({ styles }: Pick<EditorProps, "styles">) {
+function Canvas({ styles, description, names }: Pick<EditorProps, "styles" | "description" | "names">) {
   const content = useRef<HTMLDivElement>(null);
+  const registry = useRegistry() as EditorRegistry;
+  // Every paste, before Gutenberg's own handler, which would make WordPress's blocks: into text being edited, the
+  // text takes it; anywhere else, it becomes the site's blocks.
+  useEffect(() => {
+    // The plugin's own frame's page, which the canvas is in.
+    const doc = document;
+    const paste = (event: ClipboardEvent) => {
+      if (isIntoText(event.target) || !event.clipboardData) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      insertPasted(
+        registry,
+        pastedBlocks(
+          { html: event.clipboardData.getData("text/html"), text: event.clipboardData.getData("text/plain") },
+          description,
+          names,
+        ),
+      );
+    };
+    doc.addEventListener("paste", paste, true);
+    return () => doc.removeEventListener("paste", paste, true);
+  }, [description, names, registry]);
   return (
     <BlockTools __unstableContentRef={content} style={{ height: "100%", display: "flex" }}>
       <EditorStyles styles={styles} scope=":where(.editor-styles-wrapper)" />
@@ -73,7 +103,16 @@ function Canvas({ styles }: Pick<EditorProps, "styles">) {
   );
 }
 
-export function Editor({ history, names, rootFields, styles, onSelect }: EditorProps) {
+export function Editor({
+  history,
+  description,
+  names,
+  rootFields,
+  styles,
+  onSelect,
+  services,
+  sharePreview,
+}: EditorProps) {
   const page = useSyncExternalStore(history.subscribe, () => history.present);
   const setBlocks = (changed: BlockInstance[], keep: boolean) => {
     if (changed === history.present.blocks) return;
@@ -89,21 +128,25 @@ export function Editor({ history, names, rootFields, styles, onSelect }: EditorP
       onChange={(blocks) => setBlocks(blocks, true)}
       settings={{}}
     >
-      <div className="gf-editor">
-        <div className="gf-editor-canvas">
-          <Canvas styles={styles} />
+      <Services.Provider value={services}>
+        <div className="gf-editor">
+          <div className="gf-editor-canvas">
+            <Canvas styles={styles} description={description} names={names} />
+          </div>
+          <aside className="gf-editor-sidebar" aria-label="Settings">
+            <FieldsPanel
+              title="Page settings"
+              fields={rootFields}
+              props={page.root.props ?? {}}
+              onChange={(props) => history.push({ ...history.present, root: { ...history.present.root, props } })}
+            >
+              {sharePreview && <SharePreview root={page.root} preview={sharePreview} />}
+            </FieldsPanel>
+            <BlockInspector />
+          </aside>
         </div>
-        <aside className="gf-editor-sidebar" aria-label="Settings">
-          <FieldsPanel
-            title="Page settings"
-            fields={rootFields}
-            props={page.root.props ?? {}}
-            onChange={(props) => history.push({ ...history.present, root: { ...history.present.root, props } })}
-          />
-          <BlockInspector />
-        </aside>
-      </div>
-      <Selection onSelect={onSelect} />
+        <Selection onSelect={onSelect} />
+      </Services.Provider>
     </BlockEditorProvider>
   );
 }

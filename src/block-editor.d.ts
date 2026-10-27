@@ -16,6 +16,8 @@ declare module "@wordpress/block-editor" {
     },
   ): Record<string, unknown>;
   export const InspectorControls: ComponentType<{ children?: ReactNode }>;
+  export const InnerBlocks: { Content: ComponentType };
+  export const BlockControls: ComponentType<{ children?: ReactNode; group?: "default" | "block" | "inline" | "other" }>;
   export const BlockEditorProvider: ComponentType<{
     value: Block[];
     onInput?: (blocks: Block[]) => void;

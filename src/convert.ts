@@ -40,11 +40,15 @@ export function toGutenberg(content: ComponentData[], description: Description, 
   });
 }
 
-/** Gutenberg's blocks as Goodfellow's content again, every slot filled in, if only with nothing. */
+/**
+ * Gutenberg's blocks as Goodfellow's content again, every slot filled in, if
+ * only with nothing. Blocks that aren't the site's, such as the one Gutenberg
+ * puts in place of a block it doesn't know, are left out.
+ */
 export function fromGutenberg(blocks: BlockInstance[], description: Description, names: BlockNames): ComponentData[] {
-  return blocks.map((block) => {
+  return blocks.flatMap((block) => {
     const type = names.fromGutenberg(block.name);
-    if (!type) throw new Error(`${block.name} isn't one of the site's blocks.`);
+    if (!type) return [];
     const attributes = block.attributes as Partial<GoodfellowAttributes>;
     const props: Record<string, unknown> = { ...(attributes.props ?? {}) };
     const inner = new Map(
@@ -55,7 +59,7 @@ export function fromGutenberg(blocks: BlockInstance[], description: Description,
     for (const slot of slotNames(description.blocks[type])) {
       props[slot] = fromGutenberg(inner.get(slot) ?? [], description, names);
     }
-    return { type, props } as ComponentData;
+    return [{ type, props } as ComponentData];
   });
 }
 

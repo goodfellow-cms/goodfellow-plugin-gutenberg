@@ -67,9 +67,12 @@ const admin: PluginAdmin = {
         root.render(
           <Editor
             history={history}
+            description={description}
             names={names}
             rootFields={session.kind === "header" || session.kind === "footer" ? {} : session.root.fields}
             styles={styles}
+            services={{ chooseMedia: (kind, value) => session.chooseMedia(kind, value), pages: session.pages }}
+            sharePreview={session.kind === "header" || session.kind === "footer" ? undefined : (root) => session.sharePreview(root)}
             onSelect={(id) => {
               if (id === selected) return;
               selected = id;
