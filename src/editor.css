@@ -397,3 +397,12 @@ body {
   opacity: 0.35;
   cursor: default;
 }
+
+/*
+ * The preview Gutenberg shows beside "Transform to" is drawn in a frame the
+ * plugin's frame can't load (see `quietPreviewFrames()`), so it would be an
+ * empty box.
+ */
+.block-editor-block-switcher__popover-preview-container {
+  display: none;
+}
