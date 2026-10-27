@@ -10,6 +10,7 @@ import { type ComponentType, createElement } from "react";
 import { blockIcon } from "./icons.js";
 import { type BlockNames, blockNames, onlySlot, SLOT_BLOCK, slotNames } from "./names.js";
 import { STYLE_SUPPORTS } from "./styles.js";
+import { transformsFrom } from "./transforms.js";
 
 function withoutSlots(props: Record<string, unknown>, slots: string[]): Record<string, unknown> {
   return Object.fromEntries(Object.entries(props).filter(([key]) => !slots.includes(key)));
@@ -80,6 +81,8 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
         className: false,
         ...(hasClassName(block) ? { customClassName: true, ...STYLE_SUPPORTS } : { customClassName: false }),
       },
+      // Gutenberg's "Transform to": into the other blocks whose words are one field too, as text becomes a heading.
+      transforms: { to: transformsFrom(type, description, names, blocks) },
       edit: options.edit,
       save: saveInnerBlocks,
     } as unknown as BlockConfiguration);
