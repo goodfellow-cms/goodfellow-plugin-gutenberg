@@ -4,7 +4,7 @@ A [Goodfellow](https://github.com/goodfellow-cms/goodfellow-cms) plugin that let
 
 ## Status
 
-An early version, not published yet. It works with Goodfellow 0.6.0, for pages, the header and footer, and collections' templates:
+An early version, ready to publish to npm. It works with Goodfellow 0.6.0 and later, for pages, the header and footer, and collections' templates:
 
 - **Every block of the site** is a Gutenberg block of its own, made from the site's description, drawn by the site's own code (`session.draw()`) with the site's styles (`session.styles()`), and drawn from its fields alone where the site's code can't draw it.
 - **Slots** are Gutenberg's inner blocks, each drawn where it belongs in its block's layout. Blocks added in Gutenberg start with the site's defaults for them, and each gets an id of its own, as do the copies Gutenberg duplicates.
@@ -18,6 +18,10 @@ An early version, not published yet. It works with Goodfellow 0.6.0, for pages, 
 `pnpm check:site` tries it in a real site: a starter site from `create-goodfellow`, with the plugin installed from its packed files, under `goodfellow dev`, where it chooses Gutenberg, changes a heading in the sidebar, undoes and redoes it, types in the heading where it shows, makes a word of rich text bold, gives the heading a theme color in the Styles tab, pastes HTML, publishes, and reads the changes from the page's file.
 
 ## Using it
+
+**From the admin panel,** where the site installs plugins there (at a checked admin address, or with a token broker): **Site Settings → Plugins**, search for Gutenberg, read what it asks for (an editor for pages, the header and footer, and templates, and nothing else), then **Install**. Once the site has rebuilt, the editor's header offers **Gutenberg** beside the standard editor.
+
+**In code,** on any site:
 
 ```sh
 npm install goodfellow-plugin-gutenberg
@@ -34,7 +38,7 @@ export default defineConfig({
 });
 ```
 
-The plugin asks for nothing: its frame reaches no other address, reads no files and holds no secrets.
+The plugin asks for nothing: its frame reaches no other address, reads no files and holds no secrets. Before installing, the Plugins screen reviews the code of the plugin and the packages it needs, at most 40 of them; Gutenberg needs many more, so it lists the rest as not read.
 
 ## How it works
 
@@ -88,6 +92,17 @@ pnpm check:site  # the plugin in a starter site under goodfellow dev, with scree
 ```
 
 `pnpm check:site` makes the site in `.site/` the first time, which needs npm to reach the registry. It uses Playwright as the computer has it; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to use a Chromium that's already installed.
+
+## Publishing a version
+
+1. Change `version` in `package.json` and `VERSION` in `src/index.ts`, which a test keeps the same. Every change needs a new version: npm never lets one be published twice.
+2. Run `pnpm check:site`, which CI doesn't, since it makes a site from npm and drives it in a browser.
+3. Publish a GitHub release whose tag is `v` and the version, such as `v0.1.0`.
+4. [`publish.yml`](.github/workflows/publish.yml) checks the plugin again and publishes it to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), which the Plugins screen shows owners: which repository and commit it was built from.
+
+It publishes through npm's [trusted publishing](https://docs.npmjs.com/trusted-publishers), so the repository holds no npm token. The package's first version has to be published from a computer (`pnpm build && npm publish --access public`); then set its trusted publisher on npmjs.com, in the package's settings, to this repository and `publish.yml`. The Plugins screen offers a release once it's three days old.
+
+`peerDependencies` names the Goodfellow releases it works with, as a range on `@goodfellow-cms/core` (`>=0.6.0 <1.0.0`). A release is offered only to sites on a Goodfellow release in that range, and Goodfellow's Updates screen warns owners when a newer one is outside it, so narrow it in a new version if a Goodfellow release breaks the plugin.
 
 ## License
 

@@ -1,0 +1,30 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          check-latest: true
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      # The manifest the build writes must be the one committed, which Goodfellow's Plugins screen reads from npm.
+      - run: git diff --exit-code goodfellow-plugin.json
