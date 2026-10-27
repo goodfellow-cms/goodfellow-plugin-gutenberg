@@ -8,8 +8,9 @@ import { InnerBlocks } from "@wordpress/block-editor";
 import { type BlockConfiguration, getBlockType, registerBlockType, unregisterBlockType } from "@wordpress/blocks";
 import { type ComponentType, createElement } from "react";
 import { blockIcon } from "./icons.js";
-import { type BlockNames, blockNames, SLOT_BLOCK, slotNames } from "./names.js";
+import { type BlockNames, blockNames, onlySlot, SLOT_BLOCK, slotNames } from "./names.js";
 import { STYLE_SUPPORTS } from "./styles.js";
+import { transformsFrom } from "./transforms.js";
 
 function withoutSlots(props: Record<string, unknown>, slots: string[]): Record<string, unknown> {
   return Object.fromEntries(Object.entries(props).filter(([key]) => !slots.includes(key)));
@@ -67,10 +68,11 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       title: block?.label ?? type,
       category: "design",
       icon: blockIcon((block as { icon?: unknown } | undefined)?.icon),
-      // A block just added starts with the site's defaults for it, without its slots, which are blocks of their own,
-      // one for each slot, which then stay as they are (`templateLock: "all"`).
+      // A block just added starts with the site's defaults for it, without its slots: a block with several has a
+      // slot block for each, which then stay as they are (`templateLock: "all"`), and one with only one holds that
+      // slot's blocks itself.
       attributes: { props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) } },
-      template: slotNames(block).map((slot) => [SLOT_BLOCK, { slot }]),
+      ...(!onlySlot(block) && { template: slotNames(block).map((slot) => [SLOT_BLOCK, { slot }]) }),
       // Gutenberg's styling options, kept as Tailwind classes in the block's `className` (`styles.ts`), for blocks
       // that have one, as every block does; other classes are its additional CSS classes.
       supports: {
@@ -79,6 +81,8 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
         className: false,
         ...(hasClassName(block) ? { customClassName: true, ...STYLE_SUPPORTS } : { customClassName: false }),
       },
+      // Gutenberg's "Transform to": into the other blocks whose words are one field too, as text becomes a heading.
+      transforms: { to: transformsFrom(type, description, names, blocks) },
       edit: options.edit,
       save: saveInnerBlocks,
     } as unknown as BlockConfiguration);
@@ -96,7 +100,7 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
     apiVersion: 3,
     title: "Slot",
     category: "design",
-    parent: all,
+    parent: all.filter((name) => !onlySlot(description.blocks[names.fromGutenberg(name) as string])),
     __experimentalLabel: ({ slot = "" }: { slot?: string }) =>
       slotLabels.get(slot) ?? (slot ? slot.charAt(0).toUpperCase() + slot.slice(1) : "Slot"),
     attributes: { slot: { type: "string", default: "" } },

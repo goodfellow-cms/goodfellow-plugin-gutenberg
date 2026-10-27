@@ -10,9 +10,10 @@ import { describeSite } from "@goodfellow-cms/react";
 import type { ComponentData } from "@puckeditor/core";
 import { store as blockEditorStore } from "@wordpress/block-editor";
 import { dispatch, select } from "@wordpress/data";
+import { createBlock } from "@wordpress/blocks";
 import { describe, expect, it } from "vitest";
 import { fromGutenberg, toGutenberg } from "../src/convert.js";
-import { SLOT_BLOCK } from "../src/names.js";
+import { onlySlot, SLOT_BLOCK, slotNames } from "../src/names.js";
 import { registerBlocks } from "../src/register.js";
 import { SITES, type SiteName, siteDir } from "../sites.js";
 
@@ -68,16 +69,31 @@ describe.each(SITES)("the %s site", (site) => {
     },
   );
 
-  it("keeps each slot of a block apart, in a slot block of its own", () => {
-    const withSlots = Object.entries(description.blocks).find(
-      ([, block]) => Object.values(block.fields).filter((field) => (field as { type?: string }).type === "slot").length > 0,
-    );
+  it("keeps each slot of a block with several apart, in a slot block of its own", () => {
+    const withSlots = Object.entries(description.blocks).find(([, block]) => slotNames(block).length > 1);
     expect(withSlots).toBeDefined();
     const [type, block] = withSlots as [string, SiteDescription["blocks"][string]];
-    const slots = Object.keys(block.fields).filter((name) => (block.fields[name] as { type?: string }).type === "slot");
     const [converted] = toGutenberg([{ type, props: { id: "a" } } as ComponentData], description, names);
     expect(converted?.innerBlocks.map((child) => [child.name, child.attributes.slot])).toEqual(
-      slots.map((slot) => [SLOT_BLOCK, slot]),
+      slotNames(block).map((slot) => [SLOT_BLOCK, slot]),
     );
+  });
+
+  it("puts the blocks of a block with one slot straight inside it, and back in its slot", () => {
+    const withOne = Object.entries(description.blocks).find(([, block]) => onlySlot(block));
+    expect(withOne).toBeDefined();
+    const [type, block] = withOne as [string, SiteDescription["blocks"][string]];
+    const slot = onlySlot(block) as string;
+    const heading = { type: "Heading", props: { id: "h", text: "Inside" } } as ComponentData;
+    const content = [{ type, props: { id: "a", [slot]: [heading] } } as ComponentData];
+    const [converted] = toGutenberg(content, description, names);
+    expect(converted?.innerBlocks.map((child) => child.name)).toEqual([names.toGutenberg("Heading")]);
+    const [back] = fromGutenberg(converted ? [converted] : [], description, names);
+    expect(back?.props[slot]).toEqual([heading]);
+    // As copies from before kept them, in a slot block, they still come back.
+    const old = createBlock(names.toGutenberg(type) as string, { props: { id: "a" } }, [
+      createBlock(SLOT_BLOCK, { slot }, converted?.innerBlocks ?? []),
+    ]);
+    expect(fromGutenberg([old], description, names)[0]?.props[slot]).toEqual([heading]);
   });
 });

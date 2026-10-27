@@ -57,6 +57,21 @@ body,
 }
 
 /*
+ * Gutenberg's own look is light only, whatever the admin panel's: the frame's
+ * text is Gutenberg's dark gray, not the admin panel's light text for dark
+ * mode, which Gutenberg's menus, lists and fields would otherwise inherit on
+ * their white backgrounds.
+ */
+html.gfa-plugin-editor {
+  color-scheme: light;
+}
+
+html.gfa-plugin-editor,
+html.gfa-plugin-editor body {
+  color: #1e1e1e;
+}
+
+/*
  * The frame stays the size the admin panel gives it: only the canvas and the
  * sidebars scroll. The page itself can't, even when something in Gutenberg
  * scrolls an element into view, as its Styles tab does.
@@ -355,4 +370,39 @@ body {
 .gf-share-host {
   color: #757575;
   text-transform: uppercase;
+}
+
+/*
+ * The document overview's Move up and Move down, made for a 36px row: each is
+ * half its height, not the 24px Gutenberg's larger buttons are, so they stay
+ * inside it, and one that can't move the block looks it, in the selected row
+ * too, where both are otherwise white.
+ */
+.gf-editor-left .block-editor-list-view-block__mover-cell {
+  vertical-align: middle;
+}
+
+.gf-editor-left .block-editor-list-view-block__mover-cell .block-editor-block-mover-button {
+  display: flex;
+  height: 18px;
+  min-height: 0;
+  width: 24px;
+  min-width: 24px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.gf-editor-left .block-editor-list-view-block__mover-cell.is-visible .block-editor-block-mover-button[aria-disabled="true"] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/*
+ * The preview Gutenberg shows beside "Transform to" is drawn in a frame the
+ * plugin's frame can't load (see `quietPreviewFrames()`), so it would be an
+ * empty box.
+ */
+.block-editor-block-switcher__popover-preview-container {
+  display: none;
 }

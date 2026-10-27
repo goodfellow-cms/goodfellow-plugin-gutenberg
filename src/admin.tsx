@@ -40,6 +40,21 @@ function loadStylesheet(doc: Document, href: string) {
   doc.head.append(link);
 }
 
+/**
+ * Gutenberg draws the preview beside "Transform to" in a frame of its own,
+ * from a `blob:` address, which the plugin's frame may not load (its policy
+ * loads nothing from elsewhere), so the preview's frame has no document and
+ * Gutenberg's handler for it throws. The preview is hidden (`editor.css`);
+ * this keeps that one error, which changes nothing, out of the console.
+ */
+function quietPreviewFrames(win: Window): () => void {
+  const quiet = (event: ErrorEvent) => {
+    if (/of 'contentDocument' as it is null/.test(event.message)) event.preventDefault();
+  };
+  win.addEventListener("error", quiet);
+  return () => win.removeEventListener("error", quiet);
+}
+
 const admin: PluginAdmin = {
   editor: {
     async mount(element, session) {
@@ -68,6 +83,7 @@ const admin: PluginAdmin = {
 
       // The site's stylesheets, with its theme, scoped to the canvas: blocks are drawn as they are until they come.
       const root = createRoot(element as HTMLElement);
+      const stopQuieting = quietPreviewFrames((element as HTMLElement).ownerDocument.defaultView ?? window);
       const features = styleFeatures(session.settings.theme?.colors);
       const draw = (styles: { css: string }[]) =>
         root.render(
@@ -116,6 +132,7 @@ const admin: PluginAdmin = {
         },
         destroy: () => {
           stopTailwind?.();
+          stopQuieting();
           root.unmount();
         },
       };

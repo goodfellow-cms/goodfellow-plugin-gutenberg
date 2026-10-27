@@ -3,7 +3,9 @@
  * Gutenberg block of its own, named `goodfellow/<name>` (Gutenberg's names are
  * lowercase letters, digits and dashes), and each of a block's slots is a
  * `goodfellow/slot` block inside it, so a block with several slots keeps them
- * apart and each can be drawn where it belongs in the block's own layout.
+ * apart and each can be drawn where it belongs in the block's own layout. A
+ * block with only one slot needs no slot blocks: the blocks in it are its own
+ * (`onlySlot()`).
  */
 import type { SiteDescription } from "@goodfellow-cms/core";
 
@@ -58,4 +60,10 @@ export function slotNames(block: { fields: Record<string, unknown> } | undefined
   return Object.entries(block?.fields ?? {})
     .filter(([, field]) => (field as { type?: unknown })?.type === "slot")
     .map(([name]) => name);
+}
+
+/** A block's slot, where it has only one: the blocks in it are the block's own in Gutenberg, with no slot block. */
+export function onlySlot(block: { fields: Record<string, unknown> } | undefined): string | undefined {
+  const slots = slotNames(block);
+  return slots.length === 1 ? slots[0] : undefined;
 }
