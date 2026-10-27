@@ -10,10 +10,13 @@
     "wordpress"
   ],
   "license": "GPL-2.0-or-later",
+  "author": "Goodfellow contributors",
+  "homepage": "https://github.com/goodfellow-cms/goodfellow-plugin-gutenberg#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/goodfellow-cms/goodfellow-plugin-gutenberg.git"
   },
+  "bugs": "https://github.com/goodfellow-cms/goodfellow-plugin-gutenberg/issues",
   "type": "module",
   "exports": {
     ".": {
@@ -33,10 +36,11 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "check:site": "node scripts/site-check.mjs",
-    "build": "tsc -p tsconfig.build.json && cp src/*.css dist/ && node scripts/manifest.mjs"
+    "build": "tsc -p tsconfig.build.json && cp src/*.css dist/ && node scripts/manifest.mjs",
+    "prepack": "pnpm build"
   },
   "peerDependencies": {
-    "@goodfellow-cms/core": "^0.6.0"
+    "@goodfellow-cms/core": ">=0.6.0 <1.0.0"
   },
   "peerDependenciesMeta": {
     "@goodfellow-cms/core": {
@@ -44,6 +48,7 @@
     }
   },
   "dependencies": {
+    "@tailwindcss/browser": "4.3.3",
     "@wordpress/block-editor": "18.1.0",
     "@wordpress/blocks": "16.2.0",
     "@wordpress/components": "42.0.0",

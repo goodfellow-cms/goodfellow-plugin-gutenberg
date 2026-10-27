@@ -8,10 +8,14 @@ import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
 import { type Block as BlockInstance, cloneBlock, createBlock } from "@wordpress/blocks";
 import { type BlockNames, SLOT_BLOCK, slotNames } from "./names.js";
+import { hasClassName } from "./register.js";
+import { classNameFor, type StyleAttributes, styleAttributes, stylesFromClasses } from "./styles.js";
 
 /** A block's attributes: its props without its slots, which are blocks of their own. */
-export interface GoodfellowAttributes {
+export interface GoodfellowAttributes extends StyleAttributes {
   props: Record<string, unknown>;
+  /** The block's classes that aren't Gutenberg's styling options, as its additional CSS classes. */
+  className?: string;
 }
 
 /** A slot's attributes: which of its block's slots it is. */
@@ -36,8 +40,29 @@ export function toGutenberg(content: ComponentData[], description: Description, 
         toGutenberg(Array.isArray(children) ? (children as ComponentData[]) : [], description, names),
       );
     });
-    return createBlock(name, { props } satisfies GoodfellowAttributes, inner);
+    // Its classes as Gutenberg's styling options, and the rest as its additional CSS classes; `props` keeps them as
+    // they are, so they come back unchanged where nothing's chosen.
+    const styles = hasClassName(description.blocks[block.type])
+      ? stylesFromClasses(typeof props.className === "string" ? props.className : "")
+      : undefined;
+    return createBlock(
+      name,
+      {
+        props,
+        ...styles?.attributes,
+        ...(styles?.rest.length && { className: styles.rest.join(" ") }),
+      } satisfies GoodfellowAttributes,
+      inner,
+    );
   });
+}
+
+/** A block's props with what's chosen in Gutenberg's styling options, and its additional classes, in `className`. */
+export function withStyleClasses(props: Record<string, unknown>, attributes: Record<string, unknown>): Record<string, unknown> {
+  const original = typeof props.className === "string" ? props.className : "";
+  const extra = attributes.className;
+  const className = classNameFor(original, styleAttributes(attributes), typeof extra === "string" ? extra : undefined);
+  return className !== original || props.className !== undefined ? { ...props, className } : props;
 }
 
 /**
@@ -59,7 +84,8 @@ export function fromGutenberg(blocks: BlockInstance[], description: Description,
     for (const slot of slotNames(description.blocks[type])) {
       props[slot] = fromGutenberg(inner.get(slot) ?? [], description, names);
     }
-    return [{ type, props } as ComponentData];
+    const styled = hasClassName(description.blocks[type]) ? withStyleClasses(props, block.attributes) : props;
+    return [{ type, props: styled } as ComponentData];
   });
 }
 

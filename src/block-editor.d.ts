@@ -43,3 +43,5 @@ declare module "@wordpress/block-editor" {
   /** Puts styles in the page, scoped to `scope`, as the canvas does without its iframe. */
   export const __unstableEditorStyles: ComponentType<{ styles: { css: string }[]; scope?: string }>;
 }
+
+declare module "@tailwindcss/browser";

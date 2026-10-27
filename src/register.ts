@@ -8,6 +8,7 @@ import { InnerBlocks } from "@wordpress/block-editor";
 import { type BlockConfiguration, getBlockType, registerBlockType, unregisterBlockType } from "@wordpress/blocks";
 import { type ComponentType, createElement } from "react";
 import { type BlockNames, blockNames, SLOT_BLOCK, slotNames } from "./names.js";
+import { STYLE_SUPPORTS } from "./styles.js";
 
 function withoutSlots(props: Record<string, unknown>, slots: string[]): Record<string, unknown> {
   return Object.fromEntries(Object.entries(props).filter(([key]) => !slots.includes(key)));
@@ -47,6 +48,11 @@ const saveInnerBlocks = () => createElement(InnerBlocks.Content);
  */
 const MISSING_BLOCK = "core/missing";
 
+/** Whether a block keeps CSS classes, as every block does (`classNameField`). */
+export function hasClassName(block: { fields: Record<string, unknown> } | undefined): boolean {
+  return (block?.fields.className as { type?: string } | undefined)?.type === "text";
+}
+
 /** Registers the site's blocks and the slot block, replacing any registered before. Returns their names. */
 export function registerBlocks(description: Pick<SiteDescription, "blocks">, options: RegisterOptions): BlockNames {
   const names = blockNames(description);
@@ -63,8 +69,14 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       // one for each slot, which then stay as they are (`templateLock: "all"`).
       attributes: { props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) } },
       template: slotNames(block).map((slot) => [SLOT_BLOCK, { slot }]),
-      // Every block's look is the site's own, so Gutenberg's own options for it stay off for now.
-      supports: { html: false, reusable: false, customClassName: false, className: false },
+      // Gutenberg's styling options, kept as Tailwind classes in the block's `className` (`styles.ts`), for blocks
+      // that have one, as every block does; other classes are its additional CSS classes.
+      supports: {
+        html: false,
+        reusable: false,
+        className: false,
+        ...(hasClassName(block) ? { customClassName: true, ...STYLE_SUPPORTS } : { customClassName: false }),
+      },
       edit: options.edit,
       save: saveInnerBlocks,
     } as unknown as BlockConfiguration);

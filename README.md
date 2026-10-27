@@ -4,19 +4,24 @@ A [Goodfellow](https://github.com/goodfellow-cms/goodfellow-cms) plugin that let
 
 ## Status
 
-An early version, not published yet. It works with Goodfellow 0.6.0, for pages, the header and footer, and collections' templates:
+An early version, ready to publish to npm. It works with Goodfellow 0.6.0 and later, for pages, the header and footer, and collections' templates:
 
 - **Every block of the site** is a Gutenberg block of its own, made from the site's description, drawn by the site's own code (`session.draw()`) with the site's styles (`session.styles()`), and drawn from its fields alone where the site's code can't draw it.
 - **Slots** are Gutenberg's inner blocks, each drawn where it belongs in its block's layout. Blocks added in Gutenberg start with the site's defaults for them, and each gets an id of its own, as do the copies Gutenberg duplicates.
 - **The canvas** is drawn in the plugin's own frame rather than an iframe of Gutenberg's, since the frame is sandboxed already and its policy allows no frames, with the site's styles scoped to it.
 - **Text is edited where it shows,** for the fields Puck edits in place too (`contentEditable`), such as a heading's text, a button's label or a block of rich text, with the block's toolbar for rich text's bold, italic, links (to the site's pages or anywhere), headings and lists.
 - **The sidebar** has the page's settings, with how a link to the page looks when it's shared, and the selected block's: text, choices, numbers, rich text, media from the media library, lists of items, groups of fields and tables. Fields only the site's code can draw are named, with where to change them.
+- **Gutenberg's styling options** in the Styles tab, for every block with a `className` field: the theme's colors for text and background, Tailwind's font sizes, padding and margins, and rounded corners, kept as Tailwind classes in the block's `className`, which Puck shows and edits too.
 - **Pasted HTML** becomes the site's blocks, after the block selected, through Goodfellow's own conversion (`htmlBlocks()`, which its WordPress import uses), and blocks copied in Gutenberg are pasted with their slots' blocks.
 - **The admin panel's header** works as with Puck: Undo and Redo, unsaved changes, Publish, drafts, and the AI assistant, which gets the selected block.
 
-`pnpm check:site` tries it in a real site: a starter site from `create-goodfellow`, with the plugin installed from its packed files, under `goodfellow dev`, where it chooses Gutenberg, changes a heading in the sidebar, undoes and redoes it, types in the heading where it shows, makes a word of rich text bold, pastes HTML, publishes, and reads the changes from the page's file.
+`pnpm check:site` tries it in a real site: a starter site from `create-goodfellow`, with the plugin installed from its packed files, under `goodfellow dev`, where it chooses Gutenberg, changes a heading in the sidebar, undoes and redoes it, types in the heading where it shows, makes a word of rich text bold, gives the heading a theme color in the Styles tab, pastes HTML, publishes, and reads the changes from the page's file.
 
 ## Using it
+
+**From the admin panel,** where the site installs plugins there (at a checked admin address, or with a token broker): **Site Settings → Plugins**, search for Gutenberg, read what it asks for (an editor for pages, the header and footer, and templates, and nothing else), then **Install**. Once the site has rebuilt, the editor's header offers **Gutenberg** beside the standard editor.
+
+**In code,** on any site:
 
 ```sh
 npm install goodfellow-plugin-gutenberg
@@ -33,7 +38,7 @@ export default defineConfig({
 });
 ```
 
-The plugin asks for nothing: its frame reaches no other address, reads no files and holds no secrets.
+The plugin asks for nothing: its frame reaches no other address, reads no files and holds no secrets. Before installing, the Plugins screen reviews the code of the plugin and the packages it needs, at most 40 of them; Gutenberg needs many more, so it lists the rest as not read.
 
 ## How it works
 
@@ -61,9 +66,17 @@ A page's data goes into Gutenberg and comes back exactly as it was, keys and all
 
 The plugin can't tell where a block puts a field's text, since it has none of the blocks' code. So each field Puck edits in place is drawn with a marker in place of its value, letters and digits that no renderer escapes or splits, and wherever the marker comes out in the drawn HTML becomes the element the text is edited in: the heading itself, a button's label inside its link, or a block of rich text's whole element, so its paragraphs keep the site's styles (`src/in-place.ts`). Copies of the marker elsewhere, such as in an attribute, get the text itself. Typing never draws the block again, since the drawing only ever has the marker. A block that changes its text before showing it, cutting it short say, loses the marker, and that field is edited in the sidebar only. Rich text keeps only what Puck's rich text editor makes (`src/rich-text.ts`), and the site sanitizes it again when it shows it.
 
+### Styling options as Tailwind classes
+
+Goodfellow's blocks are styled with Tailwind, and every block keeps extra classes in its `className` prop, so what's chosen in Gutenberg's Styles tab is kept there as Tailwind classes, and content needs nowhere new to keep it (`src/styles.ts`):
+
+- **The theme's colors** are Gutenberg's palette, by the names the admin panel's Theme tab gives them, as `text-primary`, `bg-muted` and the rest, so they follow the theme when it changes. A color of an editor's own is an arbitrary class, `text-[#123456]`.
+- **Font sizes, spacing and rounded corners** are Tailwind's scales (`text-2xl`, `p-4`, `my-8`, `rounded-lg`), offered as Gutenberg's presets, and other values are arbitrary classes, such as `p-[13px]`. Values that could break out of a class are refused.
+- **Classes Gutenberg doesn't write**, such as `md:` variants or a theme's classes, stay as they are, as Gutenberg's additional CSS classes, and a page opened and published without a change keeps its classes exactly as they were.
+- **New classes show at once.** The site's CSS has only the classes its last build saw, so the plugin compiles the site's Tailwind source (`session.styles().tailwind`) in its frame with `@tailwindcss/browser`, as Goodfellow's own editor does, and scopes the output to the canvas with the site's other styles (`src/tailwind.ts`). The site's next build compiles them as usual.
+
 ### What's left for the plugin
 
-- **Gutenberg's styling options** (colors, spacing, typography), kept as Tailwind classes in each block's `className`, compiled in the canvas from `session.styles()`'s Tailwind source.
 - **Images just uploaded** show in the sidebar, but blocks on the canvas show only media the site already has, until it's published.
 - **Fonts.** The plugin loads the theme's Google Fonts where Goodfellow gives them (`session.styles().fonts`, after 0.6.0, goodfellow-cms/goodfellow-cms#113), whose editor plugins' frames may load them; with 0.6.0, headings fall back to the computer's fonts.
 - **Rendering while it loads.** Each block is drawn once the site's code answers, rather than from its fields first.
@@ -79,6 +92,17 @@ pnpm check:site  # the plugin in a starter site under goodfellow dev, with scree
 ```
 
 `pnpm check:site` makes the site in `.site/` the first time, which needs npm to reach the registry. It uses Playwright as the computer has it; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to use a Chromium that's already installed.
+
+## Publishing a version
+
+1. Change `version` in `package.json` and `VERSION` in `src/index.ts`, which a test keeps the same. Every change needs a new version: npm never lets one be published twice.
+2. Run `pnpm check:site`, which CI doesn't, since it makes a site from npm and drives it in a browser.
+3. Publish a GitHub release whose tag is `v` and the version, such as `v0.1.0`.
+4. [`publish.yml`](.github/workflows/publish.yml) checks the plugin again and publishes it to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), which the Plugins screen shows owners: which repository and commit it was built from.
+
+It publishes through npm's [trusted publishing](https://docs.npmjs.com/trusted-publishers), so the repository holds no npm token. The package's first version has to be published from a computer (`pnpm build && npm publish --access public`); then set its trusted publisher on npmjs.com, in the package's settings, to this repository and `publish.yml`. The Plugins screen offers a release once it's three days old.
+
+`peerDependencies` names the Goodfellow releases it works with, as a range on `@goodfellow-cms/core` (`>=0.6.0 <1.0.0`). A release is offered only to sites on a Goodfellow release in that range, and Goodfellow's Updates screen warns owners when a newer one is outside it, so narrow it in a new version if a Goodfellow release breaks the plugin.
 
 ## License
 
