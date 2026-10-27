@@ -9,7 +9,6 @@ import { describe, expect, it } from "vitest";
 import { sessionRenderer } from "../src/admin.js";
 import { fromGutenberg, toGutenberg, withBlockIds } from "../src/convert.js";
 import { editHistory } from "../src/history.js";
-import { SLOT_BLOCK } from "../src/names.js";
 import { registerBlocks } from "../src/register.js";
 
 const description: Pick<SiteDescription, "blocks"> = {
@@ -79,8 +78,8 @@ describe("blocks added in Gutenberg", () => {
     const headings = content.map((block) => (block.props.content as { props: { id: string } }[] | undefined)?.[0]);
     expect(headings[0]?.props.id).toBe("Heading-1");
     expect(headings[1]?.props.id).not.toBe("Heading-1");
-    // Slot blocks are Gutenberg's, not the site's, so they need none.
-    expect(withIds[0]?.innerBlocks[0]?.name).toBe(SLOT_BLOCK);
+    // A section has one slot, so its heading is straight inside it, with no slot block.
+    expect(withIds[0]?.innerBlocks[0]?.name).toBe(names.toGutenberg("Heading"));
   });
 
   it("are the same list when every block has an id of its own", () => {

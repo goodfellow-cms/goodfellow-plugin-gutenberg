@@ -19,7 +19,7 @@ import { BlockFields, pasteRichText } from "./fields.js";
 import { type InPlaceField, inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "./in-place.js";
 import { cleanRichText, tidyRichText } from "./rich-text.js";
 import { RichTextTools } from "./rich-text-tools.js";
-import type { BlockNames } from "./names.js";
+import { type BlockNames, onlySlot } from "./names.js";
 import { type EditProps, hasClassName } from "./register.js";
 
 /** What a drawn block leaves in each slot's place, as Goodfellow's `DRAWN_SLOT_ELEMENT`: `<gf-slot data-slot="…">`. */
@@ -225,11 +225,14 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
         .filter((name) => name && !extra.has(name) && !/^(has-|wp-elements-)/.test(name))
         .join(" "),
     };
-    // The slots are blocks of their own, which draw themselves into their places: their list shows nothing.
+    // A block with several slots has a slot block for each, which draw themselves into their places, so their list
+    // shows nothing; one with only one slot draws the blocks in it into its place itself.
+    const only = onlySlot(description.blocks[type]);
     const innerBlocksProps = useInnerBlocksProps(
-      { className: "gf-slot-list" },
-      { templateLock: "all", renderAppender: false },
+      { className: only ? "gf-slot" : "gf-slot-list" },
+      only ? { templateLock: false } : { templateLock: "all", renderAppender: false },
     );
+    const onlyPlace = only ? places.get(only) : undefined;
     return (
       <div {...blockProps}>
         {isSelected && richText.length > 0 && (
@@ -247,9 +250,14 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
           onChange={(next) => setAttributes({ props: next })}
         />
         <div ref={drawn} className="gf-block-html" onClickCapture={stayOnCanvas} onSubmitCapture={stayOnCanvas} />
-        <SlotPlaces.Provider value={places}>
-          <div {...innerBlocksProps} />
-        </SlotPlaces.Provider>
+        {only ? (
+          // Until the block is drawn, there's nowhere to put them.
+          onlyPlace && createPortal(<div {...innerBlocksProps} />, onlyPlace)
+        ) : (
+          <SlotPlaces.Provider value={places}>
+            <div {...innerBlocksProps} />
+          </SlotPlaces.Provider>
+        )}
       </div>
     );
   }

@@ -1,13 +1,14 @@
 /**
  * Goodfellow's page data as Gutenberg's blocks, and back, losing nothing: a
  * block's props are its `props` attribute, exactly as they are, and each slot
- * a `goodfellow/slot` block holding the slot's blocks. Nothing is ever written
- * as Gutenberg's HTML.
+ * a `goodfellow/slot` block holding the slot's blocks, or, where a block has
+ * only one slot, the block's own inner blocks. Nothing is ever written as
+ * Gutenberg's HTML.
  */
 import type { SiteDescription } from "@goodfellow-cms/core";
 import type { ComponentData } from "@puckeditor/core";
 import { type Block as BlockInstance, cloneBlock, createBlock } from "@wordpress/blocks";
-import { type BlockNames, SLOT_BLOCK, slotNames } from "./names.js";
+import { type BlockNames, onlySlot, SLOT_BLOCK, slotNames } from "./names.js";
 import { hasClassName } from "./register.js";
 import { classNameFor, type StyleAttributes, styleAttributes, stylesFromClasses } from "./styles.js";
 
@@ -32,14 +33,14 @@ export function toGutenberg(content: ComponentData[], description: Description, 
     if (!name) throw new Error(`The site has no block called ${block.type}.`);
     const slots = slotNames(description.blocks[block.type]);
     const props = Object.fromEntries(Object.entries(block.props).filter(([key]) => !slots.includes(key)));
-    const inner = slots.map((slot) => {
+    const childrenOf = (slot: string) => {
       const children = block.props[slot];
-      return createBlock(
-        SLOT_BLOCK,
-        { slot } satisfies SlotAttributes,
-        toGutenberg(Array.isArray(children) ? (children as ComponentData[]) : [], description, names),
-      );
-    });
+      return toGutenberg(Array.isArray(children) ? (children as ComponentData[]) : [], description, names);
+    };
+    const only = onlySlot(description.blocks[block.type]);
+    const inner = only
+      ? childrenOf(only)
+      : slots.map((slot) => createBlock(SLOT_BLOCK, { slot } satisfies SlotAttributes, childrenOf(slot)));
     // Its classes as Gutenberg's styling options, and the rest as its additional CSS classes; `props` keeps them as
     // they are, so they come back unchanged where nothing's chosen.
     const styles = hasClassName(description.blocks[block.type])
@@ -81,6 +82,9 @@ export function fromGutenberg(blocks: BlockInstance[], description: Description,
         .filter((child) => child.name === SLOT_BLOCK)
         .map((child) => [(child.attributes as Partial<SlotAttributes>).slot, child.innerBlocks]),
     );
+    // A block with one slot holds its blocks itself, unless they came in a slot block, as copies from before did.
+    const only = onlySlot(description.blocks[type]);
+    if (only && !inner.has(only)) inner.set(only, block.innerBlocks.filter((child) => child.name !== SLOT_BLOCK));
     for (const slot of slotNames(description.blocks[type])) {
       props[slot] = fromGutenberg(inner.get(slot) ?? [], description, names);
     }
