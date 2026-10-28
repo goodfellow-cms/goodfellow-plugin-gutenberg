@@ -4,7 +4,8 @@
  * as they are, or else Site Settings'.
  */
 import type { PluginEditorData, PluginSharePreview } from "@goodfellow-cms/core";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Services } from "./rich-text-tools.js";
 
 export function SharePreview({
   root,
@@ -13,6 +14,7 @@ export function SharePreview({
   root: PluginEditorData["root"];
   preview(root: PluginEditorData["root"]): Promise<PluginSharePreview>;
 }) {
+  const { mediaUrl = (url: string) => url } = useContext(Services);
   const [shown, setShown] = useState<PluginSharePreview>();
   const key = JSON.stringify(root.props ?? {});
   useEffect(() => {
@@ -34,7 +36,7 @@ export function SharePreview({
   if (!shown) return null;
   return (
     <figure className="gf-share-preview" aria-label="How a link to this page looks when it's shared">
-      {shown.image && <img src={shown.image} alt="" />}
+      {shown.image && <img src={mediaUrl(shown.image)} alt="" />}
       <figcaption>
         {shown.host && <span className="gf-share-host">{shown.host}</span>}
         <strong>{shown.title}</strong>

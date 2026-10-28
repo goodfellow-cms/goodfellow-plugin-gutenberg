@@ -17,17 +17,28 @@ import { fromGutenberg, toGutenberg } from "./convert.js";
 import { type BlockRenderer, blockEditors } from "./edit.js";
 import { type EditedPage, Editor } from "./editor.js";
 import { editHistory } from "./history.js";
+import { mediaAddresses, withMediaAddresses } from "./media.js";
 import { blockNames } from "./names.js";
 import { outlineRenderer } from "./outline.js";
 import { registerBlocks } from "./register.js";
 import { styleFeatures } from "./styles.js";
 import { compileTailwind } from "./tailwind.js";
 
-/** Draws blocks as the site does, or from their fields alone where the site's code can't. */
-export function sessionRenderer(session: Pick<PluginEditorSession, "blocks" | "draw">): BlockRenderer {
+/**
+ * Draws blocks as the site does, or from their fields alone where the site's code can't, with their media shown
+ * from where the frame can show it (`mediaAddress`).
+ */
+export function sessionRenderer(
+  session: Pick<PluginEditorSession, "blocks" | "draw">,
+  mediaAddress: (url: string) => string = (url) => url,
+): BlockRenderer {
   const fallback = outlineRenderer({ blocks: session.blocks });
   return {
-    render: (block) => session.draw(block).catch(() => fallback.render(block)),
+    render: (block) =>
+      session
+        .draw(block)
+        .catch(() => fallback.render(block))
+        .then((html) => withMediaAddresses(html, mediaAddress)),
   };
 }
 
@@ -57,10 +68,14 @@ function quietPreviewFrames(win: Window): () => void {
 
 const admin: PluginAdmin = {
   editor: {
-    async mount(element, session) {
+    async mount(element, session, api) {
       const description = { blocks: session.blocks };
       const names = blockNames(description);
-      registerBlocks(description, { ...blockEditors(description, names, sessionRenderer(session)), templates: true });
+      const mediaUrl = mediaAddresses(api?.siteUrl ?? "/");
+      registerBlocks(description, {
+        ...blockEditors(description, names, sessionRenderer(session, mediaUrl)),
+        templates: true,
+      });
       // "Type / to choose a block" at the end of the page adds the site's Text, as it adds a paragraph in WordPress.
       if (description.blocks.Text) setDefaultBlockName(names.toGutenberg("Text") as string);
 
@@ -93,7 +108,11 @@ const admin: PluginAdmin = {
             names={names}
             rootFields={session.kind === "header" || session.kind === "footer" ? {} : session.root.fields}
             styles={styles}
-            services={{ chooseMedia: (kind, value) => session.chooseMedia(kind, value), pages: session.pages }}
+            services={{
+              chooseMedia: (kind, value) => session.chooseMedia(kind, value),
+              pages: session.pages,
+              mediaUrl,
+            }}
             sharePreview={session.kind === "header" || session.kind === "footer" ? undefined : (root) => session.sharePreview(root)}
             features={features}
             onSelect={(id) => {
