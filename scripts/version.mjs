@@ -1,4 +1,4 @@
-// `pnpm run version`: `changeset version` raises `package.json`'s version and writes CHANGELOG.md, and this puts the
+// `pnpm release:version`: `changeset version` raises `package.json`'s version and writes CHANGELOG.md, and this puts the
 // same version in `src/index.ts`'s `VERSION`, which the plugin's description carries and a test keeps the same.
 import { readFileSync, writeFileSync } from "node:fs";
 
