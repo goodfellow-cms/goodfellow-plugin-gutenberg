@@ -100,7 +100,9 @@ pnpm check:site  # the plugin in a starter site under goodfellow dev, with scree
 
 ## Publishing a version
 
-1. Change `version` in `package.json` and `VERSION` in `src/index.ts`, which a test keeps the same. Every change needs a new version: npm never lets one be published twice.
+Every change that reaches the published plugin needs a changeset: run `pnpm changeset`, choose patch, minor or major, and describe the change for the plugin's users. It writes a file in `.changeset/`, which goes in the same pull request.
+
+1. Run `pnpm run version`, which turns the changesets into a new `version` in `package.json` and an entry in `CHANGELOG.md` (`changeset version`), and puts the same version in `src/index.ts`'s `VERSION`, which a test keeps the same. Commit what it changes. Every release needs a new version: npm never lets one be published twice.
 2. Run `pnpm check:site`, which CI doesn't, since it makes a site from npm and drives it in a browser.
 3. Publish a GitHub release whose tag is `v` and the version, such as `v0.1.0`.
 4. [`publish.yml`](.github/workflows/publish.yml) checks the plugin again and publishes it to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), which the Plugins screen shows owners: which repository and commit it was built from.
