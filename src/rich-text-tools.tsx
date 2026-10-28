@@ -24,6 +24,8 @@ export interface EditorServices {
   chooseMedia(kind: "image" | "video" | "audio" | "file", value?: string): Promise<string | null>;
   /** The site's pages, for links. */
   pages: readonly PageLink[];
+  /** Where the frame shows a media file from, such as a site in a folder's (`media.ts`); as it is without one. */
+  mediaUrl?(url: string): string;
 }
 
 export const Services = createContext<EditorServices>({ chooseMedia: async () => null, pages: [] });

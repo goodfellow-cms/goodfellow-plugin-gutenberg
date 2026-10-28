@@ -69,14 +69,14 @@ interface ControlProps {
 
 /** A media field: the file chosen, and the media library to choose another. */
 function MediaControl({ name, field, value, onChange }: ControlProps) {
-  const { chooseMedia } = useContext(Services);
+  const { chooseMedia, mediaUrl = (url: string) => url } = useContext(Services);
   const kind = field.metadata?.media ?? "file";
   const address = typeof value === "string" ? value : "";
   const id = useId();
   return (
     <BaseControl id={id} label={field.label ?? name} __nextHasNoMarginBottom>
       <div className="gf-media">
-        {address && kind === "image" && <img className="gf-media-preview" src={address} alt="" />}
+        {address && kind === "image" && <img className="gf-media-preview" src={mediaUrl(address)} alt="" />}
         {address && <p className="gf-media-name">{address.split("/").pop()}</p>}
         <div className="gf-media-actions">
           <Button
