@@ -17,6 +17,16 @@ export function mediaAddresses(siteUrl: string): (url: string) => string {
 }
 
 /**
+ * How the frame shows media: Goodfellow releases whose session says `showsMedia`
+ * show the site's media in the frame themselves, from wherever each file is now
+ * (uploads not yet published and a storage plugin's files too), so addresses are
+ * left as content has them; older releases need the site's address added here.
+ */
+export function frameMediaAddresses(session: object, siteUrl: string): (url: string) => string {
+  return (session as { showsMedia?: boolean }).showsMedia ? (url) => url : mediaAddresses(siteUrl);
+}
+
+/**
  * HTML the site's code drew, with the media its images, links and inline styles
  * show where the frame can show them. Only for what's shown: values written
  * back into content keep their `/media/` addresses.

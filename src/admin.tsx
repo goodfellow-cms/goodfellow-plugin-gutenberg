@@ -17,7 +17,7 @@ import { fromGutenberg, toGutenberg } from "./convert.js";
 import { type BlockRenderer, blockEditors } from "./edit.js";
 import { type EditedPage, Editor } from "./editor.js";
 import { editHistory } from "./history.js";
-import { mediaAddresses, withMediaAddresses } from "./media.js";
+import { frameMediaAddresses, withMediaAddresses } from "./media.js";
 import { blockNames } from "./names.js";
 import { outlineRenderer } from "./outline.js";
 import { registerBlocks } from "./register.js";
@@ -71,7 +71,7 @@ const admin: PluginAdmin = {
     async mount(element, session, api) {
       const description = { blocks: session.blocks };
       const names = blockNames(description);
-      const mediaUrl = mediaAddresses(api?.siteUrl ?? "/");
+      const mediaUrl = frameMediaAddresses(session, api?.siteUrl ?? "/");
       registerBlocks(description, {
         ...blockEditors(description, names, sessionRenderer(session, mediaUrl)),
         templates: true,

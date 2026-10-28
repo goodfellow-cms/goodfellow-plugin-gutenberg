@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { sessionRenderer } from "../src/admin.js";
-import { mediaAddresses, withMediaAddresses } from "../src/media.js";
+import { frameMediaAddresses, mediaAddresses, withMediaAddresses } from "../src/media.js";
 
 describe("media addresses", () => {
   it("puts a site in a folder's media under its folder, and leaves other addresses as they are", () => {
@@ -10,6 +10,12 @@ describe("media addresses", () => {
     expect(address("https://example.org/media/photo.jpg")).toBe("https://example.org/media/photo.jpg");
     const elsewhere = mediaAddresses("https://parish.example/site");
     expect(elsewhere("/media/a.jpg")).toBe("https://parish.example/site/media/a.jpg");
+  });
+
+  it("leaves addresses to Goodfellow where its session says it shows the site's media itself", () => {
+    const shown = frameMediaAddresses({ showsMedia: true }, "/goodfellow-demo/");
+    expect(shown("/media/church.svg")).toBe("/media/church.svg");
+    expect(frameMediaAddresses({}, "/goodfellow-demo/")("/media/church.svg")).toBe("/goodfellow-demo/media/church.svg");
   });
 
   it("leaves a site at the root of its domain's media as it is", () => {
