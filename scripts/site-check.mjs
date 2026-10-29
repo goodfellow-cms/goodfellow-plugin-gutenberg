@@ -19,19 +19,31 @@ import { execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
 
-const root = new URL("..", import.meta.url).pathname;
+const root = fileURLToPath(new URL("..", import.meta.url));
 const site = join(root, ".site");
 const results = join(root, ".site-check");
 const port = 4610;
 const base = `http://localhost:${port}`;
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+const windows = process.platform === "win32";
 
-function run(command, args, cwd) {
-  execFileSync(command, args, { cwd, stdio: "inherit" });
+/** An argument as cmd.exe reads it: as it is where it's plain, and otherwise in double quotes, its own doubled. */
+function cmdArgument(arg) {
+  return /^[\w@+=:,./\\-]+$/.test(arg) ? arg : `"${arg.replaceAll('"', '""')}"`;
+}
+
+/**
+ * Runs a program. npm is `npm.cmd` on Windows, which Node starts only through cmd.exe, joining the arguments as they
+ * are, so they're quoted for it; anything else runs without a shell.
+ */
+function run(command, args, cwd, options = {}) {
+  if (windows && command === "npm")
+    return execFileSync(["npm.cmd", ...args.map(cmdArgument)].join(" "), [], { cwd, stdio: "inherit", shell: true, ...options });
+  return execFileSync(command, args, { cwd, stdio: "inherit", ...options });
 }
 
 function check(ok, what) {
@@ -51,14 +63,14 @@ if (!existsSync(join(site, "package.json"))) {
     .replace("  plugins: installedPlugins,", "  plugins: [...installedPlugins, gutenberg],");
   if (!text.includes("gutenberg]")) throw new Error("The starter's config has changed: add the plugin to it by hand.");
   writeFileSync(config, text);
-  run(npm, ["install", "--no-audit", "--no-fund"], site);
+  run("npm", ["install", "--no-audit", "--no-fund"], site);
 }
 
 // The plugin as npm would install it: its packed files, after the last build.
 rmSync(results, { recursive: true, force: true });
 mkdirSync(results, { recursive: true });
-const [packed] = JSON.parse(execFileSync(npm, ["pack", "--json", "--pack-destination", results], { cwd: root, encoding: "utf8" }));
-run(npm, ["install", "--no-audit", "--no-fund", "--no-save", join(results, packed.filename)], site);
+const [packed] = JSON.parse(run("npm", ["pack", "--json", "--pack-destination", results], root, { stdio: "pipe", encoding: "utf8" }));
+run("npm", ["install", "--no-audit", "--no-fund", "--no-save", join(results, packed.filename)], site);
 // Start each run from the starter's home page as it came.
 const homeFile = join(site, "content/pages/index.json");
 const home = readFileSync(homeFile, "utf8");
