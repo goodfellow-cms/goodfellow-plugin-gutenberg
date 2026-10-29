@@ -4,7 +4,8 @@
 // Gutenberg in the editor's header, checks the page is drawn as the site draws
 // it, changes a heading in the sidebar, takes it back and forward with the
 // header's Undo and Redo, types in the heading where it shows, makes a word of
-// rich text bold, gives the heading a theme color in the Styles tab, pastes
+// rich text bold, links words by typing an address and pressing Enter, gives the heading a theme color in the Styles tab, hides it
+// on phones with Gutenberg's Hide option, pastes
 // HTML, publishes, and reads the changes from the page's file. Then it opens the
 // document overview and the inserter, finds the + between two blocks, makes
 // lists of rich text, and adds blocks by typing "/", without publishing them.
@@ -152,6 +153,23 @@ try {
   await text.locator(":is(b, strong)", { hasText: "This" }).waitFor();
   check(true, "a word is made bold with the block's toolbar");
 
+  // A link added by typing its address and pressing Enter: the link form, like Gutenberg's dialogs, is a form, which
+  // the frame's sandbox doesn't submit, so the plugin does.
+  await text.evaluate((element) => {
+    const words = element.querySelector("p")?.lastChild;
+    const range = element.ownerDocument.createRange();
+    range.setStart(words, words.textContent.length - 5);
+    range.setEnd(words, words.textContent.length - 1);
+    const selection = element.ownerDocument.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  });
+  await frame.getByRole("button", { name: "Link", exact: true }).click();
+  await frame.getByLabel("Address, or a page's name").fill("https://example.org/");
+  await frame.getByLabel("Address, or a page's name").press("Enter");
+  await text.locator("a[href='https://example.org/']").waitFor();
+  check(true, "a link is added by typing its address and pressing Enter");
+
   // Gutenberg's styling options: a theme color chosen for the heading's text is a Tailwind class, compiled in the
   // frame though the site's last build hasn't seen it, and drawn on the canvas.
   await heading.focus();
@@ -171,6 +189,18 @@ try {
   );
   check(true, "a theme color chosen in the Styles tab is a Tailwind class, drawn on the canvas");
   await sidebar.getByRole("tab", { name: "Settings" }).click();
+
+  // Gutenberg's Hide option, from the block's Options menu: hidden on phones is the class Puck's Hide on writes, and
+  // the heading is still drawn while it's selected.
+  await heading.focus();
+  await frame.getByRole("toolbar", { name: "Block tools" }).getByRole("button", { name: "Options" }).click();
+  await frame.getByRole("menuitem", { name: "Hide" }).click();
+  await frame.getByRole("checkbox", { name: "Hide on Mobile" }).check();
+  await frame.getByRole("button", { name: "Apply" }).click();
+  // The frame's sandbox submits no forms, so this is the plugin sending the dialog's submit itself.
+  await frame.getByRole("dialog", { name: "Hide block" }).waitFor({ state: "hidden" });
+  await heading.waitFor();
+  check(!(await heading.getAttribute("class")).split(" ").includes("max-sm:hidden"), "a block hidden on phones is still drawn in the editor, without the class that hides it");
 
   // Pasted HTML becomes the site's blocks, after the block selected: the heading, pasted on as a block rather than
   // into its text (focused rather than clicked, since the toolbar of the block beside it can be over it).
@@ -196,8 +226,10 @@ try {
   check(first.props.content[1].props.text === "Pasted heading", "the pasted heading's text was published");
   check(first.props.content[0].props.text === "Typed in place", "the text typed in place was published");
   check(first.props.content[3].props.content.startsWith("<p><strong>This</strong> page"), "the bold word was published");
+  check(first.props.content[3].props.content.includes('<a href="https://example.org/">'), "the link was published");
   const className = first.props.content[0].props.className;
   check(className.split(" ").includes("text-accent"), `the color was published as a class (${className})`);
+  check(className.split(" ").includes("max-sm:hidden"), `hiding it on phones was published as a class (${className})`);
   // Without what was changed, the page is as it was.
   first.props.content.splice(1, 2);
   first.props.content[0].props.text = "Welcome to my site";

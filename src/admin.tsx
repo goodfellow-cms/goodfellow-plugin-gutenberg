@@ -16,6 +16,7 @@ import { createRoot } from "react-dom/client";
 import { fromGutenberg, toGutenberg } from "./convert.js";
 import { type BlockRenderer, blockEditors } from "./edit.js";
 import { type EditedPage, Editor } from "./editor.js";
+import { submitFormsInSandbox } from "./forms.js";
 import { editHistory } from "./history.js";
 import { frameMediaAddresses, withMediaAddresses } from "./media.js";
 import { blockNames } from "./names.js";
@@ -99,6 +100,8 @@ const admin: PluginAdmin = {
       // The site's stylesheets, with its theme, scoped to the canvas: blocks are drawn as they are until they come.
       const root = createRoot(element as HTMLElement);
       const stopQuieting = quietPreviewFrames((element as HTMLElement).ownerDocument.defaultView ?? window);
+      // The frame's sandbox submits no forms, so Gutenberg's dialogs and the link form are submitted by hand.
+      const stopSubmitting = submitFormsInSandbox((element as HTMLElement).ownerDocument);
       const features = styleFeatures(session.settings.theme?.colors);
       const draw = (styles: { css: string }[]) =>
         root.render(
@@ -152,6 +155,7 @@ const admin: PluginAdmin = {
         destroy: () => {
           stopTailwind?.();
           stopQuieting();
+          stopSubmitting();
           root.unmount();
         },
       };

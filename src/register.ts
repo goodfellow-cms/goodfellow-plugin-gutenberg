@@ -71,7 +71,12 @@ export function registerBlocks(description: Pick<SiteDescription, "blocks">, opt
       // A block just added starts with the site's defaults for it, without its slots: a block with several has a
       // slot block for each, which then stay as they are (`templateLock: "all"`), and one with only one holds that
       // slot's blocks itself.
-      attributes: { props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) } },
+      // `metadata` is Gutenberg's own, which its Hide option keeps what it chose in, named here so that blocks made
+      // from content keep it wherever Gutenberg's hooks aren't loaded.
+      attributes: {
+        props: { type: "object", default: withoutSlots(block?.defaultProps ?? {}, slotNames(block)) },
+        metadata: { type: "object" },
+      },
       ...(!onlySlot(block) && { template: slotNames(block).map((slot) => [SLOT_BLOCK, { slot }]) }),
       // Gutenberg's styling options, kept as Tailwind classes in the block's `className` (`styles.ts`), for blocks
       // that have one, as every block does; other classes are its additional CSS classes.

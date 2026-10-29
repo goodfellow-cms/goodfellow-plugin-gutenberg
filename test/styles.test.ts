@@ -1,7 +1,7 @@
 /** Gutenberg's styling options as Tailwind classes in a block's `className`, and back. */
 import { describe, expect, it } from "vitest";
-import { withStyleClasses } from "../src/convert.js";
-import { classesFromStyles, classNameFor, colorPalette, stylesFromClasses } from "../src/styles.js";
+import { withoutHiddenClasses, withStyleClasses } from "../src/convert.js";
+import { classesFromStyles, classNameFor, colorPalette, styleFeatures, stylesFromClasses } from "../src/styles.js";
 
 describe("styling options as classes", () => {
   it("writes the theme's colors, Tailwind's sizes and spacing, and rounded corners", () => {
@@ -78,6 +78,57 @@ describe("styling options as classes", () => {
     // Nothing chosen and no classes: the props as they were, with no `className` added.
     const plain = { text: "Hello" };
     expect(withStyleClasses(plain, { props: plain })).toBe(plain);
+  });
+
+  it("keeps Gutenberg's Hide option as the classes Puck's Hide on writes, the fewest of them", () => {
+    const hide = (viewport: Record<string, boolean>) => classesFromStyles({ metadata: { blockVisibility: { viewport } } });
+    expect(hide({ mobile: false })).toEqual(["max-sm:hidden"]);
+    expect(hide({ tablet: false })).toEqual(["sm:max-lg:hidden"]);
+    expect(hide({ desktop: false })).toEqual(["lg:hidden"]);
+    expect(hide({ mobile: false, tablet: false })).toEqual(["max-lg:hidden"]);
+    expect(hide({ tablet: false, desktop: false })).toEqual(["sm:hidden"]);
+    expect(hide({ mobile: false, desktop: false })).toEqual(["max-sm:hidden", "lg:hidden"]);
+    expect(hide({ mobile: true, tablet: true })).toEqual([]);
+    // Hidden everywhere is hidden on every size of screen, never plain `hidden`, which blocks use with `dark:block`.
+    expect(classesFromStyles({ metadata: { blockVisibility: false } })).toEqual(["max-lg:hidden", "lg:hidden"]);
+    expect(classesFromStyles({ metadata: { blockVisibility: true } })).toEqual([]);
+  });
+
+  it("reads the hide classes back as Gutenberg's Hide option, leaving other variants as they are", () => {
+    const { attributes, rest } = stylesFromClasses("max-sm:hidden text-primary md:hidden lg:hidden hidden dark:block");
+    expect(attributes).toEqual({
+      textColor: "primary",
+      metadata: { blockVisibility: { viewport: { mobile: false, desktop: false } } },
+    });
+    expect(rest).toEqual(["md:hidden", "hidden", "dark:block"]);
+    // Classes covering two sizes, such as the Style setting writes for phones and tablets.
+    expect(stylesFromClasses("max-lg:hidden").attributes).toEqual({
+      metadata: { blockVisibility: { viewport: { mobile: false, tablet: false } } },
+    });
+  });
+
+  it("leaves the classes as they were where the Hide option didn't change, whichever way Gutenberg wrote it", () => {
+    const original = "max-lg:hidden lg:hidden custom";
+    const { attributes, rest } = stylesFromClasses(original);
+    expect(classNameFor(original, { metadata: { blockVisibility: false } }, rest.join(" "))).toBe(original);
+    const props = { className: original };
+    expect(
+      withStyleClasses(props, { props, className: "custom", metadata: { blockVisibility: { viewport: { desktop: false } }, name: "Mine" } }),
+    ).toEqual({ className: "custom lg:hidden" });
+    expect(attributes.metadata).toBeDefined();
+  });
+
+  it("draws a hidden block in the editor without the classes that hide it", () => {
+    expect(withoutHiddenClasses({ text: "Hi", className: "max-sm:hidden text-primary" })).toEqual({
+      text: "Hi",
+      className: "text-primary",
+    });
+    const plain = { text: "Hi", className: "md:hidden" };
+    expect(withoutHiddenClasses(plain)).toBe(plain);
+  });
+
+  it("gives Gutenberg's sizes of screen Tailwind's breakpoints", () => {
+    expect(styleFeatures(undefined).viewport).toEqual({ mobile: "639.98px", tablet: "1023.98px" });
   });
 
   it("offers the theme's colors by the Theme tab's names, with the site's values", () => {
