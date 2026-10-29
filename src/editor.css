@@ -168,6 +168,27 @@ body {
   font-size: 13px;
 }
 
+/* What a paste couldn't keep, as Gutenberg's snackbars say things, over the bottom of the canvas. */
+.gf-paste-note {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  max-width: min(480px, calc(100% - 32px));
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: 2px;
+  background: #1e1e1e;
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.gf-paste-note[hidden] {
+  display: none;
+}
+
 .gf-editor-canvas {
   flex: 1;
   min-width: 0;

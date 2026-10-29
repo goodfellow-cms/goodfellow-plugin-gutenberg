@@ -1,7 +1,7 @@
 /** Rich text keeps only what Puck's rich text editor makes, whatever a browser or a paste adds. */
 import { describe, expect, it } from "vitest";
 import { escapeText, itemSummary, tableRows } from "../src/fields.js";
-import { cleanRichText, isSafeAddress, tidyRichText } from "../src/rich-text.js";
+import { CELL_SEPARATOR, cleanRichText, hasPictures, isSafeAddress, tidyRichText } from "../src/rich-text.js";
 
 const clean = (html: string) => cleanRichText(html, document);
 
@@ -26,6 +26,27 @@ describe("rich text", () => {
   it("puts words a browser leaves outside a paragraph in one, and makes its new lines paragraphs", () => {
     expect(clean("Hello<div>World</div>")).toBe("<p>Hello</p><p>World</p>");
     expect(clean("<p>One</p><p><br></p>")).toBe("<p>One</p>");
+  });
+
+  it("keeps a pasted table's rows as paragraphs of their cells' words", () => {
+    expect(
+      clean("<table><caption>Times</caption><tr><th>Day</th><th>Mass</th></tr><tr><td>Sunday</td><td><b>9</b></td></tr></table>"),
+    ).toBe(`<p>Times</p><p>Day${CELL_SEPARATOR}Mass</p><p>Sunday${CELL_SEPARATOR}<strong>9</strong></p>`);
+  });
+
+  it("keeps where a numbered list starts and which way it counts, and code's language", () => {
+    expect(clean('<ol start="3" reversed type="a"><li>Three</li></ol>')).toBe('<ol start="3" reversed=""><li>Three</li></ol>');
+    expect(clean('<ol start="x"><li>One</li></ol>')).toBe("<ol><li>One</li></ol>");
+    expect(clean('<pre><code class="language-js other" data-x="1">let a;</code></pre>')).toBe(
+      '<pre><code class="language-js">let a;</code></pre>',
+    );
+    expect(clean('<p><code class="language-js">a</code></p>')).toBe("<p><code>a</code></p>");
+  });
+
+  it("knows when what's pasted has pictures, which it leaves out", () => {
+    expect(hasPictures('<p>A</p><img src="a.jpg">')).toBe(true);
+    expect(clean('<p>A</p><img src="a.jpg">')).toBe("<p>A</p>");
+    expect(hasPictures("<p>Imagine</p>")).toBe(false);
   });
 
   it("takes addresses on the site, the web, email and phone, and nothing else", () => {

@@ -20,12 +20,13 @@ import type { Block as BlockInstance } from "@wordpress/blocks";
 import { Button } from "@wordpress/components";
 import { useRegistry, useSelect } from "@wordpress/data";
 import { close, listView, plus } from "@wordpress/icons";
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useContext, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { withBlockIds } from "./convert.js";
 import { FieldsPanel } from "./fields.js";
 import type { EditHistory } from "./history.js";
 import type { BlockNames } from "./names.js";
 import { type EditorRegistry, insertPasted, isIntoText, pastedBlocks } from "./paste.js";
+import { hasPictures } from "./rich-text.js";
 import { type EditorServices, Services } from "./rich-text-tools.js";
 import { useInBetweenInserter } from "./inserters.js";
 import { SharePreview } from "./share-preview.js";
@@ -117,28 +118,50 @@ function Selection({ onSelect }: Pick<EditorProps, "onSelect">) {
 function Canvas({ styles, description, names }: Pick<EditorProps, "styles" | "description" | "names">) {
   const content = useRef<HTMLDivElement>(null);
   const registry = useRegistry() as EditorRegistry;
+  const { chooseMedia } = useContext(Services);
+  // What a paste couldn't keep, said for a few seconds.
+  const [note, setNote] = useState<string | null>(null);
+  useEffect(() => {
+    if (!note) return;
+    const timer = setTimeout(() => setNote(null), 8000);
+    return () => clearTimeout(timer);
+  }, [note]);
   // Every paste, before Gutenberg's own handler, which would make WordPress's blocks: into text being edited, the
   // text takes it; anywhere else, it becomes the site's blocks.
   useEffect(() => {
     // The plugin's own frame's page, which the canvas is in.
     const doc = document;
     const paste = (event: ClipboardEvent) => {
-      if (isIntoText(event.target) || !event.clipboardData) return;
+      const data = event.clipboardData;
+      if (!data) return;
+      const html = data.getData("text/html");
+      const text = data.getData("text/plain");
+      if (isIntoText(event.target)) {
+        // Text keeps no pictures: they're blocks of their own.
+        if (hasPictures(html)) {
+          setNote("The pictures you pasted were left out of the text. Paste outside the text to add them as blocks.");
+        }
+        return;
+      }
       event.preventDefault();
       event.stopImmediatePropagation();
-      insertPasted(
-        registry,
-        pastedBlocks(
-          { html: event.clipboardData.getData("text/html"), text: event.clipboardData.getData("text/plain") },
-          description,
-          names,
-          doc,
-        ),
-      );
+      // A picture copied on its own is a file, which only the media library can upload: it's opened to add it there.
+      const image = [...data.files].some((file) => file.type.startsWith("image/"));
+      if (image && !html.trim() && !text.trim()) {
+        setNote("A picture on the clipboard can't be pasted here: upload it in the media library, which has opened.");
+        void chooseMedia("image").then((address) => {
+          if (!address) return;
+          const picture = doc.createElement("img");
+          picture.setAttribute("src", address);
+          insertPasted(registry, pastedBlocks({ html: picture.outerHTML, text: "" }, description, names, doc));
+        });
+        return;
+      }
+      insertPasted(registry, pastedBlocks({ html, text }, description, names, doc));
     };
     doc.addEventListener("paste", paste, true);
     return () => doc.removeEventListener("paste", paste, true);
-  }, [description, names, registry]);
+  }, [chooseMedia, description, names, registry]);
   useInBetweenInserter(content, registry);
   return (
     <BlockTools __unstableContentRef={content} style={{ height: "100%", display: "flex" }}>
@@ -152,6 +175,9 @@ function Canvas({ styles, description, names }: Pick<EditorProps, "styles" | "de
         <BlockList />
       </WritingFlow>
       <SlashInserter content={content} registry={registry} />
+      <p className="gf-paste-note" role="status" hidden={!note}>
+        {note}
+      </p>
     </BlockTools>
   );
 }

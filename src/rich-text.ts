@@ -35,6 +35,12 @@ const RENAMED: Record<string, string> = { b: "strong", i: "em", strike: "s", del
 /** Elements left out with everything in them. */
 const DROPPED = new Set(["script", "style", "template", "iframe", "object", "embed", "noscript", "head", "title", "meta", "link"]);
 
+/** A table's rows, kept as paragraphs, since rich text has no tables, with their cells' words between these. */
+export const CELL_SEPARATOR = " · ";
+
+/** Table cells, whose words go in their row's paragraph. */
+const CELLS = new Set(["td", "th"]);
+
 /** Elements whose contents belong in a paragraph when they're on their own, rather than beside it. */
 const BLOCKS = new Set(["p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "blockquote", "pre", "hr"]);
 
@@ -55,6 +61,21 @@ function cleanChildren(from: Node, into: Node, doc: Document) {
     const element = node as Element;
     const name = element.tagName.toLowerCase();
     if (DROPPED.has(name)) continue;
+    if (name === "tr" || name === "caption") {
+      // A row is a paragraph of its cells' words, rather than all of a table's words run together.
+      const row = doc.createElement("p");
+      if (name === "caption") cleanChildren(element, row, doc);
+      else {
+        [...element.children]
+          .filter((cell) => CELLS.has(cell.tagName.toLowerCase()))
+          .forEach((cell, index) => {
+            if (index > 0) row.appendChild(doc.createTextNode(CELL_SEPARATOR));
+            cleanChildren(cell, row, doc);
+          });
+      }
+      (into.nodeName === "P" && into.parentNode ? into.parentNode : into).appendChild(row);
+      continue;
+    }
     const kept = RENAMED[name] ?? (KEPT.has(name) ? name : undefined);
     if (!kept) {
       cleanChildren(element, into, doc);
@@ -66,6 +87,17 @@ function cleanChildren(from: Node, into: Node, doc: Document) {
     if (kept === "a") {
       const href = element.getAttribute("href") ?? "";
       if (isSafeAddress(href)) copy.setAttribute("href", href.trim());
+    }
+    // Numbered lists keep where they start and which way they count, as Puck's rich text does.
+    if (kept === "ol") {
+      const start = element.getAttribute("start")?.trim() ?? "";
+      if (/^-?\d{1,9}$/.test(start) && start !== "1") copy.setAttribute("start", String(Number(start)));
+      if (element.hasAttribute("reversed")) copy.setAttribute("reversed", "");
+    }
+    // Code keeps the language it's in, which highlighting reads.
+    if (kept === "code" && into.nodeName === "PRE") {
+      const language = [...element.classList].find((name) => /^language-[\w+#-]{1,40}$/.test(name));
+      if (language) copy.setAttribute("class", language);
     }
     cleanChildren(element, copy, doc);
     target.appendChild(copy);
@@ -103,6 +135,11 @@ export interface CleanOptions {
    * line just started. The value kept leaves them out.
    */
   keepEmpty?: boolean;
+}
+
+/** Whether HTML has pictures, which rich text leaves out. */
+export function hasPictures(html: string): boolean {
+  return /<(img|picture|svg|video)\b/i.test(html);
 }
 
 /** `html` with only what rich text keeps, and any words outside a paragraph put in one. */

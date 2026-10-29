@@ -293,6 +293,16 @@ try {
   await words.locator("p").first().waitFor();
   check(!/<span|style=/.test(await words.innerHTML()), "nor does it when it's made words again");
 
+  // Pictures pasted into text, which it can't hold, are left out with a note saying where they can go.
+  await words.evaluate((element) => {
+    const data = new DataTransfer();
+    data.setData("text/html", '<p>Words</p><img src="https://example.org/a.jpg" alt="A picture">');
+    data.setData("text/plain", "Words");
+    element.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true }));
+  });
+  await frame.locator(".gf-paste-note", { hasText: "pictures you pasted were left out" }).waitFor();
+  check(true, "pictures pasted into text are left out, with a note saying so");
+
   // "/" on a new line lists blocks, and the one chosen goes after the text.
   await words.evaluate((element) => {
     const walker = element.ownerDocument.createTreeWalker(element, 4);
