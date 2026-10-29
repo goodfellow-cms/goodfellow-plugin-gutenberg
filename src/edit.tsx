@@ -14,7 +14,7 @@ import { createBlock, getDefaultBlockName } from "@wordpress/blocks";
 import { useRegistry } from "@wordpress/data";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { type GoodfellowAttributes, type SlotAttributes, withStyleClasses } from "./convert.js";
+import { type GoodfellowAttributes, type SlotAttributes, withoutHiddenClasses, withStyleClasses } from "./convert.js";
 import { BlockFields, pasteRichText } from "./fields.js";
 import { type InPlaceField, inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "./in-place.js";
 import { cleanRichText, tidyRichText } from "./rich-text.js";
@@ -98,9 +98,10 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
     const props = (attributes as GoodfellowAttributes).props;
     const fields = description.blocks[type]?.fields ?? {};
     const inPlace = useMemo(() => inPlaceFields(fields), [fields]);
-    // Drawn with what's chosen in the Styles tab as the classes it's published as.
+    // Drawn with what's chosen in the Styles tab as the classes it's published as, but for the ones that hide it on
+    // some screens: Gutenberg hides it itself where the editor's width is one of them, and shows it while selected.
     const styled = hasClassName(description.blocks[type])
-      ? withStyleClasses(props, attributes as unknown as Record<string, unknown>)
+      ? withoutHiddenClasses(withStyleClasses(props, attributes as unknown as Record<string, unknown>))
       : props;
     // Fields edited in place are drawn as markers, so typing in them never draws the block again.
     const key = JSON.stringify(withMarkers(styled, inPlace));

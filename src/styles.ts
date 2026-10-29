@@ -1,6 +1,6 @@
 /**
- * Gutenberg's styling options (colors, font size, spacing and rounded corners)
- * kept as Tailwind classes in a block's `className`, which every block has, so
+ * Gutenberg's styling options (colors, font size, spacing and rounded corners,
+ * and the screens its Hide option hides a block on) kept as Tailwind classes in a block's `className`, which every block has, so
  * content needs nowhere new to keep them and Puck's editors see the same
  * classes: the theme's colors as `text-primary` and `bg-muted`, Tailwind's
  * scales for sizes and spacing, and values of an editor's own as arbitrary
@@ -19,7 +19,15 @@ export interface StyleAttributes {
     spacing?: { padding?: Sides; margin?: Sides };
     border?: { radius?: string | Corners };
   };
+  /** Gutenberg keeps what its Hide option chose here: `false` everywhere, or by screen size. */
+  metadata?: { blockVisibility?: BlockVisibility; [key: string]: unknown };
 }
+
+/** Gutenberg's sizes of screen, which are Puck's Hide on phones, tablets and computers. */
+export type Viewport = "mobile" | "tablet" | "desktop";
+
+/** What Gutenberg's Hide option chose: hidden everywhere, or `false` for each size of screen it's hidden on. */
+export type BlockVisibility = boolean | { viewport?: Partial<Record<Viewport, boolean>> };
 
 type Side = "top" | "right" | "bottom" | "left";
 type Sides = Partial<Record<Side, string>>;
@@ -123,7 +131,56 @@ export function styleFeatures(colors: Partial<Record<ThemeColor, string>> | unde
       defaultSpacingSizes: false,
     },
     border: { radius: true, radiusSizes: { theme: RADIUS_SIZES }, color: false, style: false, width: false },
+    // Gutenberg's Hide option with Tailwind's breakpoints, as the hide classes use them: phones are narrower
+    // than `sm` (640px), tablets narrower than `lg` (1024px).
+    viewport: VIEWPORT_BREAKPOINTS,
   };
+}
+
+/** Gutenberg's sizes of screen, by the widest of each: `width <= 639.98px` is narrower than Tailwind's `sm`. */
+export const VIEWPORT_BREAKPOINTS = { mobile: "639.98px", tablet: "1023.98px" };
+
+/**
+ * The classes that hide a block on sizes of screen, as Goodfellow's Style
+ * setting writes them (core's `block-style.ts`), the ones covering two sizes
+ * first, so the fewest are written. Never plain `hidden`, which blocks use with
+ * `dark:block`.
+ */
+const HIDDEN_CLASSES: [string, Viewport[]][] = [
+  ["max-lg:hidden", ["mobile", "tablet"]],
+  ["sm:hidden", ["tablet", "desktop"]],
+  ["max-sm:hidden", ["mobile"]],
+  ["sm:max-lg:hidden", ["tablet"]],
+  ["lg:hidden", ["desktop"]],
+];
+
+const HIDDEN_BY_CLASS = new Map(HIDDEN_CLASSES);
+
+const VIEWPORTS: Viewport[] = ["mobile", "tablet", "desktop"];
+
+/** The sizes of screen a block is hidden on, whichever way Gutenberg wrote it. */
+export function hiddenViewports(visibility: BlockVisibility | undefined): Viewport[] {
+  if (visibility === false) return [...VIEWPORTS];
+  if (!visibility || typeof visibility !== "object") return [];
+  return VIEWPORTS.filter((viewport) => visibility.viewport?.[viewport] === false);
+}
+
+/** The fewest hide classes for sizes of screen, in the order the table has them. */
+function hiddenClasses(hidden: readonly Viewport[]): string[] {
+  const left = new Set(hidden);
+  const classes: string[] = [];
+  for (const [name, viewports] of HIDDEN_CLASSES) {
+    if (viewports.every((viewport) => left.has(viewport))) {
+      classes.push(name);
+      for (const viewport of viewports) left.delete(viewport);
+    }
+  }
+  return classes;
+}
+
+/** Whether a class is one of the hide classes. */
+export function isHiddenClass(token: string): boolean {
+  return HIDDEN_BY_CLASS.has(token);
 }
 
 /** The block supports that turn Gutenberg's styling options on, each shown in the Styles tab from the start. */
@@ -254,6 +311,7 @@ export function classesFromStyles(attributes: StyleAttributes): string[] {
   }
   classes.push(...sideClasses("p", style?.spacing?.padding), ...sideClasses("m", style?.spacing?.margin));
   classes.push(...radiusClasses(style?.border?.radius));
+  classes.push(...hiddenClasses(hiddenViewports(attributes.metadata?.blockVisibility)));
   return classes;
 }
 
@@ -326,7 +384,13 @@ export function stylesFromClasses(className: string): { attributes: StyleAttribu
   const attributes: StyleAttributes = {};
   const rest: string[] = [];
   const seen = new Set<string>();
+  const hidden = new Set<Viewport>();
   for (const token of className.split(/\s+/).filter(Boolean)) {
+    const hides = HIDDEN_BY_CLASS.get(token);
+    if (hides) {
+      for (const viewport of hides) hidden.add(viewport);
+      continue;
+    }
     // Variants (`md:p-4`, `hover:bg-muted`) and `!important` are the site's own, kept as written.
     const kind = token.includes(":") || token.startsWith("!") ? undefined : classKind(token);
     if (!kind || seen.has(kind) || !readClass(token, attributes)) {
@@ -334,6 +398,11 @@ export function stylesFromClasses(className: string): { attributes: StyleAttribu
       continue;
     }
     seen.add(kind);
+  }
+  if (hidden.size > 0) {
+    attributes.metadata = {
+      blockVisibility: { viewport: Object.fromEntries(VIEWPORTS.filter((v) => hidden.has(v)).map((v) => [v, false])) },
+    };
   }
   return { attributes, rest };
 }
@@ -370,14 +439,22 @@ export function sameStyles(a: StyleAttributes, b: StyleAttributes): boolean {
   return JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 }
 
-/** Just the styling options from a block's attributes, as Gutenberg keeps them. */
+/**
+ * Just the styling options from a block's attributes, as Gutenberg keeps them,
+ * with what its Hide option chose as the sizes of screen it hides the block on,
+ * as the hide classes read back, and none of the rest of its `metadata`.
+ */
 export function styleAttributes(attributes: Record<string, unknown>): StyleAttributes {
-  const { textColor, backgroundColor, fontSize, style } = attributes as StyleAttributes;
+  const { textColor, backgroundColor, fontSize, style, metadata } = attributes as StyleAttributes;
+  const hidden = hiddenViewports(metadata?.blockVisibility);
   return {
     ...(textColor && { textColor }),
     ...(backgroundColor && { backgroundColor }),
     ...(fontSize && { fontSize }),
     ...(style && { style }),
+    ...(hidden.length > 0 && {
+      metadata: { blockVisibility: { viewport: Object.fromEntries(hidden.map((viewport) => [viewport, false])) } },
+    }),
   };
 }
 
@@ -388,7 +465,8 @@ export function styleAttributes(attributes: Record<string, unknown>): StyleAttri
  */
 export function classNameFor(original: string, styles: StyleAttributes, extra: string | undefined): string {
   const before = stylesFromClasses(original);
+  const chosen = styleAttributes(styles as Record<string, unknown>);
   const extraClasses = (extra ?? "").split(/\s+/).filter(Boolean);
-  if (sameStyles(before.attributes, styles) && extraClasses.join(" ") === before.rest.join(" ")) return original;
-  return [...extraClasses, ...classesFromStyles(styles)].join(" ");
+  if (sameStyles(before.attributes, chosen) && extraClasses.join(" ") === before.rest.join(" ")) return original;
+  return [...extraClasses, ...classesFromStyles(chosen)].join(" ");
 }

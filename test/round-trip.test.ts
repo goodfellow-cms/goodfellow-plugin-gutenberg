@@ -69,6 +69,23 @@ describe.each(SITES)("the %s site", (site) => {
     },
   );
 
+  it("keeps a block hidden on some screens hidden, and publishes what Gutenberg's Hide option chose", () => {
+    const content = [{ type: "Heading", props: { id: "h", text: "Phones only", className: "text-primary sm:hidden" } } as ComponentData];
+    const [converted] = toGutenberg(content, description, names);
+    expect(converted?.attributes.metadata).toEqual({ blockVisibility: { viewport: { tablet: false, desktop: false } } });
+    expect(converted?.attributes.className).toBeUndefined();
+    const store = dispatch(blockEditorStore) as {
+      resetBlocks(blocks: unknown[]): void;
+      updateBlockAttributes(id: string, attributes: Record<string, unknown>): void;
+    };
+    store.resetBlocks(converted ? [converted] : []);
+    expect(fromGutenberg(select(blockEditorStore).getBlocks(), description, names)).toEqual(content);
+    // Hide everywhere, as Gutenberg's Hide option writes it.
+    store.updateBlockAttributes(converted?.clientId as string, { metadata: { blockVisibility: false } });
+    const [hidden] = fromGutenberg(select(blockEditorStore).getBlocks(), description, names);
+    expect(hidden?.props.className).toBe("text-primary max-lg:hidden lg:hidden");
+  });
+
   it("keeps each slot of a block with several apart, in a slot block of its own", () => {
     const withSlots = Object.entries(description.blocks).find(([, block]) => slotNames(block).length > 1);
     expect(withSlots).toBeDefined();

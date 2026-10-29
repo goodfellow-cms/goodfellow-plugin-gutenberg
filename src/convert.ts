@@ -10,7 +10,7 @@ import type { ComponentData } from "@puckeditor/core";
 import { type Block as BlockInstance, cloneBlock, createBlock } from "@wordpress/blocks";
 import { type BlockNames, onlySlot, SLOT_BLOCK, slotNames } from "./names.js";
 import { hasClassName } from "./register.js";
-import { classNameFor, type StyleAttributes, styleAttributes, stylesFromClasses } from "./styles.js";
+import { classNameFor, isHiddenClass, type StyleAttributes, styleAttributes, stylesFromClasses } from "./styles.js";
 
 /** A block's attributes: its props without its slots, which are blocks of their own. */
 export interface GoodfellowAttributes extends StyleAttributes {
@@ -64,6 +64,14 @@ export function withStyleClasses(props: Record<string, unknown>, attributes: Rec
   const extra = attributes.className;
   const className = classNameFor(original, styleAttributes(attributes), typeof extra === "string" ? extra : undefined);
   return className !== original || props.className !== undefined ? { ...props, className } : props;
+}
+
+/** A block's props without the classes that hide it on some sizes of screen, for drawing it in the editor. */
+export function withoutHiddenClasses(props: Record<string, unknown>): Record<string, unknown> {
+  if (typeof props.className !== "string") return props;
+  const classes = props.className.split(/\s+/).filter(Boolean);
+  if (!classes.some(isHiddenClass)) return props;
+  return { ...props, className: classes.filter((name) => !isHiddenClass(name)).join(" ") };
 }
 
 /**
