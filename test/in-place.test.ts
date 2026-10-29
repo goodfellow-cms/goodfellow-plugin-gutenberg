@@ -8,7 +8,7 @@ import type { GoodfellowConfig } from "@goodfellow-cms/core";
 import { describeSite } from "@goodfellow-cms/react";
 import type { ComponentData } from "@puckeditor/core";
 import { describe, expect, it } from "vitest";
-import { inPlaceFields, placeInPlace, readValue, withMarkers } from "../src/in-place.js";
+import { inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "../src/in-place.js";
 import { siteDir } from "../sites.js";
 import { siteDrawer } from "./draw.js";
 
@@ -46,6 +46,12 @@ describe("text edited in place", () => {
     expect(text?.classList.contains("gf-text")).toBe(true);
     expect(text?.getAttribute("contenteditable")).toBe("true");
     expect(text?.innerHTML).toBe(html);
+  });
+
+  it("cleans rich text as it's put in place, whoever wrote it", () => {
+    const element = document.createElement("div");
+    writeValue(element, { name: "content", type: "richtext", label: "Text" }, '<p>ok</p><img src=x onerror="alert(1)">');
+    expect(element.innerHTML).toBe("<p>ok</p>");
   });
 
   it("is a button's label, inside its link", async () => {

@@ -132,6 +132,7 @@ function Canvas({ styles, description, names }: Pick<EditorProps, "styles" | "de
           { html: event.clipboardData.getData("text/html"), text: event.clipboardData.getData("text/plain") },
           description,
           names,
+          doc,
         ),
       );
     };

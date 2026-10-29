@@ -14,6 +14,7 @@ import { type Block as BlockInstance, parse } from "@wordpress/blocks";
 import { toGutenberg } from "./convert.js";
 import { escapeText } from "./fields.js";
 import { type BlockNames, SLOT_BLOCK } from "./names.js";
+import { cleanRichText } from "./rich-text.js";
 
 type Description = Pick<SiteDescription, "blocks">;
 
@@ -34,11 +35,85 @@ function known(blocks: ComponentData[], description: Description, names: BlockNa
     })) as ComponentData[];
 }
 
-/** Gutenberg's blocks that are the site's, with the same in their slots. */
-function siteBlocks(blocks: BlockInstance[], names: BlockNames): BlockInstance[] {
+interface FieldShape {
+  type?: string;
+  arrayFields?: Record<string, FieldShape>;
+  objectFields?: Record<string, FieldShape>;
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * A value pasted for a field, as the field takes it: rich text cleaned as
+ * typed rich text is, words as words, lists and objects field by field, and
+ * `undefined` for anything else, which is left out. Slots are blocks of their
+ * own, never props.
+ */
+function pastedValue(field: FieldShape | undefined, value: unknown, doc: Document): unknown {
+  switch (field?.type) {
+    case undefined:
+    case "slot":
+      return undefined;
+    case "richtext":
+      return typeof value === "string" ? cleanRichText(value, doc) : undefined;
+    case "text":
+    case "textarea":
+      return typeof value === "string" ? value : undefined;
+    case "number":
+      return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+    case "select":
+    case "radio":
+      return ["string", "number", "boolean"].includes(typeof value) || value === null ? value : undefined;
+    case "array":
+      return Array.isArray(value)
+        ? value.filter(isPlainObject).map((item) => pastedFields(field.arrayFields ?? {}, item, doc))
+        : undefined;
+    case "object":
+      return isPlainObject(value) ? pastedFields(field.objectFields ?? {}, value, doc) : undefined;
+    default:
+      // The site's own fields, such as media and tables, which the editor checks against the block's fields when
+      // it's published (`checkEditedData()`).
+      return value;
+  }
+}
+
+/** Pasted values for the fields there are, each as its field takes it. */
+function pastedFields(fields: Record<string, FieldShape>, values: Record<string, unknown>, doc: Document) {
+  return Object.fromEntries(
+    Object.entries(values).flatMap(([name, value]) => {
+      const kept = pastedValue(fields[name], value, doc);
+      return kept === undefined ? [] : [[name, kept]];
+    }),
+  );
+}
+
+/**
+ * Gutenberg's blocks that are the site's, with the same in their slots, and
+ * their props as the site's fields take them: block markup on the clipboard
+ * can come from anywhere, such as a web page, so nothing in it is taken as
+ * it is, as nothing pasted as HTML is.
+ */
+function siteBlocks(blocks: BlockInstance[], description: Description, names: BlockNames, doc: Document): BlockInstance[] {
   return blocks
     .filter((block) => block.name === SLOT_BLOCK || names.fromGutenberg(block.name))
-    .map((block) => ({ ...block, innerBlocks: siteBlocks(block.innerBlocks, names) }));
+    .map((block) => {
+      const innerBlocks = siteBlocks(block.innerBlocks, description, names, doc);
+      if (block.name === SLOT_BLOCK) return { ...block, innerBlocks };
+      const fields = (description.blocks[names.fromGutenberg(block.name) as string]?.fields ?? {}) as Record<
+        string,
+        FieldShape
+      >;
+      const given = (block.attributes as { props?: unknown }).props;
+      const props = isPlainObject(given) ? given : {};
+      const kept = pastedFields(fields, props, doc);
+      return {
+        ...block,
+        attributes: { ...block.attributes, props: typeof props.id === "string" ? { id: props.id, ...kept } : kept },
+        innerBlocks,
+      };
+    });
 }
 
 /** What's pasted, as Gutenberg's blocks of the site's own. */
@@ -46,10 +121,12 @@ export function pastedBlocks(
   pasted: { html: string; text: string },
   description: Description,
   names: BlockNames,
+  doc: Document = document,
 ): BlockInstance[] {
-  // Blocks copied in Gutenberg, the site's own with their props as they were: ids of their own come when they're added.
+  // Blocks copied in Gutenberg, the site's own with their props as the site's fields take them: ids of their own
+  // come when they're added.
   if (pasted.html.includes("<!-- wp:")) {
-    const copied = siteBlocks(parse(pasted.html), names).filter((block) => block.name !== SLOT_BLOCK);
+    const copied = siteBlocks(parse(pasted.html), description, names, doc).filter((block) => block.name !== SLOT_BLOCK);
     if (copied.length > 0) return copied;
   }
   const html = pasted.html.trim() || escapeText(pasted.text);

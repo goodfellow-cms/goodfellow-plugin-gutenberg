@@ -37,6 +37,24 @@ describe("pasting", () => {
     expect(content[0]?.props.content).toContain("Two");
   });
 
+  it("keeps copied blocks' props only as the site's fields take them", () => {
+    const name = names.toGutenberg("Text");
+    const props = {
+      id: "Text-1",
+      content: '<p>ok</p><img src=x onerror="alert(1)"><style>p{}</style>',
+      extra: 1,
+      className: { not: "words" },
+    };
+    const html = `<!-- wp:${name} ${JSON.stringify({ props })} /-->`;
+    const content = fromGutenberg(pastedBlocks({ html, text: "" }, description, names), description, names);
+    expect(content.map((block) => block.type)).toEqual(["Text"]);
+    const kept: Record<string, unknown> = content[0]?.props ?? {};
+    expect(kept.content).toContain("<p>ok</p>");
+    expect(kept.content).not.toMatch(/onerror|<style|<img/);
+    expect(kept).not.toHaveProperty("extra");
+    expect(kept.className).not.toEqual({ not: "words" });
+  });
+
   it("leaves pasting into text being edited to the text", () => {
     const element = document.createElement("div");
     element.innerHTML = '<h2 data-gf-field="text"><span>x</span></h2><div class="gf-block"></div>';

@@ -130,7 +130,10 @@ function RichTextControl({ name, field, value, onChange }: ControlProps) {
   const html = typeof value === "string" ? value : "";
   useEffect(() => {
     const current = element.current;
-    if (current && cleanRichText(current.innerHTML, current.ownerDocument) !== html) current.innerHTML = html;
+    if (current && cleanRichText(current.innerHTML, current.ownerDocument) !== html) {
+      // Cleaned as typed rich text is, since what's stored may have been written anywhere.
+      current.innerHTML = cleanRichText(html, current.ownerDocument, { keepEmpty: true });
+    }
   }, [html]);
   const id = useId();
   return (

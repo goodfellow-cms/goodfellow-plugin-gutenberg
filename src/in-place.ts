@@ -8,6 +8,7 @@
  * the marker, and that field is edited in the sidebar only.
  */
 import type { Field } from "./fields.js";
+import { cleanRichText } from "./rich-text.js";
 
 /** The field types that can be edited in place. */
 const IN_PLACE_TYPES = new Set(["text", "textarea", "richtext"]);
@@ -155,6 +156,7 @@ export function readValue(element: HTMLElement, field: InPlaceField): string {
 /** Puts a field's value in the element it's edited in. */
 export function writeValue(element: HTMLElement, field: InPlaceField, value: unknown): void {
   const text = typeof value === "string" ? value : "";
-  if (field.type === "richtext") element.innerHTML = text;
+  // Cleaned as typed rich text is, since what's stored may have been written anywhere, such as by a collaborator.
+  if (field.type === "richtext") element.innerHTML = cleanRichText(text, element.ownerDocument, { keepEmpty: true });
   else element.textContent = text;
 }
