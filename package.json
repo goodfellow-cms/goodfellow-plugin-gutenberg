@@ -52,12 +52,12 @@
   },
   "dependencies": {
     "@tailwindcss/browser": "4.3.3",
-    "@wordpress/block-editor": "18.1.0",
-    "@wordpress/blocks": "16.2.0",
-    "@wordpress/components": "42.0.0",
-    "@wordpress/data": "10.57.0",
-    "@wordpress/element": "9.0.0",
-    "@wordpress/icons": "18.0.0"
+    "@wordpress/block-editor": "19.0.0",
+    "@wordpress/blocks": "17.0.0",
+    "@wordpress/components": "43.0.0",
+    "@wordpress/data": "11.0.0",
+    "@wordpress/element": "10.0.0",
+    "@wordpress/icons": "19.0.0"
   },
   "devDependencies": {
     "@changesets/cli": "3.0.3",
@@ -65,16 +65,16 @@
     "@goodfellow-cms/core": "0.6.0",
     "@goodfellow-cms/react": "0.6.0",
     "@puckeditor/core": "0.23.0",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "create-goodfellow": "0.6.0",
     "happy-dom": "21.0.4",
-    "playwright": "1.63.0",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "typescript": "5.9.3",
-    "vite": "8.3.4",
-    "vitest": "5.0.3"
+    "playwright": "1.64.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.0.5"
   },
   "engines": {
     "node": ">=22.23.4"
