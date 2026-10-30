@@ -1,6 +1,6 @@
 {
   "name": "goodfellow-plugin-gutenberg",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A Goodfellow plugin that lets people edit pages in WordPress's block editor, Gutenberg, in place of Puck.",
   "keywords": [
     "goodfellow-plugin",
