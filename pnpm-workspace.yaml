@@ -14,3 +14,11 @@ overrides:
 peerDependencyRules:
   allowedVersions:
     "@tiptap/html>happy-dom": "21"
+
+auditConfig:
+  ignoreGhsas:
+    # deepmerge, which WordPress's @wordpress/data and @wordpress/components
+    # use, has no fixed release. It runs only in the editor, in the plugin's
+    # frame in the admin panel, which is sandboxed and holds no sign-in, and
+    # never in the site's pages or builds. As in Goodfellow's own workspace.
+    - GHSA-gcqx-w48m-w2h4
