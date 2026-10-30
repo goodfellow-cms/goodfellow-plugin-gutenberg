@@ -39,6 +39,16 @@ describe("media addresses", () => {
     expect(html).toContain("url('/goodfellow-demo/media/sky.jpg')");
   });
 
+  it("shows smaller copies in srcset from the site's folder, keeping their widths", () => {
+    const html = withMediaAddresses(
+      '<picture><source srcset="/media/media-sizes/640/a.webp 640w, https://cdn.example/a.webp 1280w">' +
+        '<img src="/media/a.jpg" srcset="/media/media-sizes/640/a.jpg 640w,/media/a.jpg 2x" alt=""></picture>',
+      mediaAddresses("/goodfellow-demo/"),
+    );
+    expect(html).toContain('srcset="/goodfellow-demo/media/media-sizes/640/a.webp 640w, https://cdn.example/a.webp 1280w"');
+    expect(html).toContain('srcset="/goodfellow-demo/media/media-sizes/640/a.jpg 640w,/goodfellow-demo/media/a.jpg 2x"');
+  });
+
   it("draws the site's blocks with their media from the site's folder", async () => {
     const renderer = sessionRenderer(
       { blocks: {}, draw: async () => '<figure><img src="/media/church.svg" alt="The church"></figure>' },

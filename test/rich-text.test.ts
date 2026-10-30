@@ -119,6 +119,22 @@ describe("rich text being edited", () => {
     element.remove();
   });
 
+  it("keeps the selection where text has private-use characters of its own, such as an icon font's", () => {
+    const element = editing('<p><span style="color: red;">\uE000 Call \uE001 us</span></p>');
+    const text = element.querySelector("span")?.firstChild as Text;
+    const selection = document.getSelection() as Selection;
+    const range = document.createRange();
+    range.setStart(text, 3);
+    range.setEnd(text, 6);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    expect(tidyRichText(element)).toBe(true);
+    expect(element.innerHTML).toBe("<p>\uE000 Call \uE001 us</p>");
+    expect(selection.toString()).toBe("all");
+    element.remove();
+  });
+
   it("leaves rich text that's as it's kept alone", () => {
     const element = editing("<p>One <strong>two</strong></p><p><br></p>");
     expect(tidyRichText(element)).toBe(false);
