@@ -177,9 +177,16 @@ export function cleanRichText(html: string, doc: Document, options: CleanOptions
   return result.innerHTML;
 }
 
-/** Where the selection starts and ends while text is tidied: characters no one types, kept in the text for a moment. */
-const START = "\uE000";
-const END = "\uE001";
+/**
+ * Where the selection starts and ends while text is tidied, kept in the text
+ * for a moment: private-use characters around letters made for this tidying
+ * alone, since a single private-use character can be in text, such as an
+ * icon font's.
+ */
+function selectionMarkers(): { start: string; end: string } {
+  const made = Math.random().toString(36).slice(2, 12);
+  return { start: `\uE000${made}s\uE001`, end: `\uE000${made}e\uE001` };
+}
 
 /** Finds a marker in `element`'s text, takes it out, and says where it was. */
 function takeMarker(element: HTMLElement, marker: string): { node: Text; offset: number } | null {
@@ -187,7 +194,7 @@ function takeMarker(element: HTMLElement, marker: string): { node: Text; offset:
   for (let node = walker.nextNode() as Text | null; node; node = walker.nextNode() as Text | null) {
     const offset = node.data.indexOf(marker);
     if (offset === -1) continue;
-    node.data = node.data.slice(0, offset) + node.data.slice(offset + 1);
+    node.data = node.data.slice(0, offset) + node.data.slice(offset + marker.length);
     return { node, offset };
   }
   return null;
@@ -209,17 +216,18 @@ export function tidyRichText(element: HTMLElement): boolean {
     selection && selection.rangeCount > 0 && element.contains(selection.getRangeAt(0).commonAncestorContainer)
       ? selection.getRangeAt(0)
       : null;
+  const markers = selectionMarkers();
   if (range) {
     const end = range.cloneRange();
     end.collapse(false);
-    end.insertNode(doc.createTextNode(END));
+    end.insertNode(doc.createTextNode(markers.end));
     const start = range.cloneRange();
     start.collapse(true);
-    start.insertNode(doc.createTextNode(START));
+    start.insertNode(doc.createTextNode(markers.start));
   }
   element.innerHTML = cleanRichText(element.innerHTML, doc, { keepEmpty: true });
-  const start = takeMarker(element, START);
-  const end = takeMarker(element, END);
+  const start = takeMarker(element, markers.start);
+  const end = takeMarker(element, markers.end);
   if (selection && start) {
     const restored = doc.createRange();
     restored.setStart(start.node, start.offset);

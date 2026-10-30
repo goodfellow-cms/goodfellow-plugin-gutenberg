@@ -190,12 +190,6 @@ importers:
       '@wordpress/icons':
         specifier: 18.0.0
         version: 18.0.0(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
-      react:
-        specifier: 19.3.0
-        version: 19.3.0
-      react-dom:
-        specifier: 19.3.0
-        version: 19.3.0(react@19.3.0)
     devDependencies:
       '@changesets/cli':
         specifier: 3.0.3
@@ -227,6 +221,12 @@ importers:
       playwright:
         specifier: 1.63.0
         version: 1.63.0
+      react:
+        specifier: 19.3.0
+        version: 19.3.0
+      react-dom:
+        specifier: 19.3.0
+        version: 19.3.0(react@19.3.0)
       typescript:
         specifier: 5.9.3
         version: 5.9.3

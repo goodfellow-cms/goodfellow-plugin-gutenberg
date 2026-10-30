@@ -15,7 +15,7 @@ import { useRegistry } from "@wordpress/data";
 import { createContext, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { type GoodfellowAttributes, type SlotAttributes, withoutHiddenClasses, withStyleClasses } from "./convert.js";
-import { BlockFields, pasteRichText } from "./fields.js";
+import { BlockFields, escapeText, pasteRichText } from "./fields.js";
 import { type InPlaceField, inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "./in-place.js";
 import { cleanRichText, tidyRichText } from "./rich-text.js";
 import { RichTextTools } from "./rich-text-tools.js";
@@ -162,7 +162,8 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
       // Its props alone: the blocks in its slots are Gutenberg's, drawn into the places the drawing leaves.
       renderer.render({ type, props: JSON.parse(key) } as ComponentData).then(
         (drawn) => current && setHtml(drawn),
-        () => current && setHtml(`<p>${description.blocks[type]?.label ?? type}</p>`),
+        // The block's name as text: a label is the site's code's words, never HTML.
+        () => current && setHtml(escapeText(description.blocks[type]?.label || type)),
       );
       return () => {
         current = false;
