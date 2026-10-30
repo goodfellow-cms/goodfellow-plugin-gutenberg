@@ -32,7 +32,17 @@ export const SLOT_ELEMENT = "gf-slot";
  */
 export interface BlockRenderer {
   render(block: ComponentData): Promise<string>;
+  /**
+   * The block's settings as its props make them, for blocks whose description
+   * says `resolvesFields`, which choose them in the site's code, as an editor
+   * plugin's `session.fields()` gives them. Without it, or where it fails, the
+   * description's fields are shown.
+   */
+  fields?(block: ComponentData): Promise<Record<string, unknown>>;
 }
+
+/** How long after a change to a block's props its settings are asked for again, in milliseconds. */
+const FIELDS_WAIT = 300;
 
 /** Where each of a block's slots is in the HTML drawn for it, by slot. */
 const SlotPlaces = createContext<ReadonlyMap<string, Element>>(new Map());
@@ -68,6 +78,40 @@ interface BlockChanges {
   ): void;
 }
 
+/**
+ * The settings shown for a block: the description's fields, or, for a block
+ * that chooses them in the site's code (`resolvesFields`), what `renderer`
+ * gives for its props now, asked for again a moment after they change.
+ */
+export function useResolvedFields(
+  renderer: BlockRenderer,
+  // Said by descriptions from Goodfellow 0.7 on, which the types this plugin's built with don't have.
+  block: { resolvesFields?: boolean } | undefined,
+  type: string,
+  props: Record<string, unknown>,
+  fields: Record<string, unknown>,
+): Record<string, unknown> {
+  const resolves = block?.resolvesFields === true && renderer.fields !== undefined;
+  const key = resolves ? JSON.stringify(props) : "";
+  const [resolved, setResolved] = useState<Record<string, unknown>>();
+  useEffect(() => {
+    if (!resolves) return;
+    let current = true;
+    const timer = setTimeout(() => {
+      renderer.fields?.({ type, props: JSON.parse(key) } as ComponentData).then(
+        (next) => current && setResolved(next),
+        () => current && setResolved(undefined),
+      );
+    }, FIELDS_WAIT);
+    return () => {
+      current = false;
+      clearTimeout(timer);
+    };
+  }, [renderer, resolves, type, key]);
+  // Until the site's code answers, the last answer, else the description's.
+  return resolves && resolved ? resolved : fields;
+}
+
 /** The `edit` and `slotEdit` components for `registerBlocks()`, drawing blocks with `renderer`. */
 export function blockEditors(description: Pick<SiteDescription, "blocks">, names: BlockNames, renderer: BlockRenderer) {
   /**
@@ -98,6 +142,13 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
     const props = (attributes as GoodfellowAttributes).props;
     const fields = description.blocks[type]?.fields ?? {};
     const inPlace = useMemo(() => inPlaceFields(fields), [fields]);
+    const settings = useResolvedFields(
+      renderer,
+      description.blocks[type] as { resolvesFields?: boolean } | undefined,
+      type,
+      props,
+      fields,
+    );
     // Drawn with what's chosen in the Styles tab as the classes it's published as, but for the ones that hide it on
     // some screens: Gutenberg hides it itself where the editor's width is one of them, and shows it while selected.
     const styled = hasClassName(description.blocks[type])
@@ -244,7 +295,7 @@ export function blockEditors(description: Pick<SiteDescription, "blocks">, names
           </BlockControls>
         )}
         <BlockFields
-          fields={fields}
+          fields={settings}
           props={props}
           // Its CSS classes are Gutenberg's styling options and additional CSS classes, under Advanced.
           hidden={new Set([...richText.map((field) => field.name), "className"])}

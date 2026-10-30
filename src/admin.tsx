@@ -11,6 +11,7 @@ import "@wordpress/block-editor/build-style/style.css";
 import "@wordpress/block-editor/build-style/content.css";
 import "./editor.css";
 import type { PluginAdmin, PluginEditorData, PluginEditorSession } from "@goodfellow-cms/core";
+import type { ComponentData } from "@puckeditor/core";
 import { setDefaultBlockName } from "@wordpress/blocks";
 import { createRoot } from "react-dom/client";
 import { fromGutenberg, toGutenberg } from "./convert.js";
@@ -25,12 +26,16 @@ import { registerBlocks } from "./register.js";
 import { styleFeatures } from "./styles.js";
 import { compileTailwind } from "./tailwind.js";
 
+/** The session's `fields()`, which admin panels from Goodfellow 0.9 on have, for blocks that choose their settings. */
+type SessionFields = { fields?(block: ComponentData): Promise<Record<string, unknown>> };
+
 /**
  * Draws blocks as the site does, or from their fields alone where the site's code can't, with their media shown
- * from where the frame can show it (`mediaAddress`).
+ * from where the frame can show it (`mediaAddress`), and asks the site's code for the settings of blocks that
+ * choose them, where the admin panel can.
  */
 export function sessionRenderer(
-  session: Pick<PluginEditorSession, "blocks" | "draw">,
+  session: Pick<PluginEditorSession, "blocks" | "draw"> & SessionFields,
   mediaAddress: (url: string) => string = (url) => url,
 ): BlockRenderer {
   const fallback = outlineRenderer({ blocks: session.blocks });
@@ -40,6 +45,7 @@ export function sessionRenderer(
         .draw(block)
         .catch(() => fallback.render(block))
         .then((html) => withMediaAddresses(html, mediaAddress)),
+    ...(session.fields && { fields: (block: ComponentData) => session.fields?.(block) ?? Promise.resolve({}) }),
   };
 }
 

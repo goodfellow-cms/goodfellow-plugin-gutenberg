@@ -103,3 +103,13 @@ describe("drawing blocks", () => {
     ).toContain('<gf-slot data-slot="content"></gf-slot>');
   });
 });
+
+describe("blocks' settings", () => {
+  it("are asked of the site's code where the admin panel can", async () => {
+    const draw = async () => "<p></p>";
+    const fields = async () => ({ heading: { type: "text" } });
+    expect(sessionRenderer({ blocks: description.blocks, draw }).fields).toBeUndefined();
+    const renderer = sessionRenderer({ blocks: description.blocks, draw, fields });
+    expect(await renderer.fields?.({ type: "Heading", props: { id: "Heading-1" } })).toEqual({ heading: { type: "text" } });
+  });
+});
