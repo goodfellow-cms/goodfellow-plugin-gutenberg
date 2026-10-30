@@ -89,6 +89,10 @@ Goodfellow's blocks are styled with Tailwind, and every block keeps extra classe
 - **Fonts.** The plugin loads the theme's Google Fonts where Goodfellow gives them (`session.styles().fonts`, after 0.6.0, goodfellow-cms/goodfellow-cms#113), whose editor plugins' frames may load them; with 0.6.0, headings fall back to the computer's fonts.
 - **Rendering while it loads.** Each block is drawn once the site's code answers, rather than from its fields first.
 
+### `npm audit` and deepmerge
+
+In a site with the plugin, `npm audit` lists a low-severity advisory for deepmerge (GHSA-gcqx-w48m-w2h4), once for each WordPress package that uses it, so it can show as a dozen or more. deepmerge has no fixed release yet. WordPress's `@wordpress/data` and `@wordpress/components` use it, and they run only in the editor, in the plugin's frame in the admin panel, which is sandboxed and holds no sign-in. They never run in the site's pages or its build: the build only bundles them, and the plugin's main module, which the site's config imports, imports none of them. npm can't be told to skip an advisory, so it stays listed until deepmerge has a fixed release; this repository's `pnpm audit` skips it (`pnpm-workspace.yaml`'s `auditConfig`).
+
 ## Trying it
 
 ```sh
