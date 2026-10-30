@@ -7,7 +7,7 @@
 import type { GoodfellowPlugin } from "@goodfellow-cms/core";
 
 /** The plugin's version, which `package.json` has too. */
-export const VERSION = "0.1.1";
+export const VERSION = "0.2.0";
 
 /** The plugin, for a site's config's `plugins`. */
 export function gutenberg(): GoodfellowPlugin {
