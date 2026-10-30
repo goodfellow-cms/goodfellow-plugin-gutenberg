@@ -107,7 +107,14 @@ Every change that reaches the published plugin needs a changeset: run `pnpm chan
 
 1. Run `pnpm release:version`, which turns the changesets into a new `version` in `package.json` and an entry in `CHANGELOG.md` (`changeset version`), and puts the same version in `src/index.ts`'s `VERSION`, which a test keeps the same. Commit what it changes. Every release needs a new version: npm never lets one be published twice.
 2. Run `pnpm check:site`, which CI doesn't, since it makes a site from npm and drives it in a browser.
-3. Publish a GitHub release whose tag is `v` and the version, such as `v0.1.0`.
+3. Once that's on `main`, tag it with `v` and the version, and push the tag, which starts [`publish.yml`](.github/workflows/publish.yml):
+
+   ```sh
+   git switch main && git pull
+   git tag v0.2.1 && git push origin v0.2.1
+   ```
+
+   The workflow stops unless the tag matches `package.json`'s version and is on `main`. A GitHub release for the tag, for its notes, is up to you: it doesn't start anything.
 4. [`publish.yml`](.github/workflows/publish.yml) checks the plugin again and stages it on npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), which the Plugins screen shows owners: which repository and commit it was built from. A staged version isn't published: nobody can install it until a maintainer approves it. The run's page lists the digest of the file it staged.
 5. Approve it from your computer, with npm 11.15 or later (`npm install --global npm@11`), signed in to npm (`npm login`): `npm stage list goodfellow-plugin-gutenberg` lists what's waiting, with each one's id and digest. Compare the digest with the run's, then run `npm stage approve <id>`, which asks for your two-factor code and publishes it. To throw a staged version away instead, run `npm stage reject <id>`.
 
@@ -117,7 +124,9 @@ The workflow signs in to npm with [trusted publishing](https://docs.npmjs.com/tr
 npm trust github goodfellow-plugin-gutenberg --file publish.yml --repo goodfellow-cms/goodfellow-plugin-gutenberg --allow-stage-publish --yes
 ```
 
-Without `--allow-publish`, npm refuses `npm publish` from the workflow. A package has one trusted publisher: if it already has one that may publish, find its id with `npm trust list goodfellow-plugin-gutenberg` and remove it first with `npm trust revoke --id <id> goodfellow-plugin-gutenberg`. npm drops a trusted publisher that hasn't staged anything within 2 days of being added, so add it shortly before a release. Then choose **Require two-factor authentication and disallow tokens** under the package's **Settings → Publishing access**. The package's first version has to be published from a computer (`pnpm build && npm publish --access public`), since trusted publishing is set up in a package's settings. The Plugins screen offers a release once it's three days old.
+Without `--allow-publish`, npm refuses `npm publish` from the workflow. A package has one trusted publisher: if it already has one that may publish, find its id with `npm trust list goodfellow-plugin-gutenberg` and remove it first with `npm trust revoke --id <id> goodfellow-plugin-gutenberg`. npm drops a trusted publisher that hasn't staged anything within 2 days of being added, so add it shortly before a release. Then choose **Require two-factor authentication and disallow tokens** under the package's **Settings → Publishing access**.
+
+Pushing a `v` tag is what starts a release, so keep that to maintainers, though nothing reaches npm until one approves it: under the repository's **Settings → Rules → Rulesets**, choose **New ruleset → New tag ruleset**, set **Enforcement status** to Active, add the target `v*` under **Target tags**, turn on **Restrict creations**, **Restrict updates** and **Restrict deletions**, and add the **Repository admin** and **Maintain** roles to the **Bypass list**. If a tag's push didn't start the workflow, such as one pushed before it ran on tags, run **Publish** from the **Actions** tab and choose the tag under **Use workflow from**; that works only for tags whose commit has this workflow. The package's first version has to be published from a computer (`pnpm build && npm publish --access public`), since trusted publishing is set up in a package's settings. The Plugins screen offers a release once it's three days old.
 
 `peerDependencies` names the Goodfellow releases it works with, as a range on `@goodfellow-cms/core` (`>=0.6.0 <1.0.0`). A release is offered only to sites on a Goodfellow release in that range, and Goodfellow's Updates screen warns owners when a newer one is outside it, so narrow it in a new version if a Goodfellow release breaks the plugin.
 
