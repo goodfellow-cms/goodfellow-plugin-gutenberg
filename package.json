@@ -17,6 +17,10 @@
     "url": "git+https://github.com/goodfellow-cms/goodfellow-plugin-gutenberg.git"
   },
   "bugs": "https://github.com/goodfellow-cms/goodfellow-plugin-gutenberg/issues",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/goodfellow-cms"
+  },
   "type": "module",
   "exports": {
     ".": {
