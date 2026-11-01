@@ -1,5 +1,13 @@
 # goodfellow-plugin-gutenberg
 
+## 0.2.1
+
+### Patch Changes
+
+- fdd69eb: Links to Goodfellow's GitHub Sponsors page from npm.
+- ce20ce9: Blocks that choose their settings in the site's code, such as the Comments block, show in the sidebar the settings the site's code gives for what's chosen, where the admin panel can say (Goodfellow 0.9 or later), so Disqus and Garrul comments no longer offer Giscus's settings.
+- 29a9227: Uses the site's own React rather than a copy of its own: React and React DOM are peer dependencies, as they are for WordPress's packages, so the plugin's frame never bundles two. Drawn blocks show the site's smaller copies of photos (`srcset`) from a site in a folder, as they do the photo itself. Tidying text that has private-use characters of its own, such as an icon font's, keeps the selection where it was. A block that couldn't be drawn shows its name as text. The repository checks its packages for security advisories, and Dependabot keeps them up to date.
+
 ## 0.2.0
 
 ### Minor Changes
