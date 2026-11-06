@@ -10,6 +10,12 @@ overrides:
   # @tiptap/html, which asks for happy-dom 20; only 21.0.4 and later fix
   # GHSA-834v-8h66-3h79.
   "@puckeditor/core>happy-dom": "^21.0.4"
+  # Also as in Goodfellow's own workspace: @goodfellow-cms/core's sigstore, which
+  # checks plugins' early updates, brings cacache, which asks for glob 13 (14.0.2
+  # fixes GHSA-3g3m-2fjr-6pw4), and @tufjs/models, which asks for minimatch 10
+  # (11.0.1 fixes GHSA-g3hv-75wg-m249).
+  "glob@<14.0.2": "^14.0.2"
+  "minimatch@<11.0.1": "^11.0.1"
 
 peerDependencyRules:
   allowedVersions:
