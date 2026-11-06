@@ -58,7 +58,8 @@ describe("text edited in place", () => {
     const { editing } = await placed("Button", { label: "Read more", href: "/about" });
     const label = editing.get("label");
     expect(label?.textContent).toBe("Read more");
-    expect(label?.closest("a")?.getAttribute("href")).toBe("/about");
+    // Goodfellow 0.10 ends links to the site's pages with "/", as its builds serve them.
+    expect(label?.closest("a")?.getAttribute("href")).toBe("/about/");
   });
 
   it("is each of a quote's two parts", async () => {
