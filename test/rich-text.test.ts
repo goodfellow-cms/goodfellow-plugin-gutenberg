@@ -49,11 +49,15 @@ describe("rich text", () => {
     expect(hasPictures("<p>Imagine</p>")).toBe(false);
   });
 
+  it("keeps a link's address as browsers read it, without the line breaks they take out", () => {
+    expect(clean('<p><a href="ht&#10;tps://example.org">x</a></p>')).toBe('<p><a href="https://example.org">x</a></p>');
+  });
+
   it("takes addresses on the site, the web, email and phone, and nothing else", () => {
-    for (const address of ["/about", "#top", "https://example.org", "mailto:a@example.org", "tel:555-0100", "../up"]) {
+    for (const address of ["/about", "#top", "https://example.org", "mailto:a@example.org", "tel:555-0100", "../up", "ht\ntps://example.org", "/ab\tout"]) {
       expect(isSafeAddress(address)).toBe(true);
     }
-    for (const address of ["javascript:alert(1)", "//evil.example", "data:text/html,x", "vbscript:x"]) {
+    for (const address of ["javascript:alert(1)", "//evil.example", "/\\evil.example", "/\t/evil.example", "/\n/evil.example", "/\r/evil.example", "data:text/html,x", "vbscript:x"]) {
       expect(isSafeAddress(address)).toBe(false);
     }
   });
