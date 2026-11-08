@@ -46,8 +46,9 @@ const BLOCKS = new Set(["p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "bl
 
 /** Whether a link's address is one a page may have: on the site, the web, email or phone. */
 export function isSafeAddress(address: string): boolean {
-  const trimmed = address.trim();
-  if (/^(#|\/(?!\/)|\.{1,2}\/)/.test(trimmed)) return true;
+  // Browsers take tabs and line breaks out of addresses, and read `\` as `/`, so `/\host` is another site.
+  const trimmed = address.trim().replace(/[\t\n\r]/g, "");
+  if (/^(#|\/(?![/\\])|\.{1,2}\/)/.test(trimmed)) return true;
   return /^(https?:|mailto:|tel:)/i.test(trimmed);
 }
 

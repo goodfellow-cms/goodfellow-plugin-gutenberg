@@ -53,7 +53,7 @@ describe("rich text", () => {
     for (const address of ["/about", "#top", "https://example.org", "mailto:a@example.org", "tel:555-0100", "../up"]) {
       expect(isSafeAddress(address)).toBe(true);
     }
-    for (const address of ["javascript:alert(1)", "//evil.example", "data:text/html,x", "vbscript:x"]) {
+    for (const address of ["javascript:alert(1)", "//evil.example", "/\\evil.example", "/\t/evil.example", "data:text/html,x", "vbscript:x"]) {
       expect(isSafeAddress(address)).toBe(false);
     }
   });
