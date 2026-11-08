@@ -44,10 +44,15 @@ const CELLS = new Set(["td", "th"]);
 /** Elements whose contents belong in a paragraph when they're on their own, rather than beside it. */
 const BLOCKS = new Set(["p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "blockquote", "pre", "hr"]);
 
+/** An address as browsers read it: trimmed, without the tabs and line breaks they take out. Links store this. */
+export function normalizedAddress(address: string): string {
+  return address.trim().replace(/[\t\n\r]/g, "");
+}
+
 /** Whether a link's address is one a page may have: on the site, the web, email or phone. */
 export function isSafeAddress(address: string): boolean {
-  // Browsers take tabs and line breaks out of addresses, and read `\` as `/`, so `/\host` is another site.
-  const trimmed = address.trim().replace(/[\t\n\r]/g, "");
+  // Browsers read `\` as `/`, so `/\host` is another site.
+  const trimmed = normalizedAddress(address);
   if (/^(#|\/(?![/\\])|\.{1,2}\/)/.test(trimmed)) return true;
   return /^(https?:|mailto:|tel:)/i.test(trimmed);
 }
@@ -87,7 +92,7 @@ function cleanChildren(from: Node, into: Node, doc: Document) {
     const copy = doc.createElement(kept);
     if (kept === "a") {
       const href = element.getAttribute("href") ?? "";
-      if (isSafeAddress(href)) copy.setAttribute("href", href.trim());
+      if (isSafeAddress(href)) copy.setAttribute("href", normalizedAddress(href));
     }
     // Numbered lists keep where they start and which way they count, as Puck's rich text does.
     if (kept === "ol") {

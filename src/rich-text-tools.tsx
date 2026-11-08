@@ -16,7 +16,7 @@ import {
   linkOff,
 } from "@wordpress/icons";
 import { createContext, useContext, useRef, useState } from "react";
-import { isSafeAddress } from "./rich-text.js";
+import { isSafeAddress, normalizedAddress } from "./rich-text.js";
 
 /** What the editor's fields need from the admin panel. */
 export interface EditorServices {
@@ -86,7 +86,7 @@ function LinkButton({ elements }: { elements: () => HTMLElement[] }) {
   };
   const apply = (to: string) => {
     restore();
-    if (isSafeAddress(to)) format(elements(), "createLink", to.trim());
+    if (isSafeAddress(to)) format(elements(), "createLink", normalizedAddress(to));
     close();
   };
   const remove = () => {
