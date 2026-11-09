@@ -105,6 +105,10 @@ pnpm check:site  # the plugin in a starter site under goodfellow dev, with scree
 
 `pnpm check:site` makes the site in `.site/` the first time, which needs npm to reach the registry. It uses Playwright as the computer has it; set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to use a Chromium that's already installed.
 
+## Reviews
+
+Pull requests are reviewed by CodeRabbit and by Claude. Claude's review ([`claude-review.yml`](.github/workflows/claude-review.yml)) runs Claude Code's `/code-review` once CI has passed on a pull request that's ready for review, on the Claude subscription behind the `CLAUDE_CODE_OAUTH_TOKEN` secret (made with `claude setup-token`), and leaves what it finds as comments on the lines, with a comment saying what the review used. A comment starting `@claude review` asks again, at a level such as `@claude review high`; the `no-claude-review` label skips the review CI starts, and `claude-review:low`, `:high`, or `:xhigh` changes its level from `medium`. It never reviews pull requests from forks, whose runs get no secrets.
+
 ## Publishing a version
 
 Every change that reaches the published plugin needs a changeset: run `pnpm changeset`, choose patch, minor or major, and describe the change for the plugin's users. It writes a file in `.changeset/`, which goes in the same pull request.
