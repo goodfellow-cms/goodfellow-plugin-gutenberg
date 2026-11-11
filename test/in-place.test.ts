@@ -8,7 +8,14 @@ import type { GoodfellowConfig } from "@goodfellow-cms/core";
 import { describeSite } from "@goodfellow-cms/react";
 import type { ComponentData } from "@puckeditor/core";
 import { describe, expect, it } from "vitest";
-import { inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "../src/in-place.js";
+import {
+  attributeWithText,
+  inPlaceFields,
+  placeInPlace,
+  readValue,
+  withMarkers,
+  writeValue,
+} from "../src/in-place.js";
 import { siteDir } from "../sites.js";
 import { siteDrawer } from "./draw.js";
 
@@ -83,6 +90,26 @@ describe("text edited in place", () => {
     expect(element.querySelector("section")?.getAttribute("aria-label")).toBe("Our parish");
     expect(editing.get("text")?.tagName).toBe("H2");
     expect(element.querySelector("p")?.textContent).toBe("About Our parish.");
+  });
+
+  it("never puts the text where it would run, and puts it in an address only where it makes a safe one", () => {
+    const element = document.createElement("div");
+    const fields = [{ name: "text", type: "text", label: "Text" }] as const;
+    const marker = (withMarkers({ text: "x" }, fields).text as string) ?? "";
+    // A block that put its text in these after its own address checks ran on the marker.
+    element.innerHTML = `<a href="${marker}" onclick="${marker}" style="${marker}" title="${marker}">${marker}</a><iframe srcdoc="${marker}" src="/pages/${marker}"></iframe>`;
+    placeInPlace(element, fields, { text: "javascript:alert(1)" });
+    const link = element.querySelector("a");
+    expect(link?.getAttribute("href")).toBe("");
+    expect(link?.getAttribute("onclick")).toBe("");
+    expect(link?.getAttribute("style")).toBe("");
+    expect(link?.getAttribute("title")).toBe("javascript:alert(1)");
+    expect(element.querySelector("iframe")?.getAttribute("srcdoc")).toBe("");
+    // The page's own address with the text in it is still one a page may have.
+    expect(element.querySelector("iframe")?.getAttribute("src")).toBe("/pages/javascript:alert(1)");
+    expect(attributeWithText("href", marker, marker, " https://example.org/\n")).toBe("https://example.org/");
+    expect(attributeWithText("HREF", marker, marker, "\tjavascript:x")).toBe("");
+    expect(attributeWithText("onmouseover", `a${marker}`, marker, "x")).toBe("a");
   });
 
   it("is an element of its own among other words, and leaves out a block that changes its text", () => {

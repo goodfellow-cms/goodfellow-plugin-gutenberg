@@ -8,7 +8,7 @@
  * the marker, and that field is edited in the sidebar only.
  */
 import type { Field } from "./fields.js";
-import { cleanRichText } from "./rich-text.js";
+import { cleanRichText, isSafeAddress, normalizedAddress } from "./rich-text.js";
 
 /** The field types that can be edited in place. */
 const IN_PLACE_TYPES = new Set(["text", "textarea", "richtext"]);
@@ -53,6 +53,41 @@ export function plainText(field: InPlaceField, value: unknown, doc: Document): s
   return template.content.textContent ?? "";
 }
 
+/** Attributes a field's text never goes into: event handlers, styles and frames' pages, which would run or load it. */
+function runsText(name: string): boolean {
+  return /^on/.test(name) || name === "style" || name === "srcdoc";
+}
+
+/** Attributes that hold an address, which takes a field's text only where it makes one a page may have. */
+const ADDRESS_ATTRIBUTES = new Set([
+  "href",
+  "xlink:href",
+  "src",
+  "srcset",
+  "action",
+  "formaction",
+  "poster",
+  "data",
+  "cite",
+  "background",
+  "ping",
+]);
+
+/**
+ * An attribute's value with a field's text where the drawing put its marker:
+ * the block filtered its addresses while the marker stood in for the text, so
+ * an address is checked again with the text in it, and left empty where it
+ * isn't one a page may have, such as `javascript:`, and what runs or styles
+ * the page never takes the text at all.
+ */
+export function attributeWithText(name: string, value: string, marker: string, text: string): string {
+  const lower = name.toLowerCase();
+  if (runsText(lower)) return value.split(marker).join("");
+  const filled = value.split(marker).join(text);
+  if (!ADDRESS_ATTRIBUTES.has(lower)) return filled;
+  return isSafeAddress(filled) ? normalizedAddress(filled) : "";
+}
+
 /** The element a marker could be edited in, where it's all its text node holds: its parent, while it holds nothing else, but never `root`. */
 function wholeElement(node: Text, marker: string, root: Element): Element | null {
   let element = node.parentElement;
@@ -93,7 +128,9 @@ export function placeInPlace(
   for (const element of root.querySelectorAll("*")) {
     for (const attribute of [...element.attributes]) {
       let value = attribute.value;
-      for (const { marker, text } of markers) value = value.split(marker).join(text);
+      for (const { marker, text } of markers) {
+        if (value.includes(marker)) value = attributeWithText(attribute.name, value, marker, text);
+      }
       if (value !== attribute.value) element.setAttribute(attribute.name, value);
     }
   }
