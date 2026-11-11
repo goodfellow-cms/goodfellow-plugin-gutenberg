@@ -89,6 +89,7 @@ jobs:
         with:
           node-version: 24
           check-latest: true
+          package-manager-cache: false
           registry-url: https://registry.npmjs.org
       # Staged publishing needs npm 11.15.0 or later. An exact release, checked against its digest, so what publishes
       # doesn't change by itself; Dependabot can't see it here, so move it on by hand.
@@ -118,6 +119,10 @@ jobs:
           DIGEST: ${{ needs.build.outputs.digest }}
           npm_config_ignore_scripts: "true"
         run: |
+          # The build job ran the repository's code, so its outputs are only a file's name and digest to check.
+          case "$TARBALL" in
+            "" | */* | .*) echo "::error::The build job's file name isn't a plain one."; exit 1 ;;
+          esac
           file="$RUNNER_TEMP/package/$TARBALL"
           digest="sha512-$(openssl dgst -sha512 -binary "$file" | base64 -w0)"
           if [ "$digest" != "$DIGEST" ]; then

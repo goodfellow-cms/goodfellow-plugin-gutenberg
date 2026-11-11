@@ -74,18 +74,37 @@ const ADDRESS_ATTRIBUTES = new Set([
 ]);
 
 /**
- * An attribute's value with a field's text where the drawing put its marker:
- * the block filtered its addresses while the marker stood in for the text, so
- * an address is checked again with the text in it, and left empty where it
- * isn't one a page may have, such as `javascript:`, and what runs or styles
- * the page never takes the text at all.
+ * An address with no scheme of its own (`images/a.png`, `?page=2`), which the
+ * page's address is the start of, so it can't run anything. Browsers read `\`
+ * as `/`, so one starting with either is left to `isSafeAddress()`.
  */
-export function attributeWithText(name: string, value: string, marker: string, text: string): string {
+function isRelativeAddress(address: string): boolean {
+  const trimmed = normalizedAddress(address);
+  if (/^[\\/]/.test(trimmed)) return false;
+  const end = trimmed.search(/[/?#\\]/);
+  return !(end === -1 ? trimmed : trimmed.slice(0, end)).includes(":");
+}
+
+/** A field's marker in the drawn HTML, and the text it stands for. */
+export interface Fill {
+  marker: string;
+  text: string;
+}
+
+/**
+ * An attribute's value with each field's text where the drawing put its
+ * marker: the block filtered its addresses while the markers stood in for the
+ * text, so an address is checked again once all the text is in it, and left
+ * empty where it isn't one a page may have, such as `javascript:`, and what
+ * runs or styles the page never takes the text at all.
+ */
+export function attributeWithText(name: string, value: string, fills: readonly Fill[]): string {
   const lower = name.toLowerCase();
-  if (runsText(lower)) return value.split(marker).join("");
-  const filled = value.split(marker).join(text);
-  if (!ADDRESS_ATTRIBUTES.has(lower)) return filled;
-  return isSafeAddress(filled) ? normalizedAddress(filled) : "";
+  const runs = runsText(lower);
+  let filled = value;
+  for (const { marker, text } of fills) filled = filled.split(marker).join(runs ? "" : text);
+  if (runs || !ADDRESS_ATTRIBUTES.has(lower)) return filled;
+  return isSafeAddress(filled) || isRelativeAddress(filled) ? normalizedAddress(filled) : "";
 }
 
 /** The element a marker could be edited in, where it's all its text node holds: its parent, while it holds nothing else, but never `root`. */
@@ -127,11 +146,8 @@ export function placeInPlace(
 
   for (const element of root.querySelectorAll("*")) {
     for (const attribute of [...element.attributes]) {
-      let value = attribute.value;
-      for (const { marker, text } of markers) {
-        if (value.includes(marker)) value = attributeWithText(attribute.name, value, marker, text);
-      }
-      if (value !== attribute.value) element.setAttribute(attribute.name, value);
+      const fills = markers.filter(({ marker }) => attribute.value.includes(marker));
+      if (fills.length > 0) element.setAttribute(attribute.name, attributeWithText(attribute.name, attribute.value, fills));
     }
   }
 

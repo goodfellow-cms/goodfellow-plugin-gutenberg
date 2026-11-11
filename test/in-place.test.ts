@@ -107,9 +107,34 @@ describe("text edited in place", () => {
     expect(element.querySelector("iframe")?.getAttribute("srcdoc")).toBe("");
     // The page's own address with the text in it is still one a page may have.
     expect(element.querySelector("iframe")?.getAttribute("src")).toBe("/pages/javascript:alert(1)");
-    expect(attributeWithText("href", marker, marker, " https://example.org/\n")).toBe("https://example.org/");
-    expect(attributeWithText("HREF", marker, marker, "\tjavascript:x")).toBe("");
-    expect(attributeWithText("onmouseover", `a${marker}`, marker, "x")).toBe("a");
+    expect(attributeWithText("href", marker, [{ marker, text: " https://example.org/\n" }])).toBe("https://example.org/");
+    expect(attributeWithText("HREF", marker, [{ marker, text: "\tjavascript:x" }])).toBe("");
+    expect(attributeWithText("onmouseover", `a${marker}`, [{ marker, text: "x" }])).toBe("a");
+  });
+
+  it("checks an address once all its fields' text is in it, and keeps addresses with no scheme of their own", () => {
+    const fields = [
+      { name: "start", type: "text", label: "Start" },
+      { name: "rest", type: "text", label: "Rest" },
+    ] as const;
+    const drawn = withMarkers({ start: "", rest: "" }, fields);
+    const element = document.createElement("div");
+    // Checked as each marker was replaced, the first link would have been blanked while the second marker was in it.
+    element.innerHTML = `<a href="${drawn.start}${drawn.rest}">a</a><img src="images/${drawn.rest}.png" alt=""><a href="?page=${drawn.rest}">b</a>`;
+    placeInPlace(element, fields, { start: "", rest: "https://a.example/" });
+    const links = element.querySelectorAll("a");
+    expect(links[0]?.getAttribute("href")).toBe("https://a.example/");
+    expect(element.querySelector("img")?.getAttribute("src")).toBe("images/https://a.example/.png");
+    expect(links[1]?.getAttribute("href")).toBe("?page=https://a.example/");
+
+    const unsafe = document.createElement("div");
+    unsafe.innerHTML = `<a href="${drawn.start}${drawn.rest}">a</a><img src="${drawn.rest}/a.png" alt="">`;
+    placeInPlace(unsafe, fields, { start: "java", rest: "script:alert(1)" });
+    expect(unsafe.querySelector("a")?.getAttribute("href")).toBe("");
+    expect(unsafe.querySelector("img")?.getAttribute("src")).toBe("");
+
+    expect(attributeWithText("href", "?page=2", [])).toBe("?page=2");
+    expect(attributeWithText("href", "\\\\evil.example/", [])).toBe("");
   });
 
   it("is an element of its own among other words, and leaves out a block that changes its text", () => {
