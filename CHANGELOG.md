@@ -1,5 +1,13 @@
 # goodfellow-plugin-gutenberg
 
+## 0.2.2
+
+### Patch Changes
+
+- 1d4b7ea: Text edited in place no longer goes into a drawn block's event handlers, styles, or frames' `srcdoc`, and goes into an address (`href`, `src`, and the like) only where the address it makes is one a page may have (in a `srcset`, each candidate's, keeping the others), since the block checked its addresses while a marker stood in for the text. A site address ending in a long run of slashes no longer slows down showing its media in the frame. Releases are built and tested in a job of their own, and staged from a second job that runs none of the repository's code, so no package the build installs runs where npm's publishing token can be had.
+- 02cbd98: Links are checked, and stored, as browsers read them: trimmed, without tabs and line breaks. Those that then start with `//` or `/\`, such as `/\example.org`, are no longer taken for addresses on the site, since browsers read them as another site's.
+- 0fd27d1: The editor's frame uses Tailwind's browser build 4.3.4, which draws the site's classes as Goodfellow 0.10's previews do.
+
 ## 0.2.1
 
 ### Patch Changes
