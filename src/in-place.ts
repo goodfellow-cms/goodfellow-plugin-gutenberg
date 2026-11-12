@@ -64,6 +64,7 @@ const ADDRESS_ATTRIBUTES = new Set([
   "xlink:href",
   "src",
   "srcset",
+  "imagesrcset",
   "action",
   "formaction",
   "poster",
@@ -97,7 +98,8 @@ const isSpace = (char: string) => char === " " || char === "\t" || char === "\n"
  * A `srcset` with only the candidates whose address may stay, each with its
  * width or density as written. It's read as HTML reads it, in one pass: an
  * address runs to the next whitespace, commas included, less any commas it
- * ends with; its descriptors run to the next comma outside brackets.
+ * ends with; its descriptors run to the next comma outside brackets. A link's
+ * `imagesrcset` is read the same way.
  */
 function srcsetWithKeptAddresses(srcset: string): string {
   const kept: string[] = [];
@@ -114,10 +116,12 @@ function srcsetWithKeptAddresses(srcset: string): string {
       url = url.replace(/,+$/, "");
     } else {
       const from = at;
-      let depth = 0;
-      while (at < srcset.length && (srcset.charAt(at) !== "," || depth > 0)) {
-        if (srcset.charAt(at) === "(") depth += 1;
-        else if (srcset.charAt(at) === ")" && depth > 0) depth -= 1;
+      // Inside brackets a comma is the descriptors' own, as HTML reads them; the first `)` ends the brackets,
+      // however many `(` came before, so the next comma ends the candidate.
+      let inParens = false;
+      while (at < srcset.length && (srcset.charAt(at) !== "," || inParens)) {
+        if (srcset.charAt(at) === "(") inParens = true;
+        else if (srcset.charAt(at) === ")") inParens = false;
         at += 1;
       }
       descriptors = srcset.slice(from, at).trimEnd();
@@ -146,7 +150,7 @@ export function attributeWithText(name: string, value: string, fills: readonly F
   let filled = value;
   for (const { marker, text } of fills) filled = filled.split(marker).join(runs ? "" : text);
   if (runs || !ADDRESS_ATTRIBUTES.has(lower)) return filled;
-  if (lower === "srcset") return srcsetWithKeptAddresses(filled);
+  if (lower === "srcset" || lower === "imagesrcset") return srcsetWithKeptAddresses(filled);
   return keptAddress(filled) ? normalizedAddress(filled) : "";
 }
 

@@ -150,6 +150,12 @@ describe("text edited in place", () => {
       "a.png, b.png 3x",
     );
     expect(attributeWithText("srcset", "a.png (x, y) 1x, b.png 2x", [])).toBe("a.png (x, y) 1x, b.png 2x");
+    // The first ")" ends the brackets, as HTML reads them, so the comma after it starts the next candidate.
+    const gif = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+    expect(attributeWithText("srcset", `${marker} 2x`, [{ marker, text: `safe.png ((x), ${gif}` }])).toBe("safe.png ((x)");
+    // A preload link's image candidates are read as srcset's are.
+    expect(attributeWithText("imagesrcset", marker, [{ marker, text: `${gif} 2x` }])).toBe("");
+    expect(attributeWithText("imagesrcset", `${marker} 1x, b.png 2x`, [{ marker, text: "javascript:x" }])).toBe("b.png 2x");
     expect(attributeWithText("href", "\\\\evil.example/", [])).toBe("");
   });
 
