@@ -90,19 +90,41 @@ function keptAddress(address: string): boolean {
   return isSafeAddress(address) || isRelativeAddress(address);
 }
 
+/** HTML's ASCII whitespace, which separates a `srcset` candidate's address from its descriptors. */
+const isSpace = (char: string) => char === " " || char === "\t" || char === "\n" || char === "\f" || char === "\r";
+
 /**
  * A `srcset` with only the candidates whose address may stay, each with its
- * width or density as written: its addresses are checked one by one, since
- * the list as a whole isn't one address.
+ * width or density as written. It's read as HTML reads it, in one pass: an
+ * address runs to the next whitespace, commas included, less any commas it
+ * ends with; its descriptors run to the next comma outside brackets.
  */
 function srcsetWithKeptAddresses(srcset: string): string {
-  return srcset
-    .split(",")
-    .flatMap((candidate) => {
-      const [, space = "", url = "", rest = ""] = /^(\s*)(\S+)([\s\S]*)$/.exec(candidate) ?? [];
-      return url && keptAddress(url) ? [`${space}${normalizedAddress(url)}${rest}`] : [];
-    })
-    .join(",");
+  const kept: string[] = [];
+  let at = 0;
+  while (at < srcset.length) {
+    while (at < srcset.length && (isSpace(srcset.charAt(at)) || srcset.charAt(at) === ",")) at += 1;
+    if (at >= srcset.length) break;
+    const start = at;
+    while (at < srcset.length && !isSpace(srcset.charAt(at))) at += 1;
+    let url = srcset.slice(start, at);
+    let descriptors = "";
+    if (url.endsWith(",")) {
+      // Commas ending the address end the candidate too, with no descriptors.
+      url = url.replace(/,+$/, "");
+    } else {
+      const from = at;
+      let depth = 0;
+      while (at < srcset.length && (srcset.charAt(at) !== "," || depth > 0)) {
+        if (srcset.charAt(at) === "(") depth += 1;
+        else if (srcset.charAt(at) === ")" && depth > 0) depth -= 1;
+        at += 1;
+      }
+      descriptors = srcset.slice(from, at).trimEnd();
+    }
+    if (url && keptAddress(url)) kept.push(`${normalizedAddress(url)}${descriptors}`);
+  }
+  return kept.join(", ");
 }
 
 /** A field's marker in the drawn HTML, and the text it stands for. */

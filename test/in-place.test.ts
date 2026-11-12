@@ -142,6 +142,14 @@ describe("text edited in place", () => {
     expect(attributeWithText("SRCSET", `a.png 640w, ${marker} 1280w, b.png 1920w`, [{ marker, text: "javascript:x" }])).toBe(
       "a.png 640w, b.png 1920w",
     );
+    // An address runs to the next whitespace, commas and all, as HTML reads it.
+    expect(attributeWithText("srcset", `${marker} 2x`, [{ marker, text: "https://images.example/a,b:c.png" }])).toBe(
+      "https://images.example/a,b:c.png 2x",
+    );
+    expect(attributeWithText("srcset", `a.png,, ${marker} 2x,b.png 3x`, [{ marker, text: "javascript:alert(1)" }])).toBe(
+      "a.png, b.png 3x",
+    );
+    expect(attributeWithText("srcset", "a.png (x, y) 1x, b.png 2x", [])).toBe("a.png (x, y) 1x, b.png 2x");
     expect(attributeWithText("href", "\\\\evil.example/", [])).toBe("");
   });
 
