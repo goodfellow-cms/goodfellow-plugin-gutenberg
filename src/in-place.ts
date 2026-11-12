@@ -85,6 +85,26 @@ function isRelativeAddress(address: string): boolean {
   return !(end === -1 ? trimmed : trimmed.slice(0, end)).includes(":");
 }
 
+/** Whether an address may stay in an attribute: one a page may have, or one with no scheme of its own. */
+function keptAddress(address: string): boolean {
+  return isSafeAddress(address) || isRelativeAddress(address);
+}
+
+/**
+ * A `srcset` with only the candidates whose address may stay, each with its
+ * width or density as written: its addresses are checked one by one, since
+ * the list as a whole isn't one address.
+ */
+function srcsetWithKeptAddresses(srcset: string): string {
+  return srcset
+    .split(",")
+    .flatMap((candidate) => {
+      const [, space = "", url = "", rest = ""] = /^(\s*)(\S+)([\s\S]*)$/.exec(candidate) ?? [];
+      return url && keptAddress(url) ? [`${space}${normalizedAddress(url)}${rest}`] : [];
+    })
+    .join(",");
+}
+
 /** A field's marker in the drawn HTML, and the text it stands for. */
 export interface Fill {
   marker: string;
@@ -104,7 +124,8 @@ export function attributeWithText(name: string, value: string, fills: readonly F
   let filled = value;
   for (const { marker, text } of fills) filled = filled.split(marker).join(runs ? "" : text);
   if (runs || !ADDRESS_ATTRIBUTES.has(lower)) return filled;
-  return isSafeAddress(filled) || isRelativeAddress(filled) ? normalizedAddress(filled) : "";
+  if (lower === "srcset") return srcsetWithKeptAddresses(filled);
+  return keptAddress(filled) ? normalizedAddress(filled) : "";
 }
 
 /** The element a marker could be edited in, where it's all its text node holds: its parent, while it holds nothing else, but never `root`. */

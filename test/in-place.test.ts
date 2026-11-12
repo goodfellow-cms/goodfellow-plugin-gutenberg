@@ -134,6 +134,14 @@ describe("text edited in place", () => {
     expect(unsafe.querySelector("img")?.getAttribute("src")).toBe("");
 
     expect(attributeWithText("href", "?page=2", [])).toBe("?page=2");
+    // A srcset is a list of addresses, each checked on its own, with its width or density kept.
+    const marker = "\u{F0000}m\u{F0000}";
+    expect(attributeWithText("srcset", `small.png 1x, ${marker} 2x`, [{ marker, text: "https://example.org/large.png" }])).toBe(
+      "small.png 1x, https://example.org/large.png 2x",
+    );
+    expect(attributeWithText("SRCSET", `a.png 640w, ${marker} 1280w, b.png 1920w`, [{ marker, text: "javascript:x" }])).toBe(
+      "a.png 640w, b.png 1920w",
+    );
     expect(attributeWithText("href", "\\\\evil.example/", [])).toBe("");
   });
 
