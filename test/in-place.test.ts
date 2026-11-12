@@ -8,7 +8,14 @@ import type { GoodfellowConfig } from "@goodfellow-cms/core";
 import { describeSite } from "@goodfellow-cms/react";
 import type { ComponentData } from "@puckeditor/core";
 import { describe, expect, it } from "vitest";
-import { inPlaceFields, placeInPlace, readValue, withMarkers, writeValue } from "../src/in-place.js";
+import {
+  attributeWithText,
+  inPlaceFields,
+  placeInPlace,
+  readValue,
+  withMarkers,
+  writeValue,
+} from "../src/in-place.js";
 import { siteDir } from "../sites.js";
 import { siteDrawer } from "./draw.js";
 
@@ -83,6 +90,73 @@ describe("text edited in place", () => {
     expect(element.querySelector("section")?.getAttribute("aria-label")).toBe("Our parish");
     expect(editing.get("text")?.tagName).toBe("H2");
     expect(element.querySelector("p")?.textContent).toBe("About Our parish.");
+  });
+
+  it("never puts the text where it would run, and puts it in an address only where it makes a safe one", () => {
+    const element = document.createElement("div");
+    const fields = [{ name: "text", type: "text", label: "Text" }] as const;
+    const marker = (withMarkers({ text: "x" }, fields).text as string) ?? "";
+    // A block that put its text in these after its own address checks ran on the marker.
+    element.innerHTML = `<a href="${marker}" onclick="${marker}" style="${marker}" title="${marker}">${marker}</a><iframe srcdoc="${marker}" src="/pages/${marker}"></iframe>`;
+    placeInPlace(element, fields, { text: "javascript:alert(1)" });
+    const link = element.querySelector("a");
+    expect(link?.getAttribute("href")).toBe("");
+    expect(link?.getAttribute("onclick")).toBe("");
+    expect(link?.getAttribute("style")).toBe("");
+    expect(link?.getAttribute("title")).toBe("javascript:alert(1)");
+    expect(element.querySelector("iframe")?.getAttribute("srcdoc")).toBe("");
+    // The page's own address with the text in it is still one a page may have.
+    expect(element.querySelector("iframe")?.getAttribute("src")).toBe("/pages/javascript:alert(1)");
+    expect(attributeWithText("href", marker, [{ marker, text: " https://example.org/\n" }])).toBe("https://example.org/");
+    expect(attributeWithText("HREF", marker, [{ marker, text: "\tjavascript:x" }])).toBe("");
+    expect(attributeWithText("onmouseover", `a${marker}`, [{ marker, text: "x" }])).toBe("a");
+  });
+
+  it("checks an address once all its fields' text is in it, and keeps addresses with no scheme of their own", () => {
+    const fields = [
+      { name: "start", type: "text", label: "Start" },
+      { name: "rest", type: "text", label: "Rest" },
+    ] as const;
+    const drawn = withMarkers({ start: "", rest: "" }, fields);
+    const element = document.createElement("div");
+    // Checked as each marker was replaced, the first link would have been blanked while the second marker was in it.
+    element.innerHTML = `<a href="${drawn.start}${drawn.rest}">a</a><img src="images/${drawn.rest}.png" alt=""><a href="?page=${drawn.rest}">b</a>`;
+    placeInPlace(element, fields, { start: "", rest: "https://a.example/" });
+    const links = element.querySelectorAll("a");
+    expect(links[0]?.getAttribute("href")).toBe("https://a.example/");
+    expect(element.querySelector("img")?.getAttribute("src")).toBe("images/https://a.example/.png");
+    expect(links[1]?.getAttribute("href")).toBe("?page=https://a.example/");
+
+    const unsafe = document.createElement("div");
+    unsafe.innerHTML = `<a href="${drawn.start}${drawn.rest}">a</a><img src="${drawn.rest}/a.png" alt="">`;
+    placeInPlace(unsafe, fields, { start: "java", rest: "script:alert(1)" });
+    expect(unsafe.querySelector("a")?.getAttribute("href")).toBe("");
+    expect(unsafe.querySelector("img")?.getAttribute("src")).toBe("");
+
+    expect(attributeWithText("href", "?page=2", [])).toBe("?page=2");
+    // A srcset is a list of addresses, each checked on its own, with its width or density kept.
+    const marker = "\u{F0000}m\u{F0000}";
+    expect(attributeWithText("srcset", `small.png 1x, ${marker} 2x`, [{ marker, text: "https://example.org/large.png" }])).toBe(
+      "small.png 1x, https://example.org/large.png 2x",
+    );
+    expect(attributeWithText("SRCSET", `a.png 640w, ${marker} 1280w, b.png 1920w`, [{ marker, text: "javascript:x" }])).toBe(
+      "a.png 640w, b.png 1920w",
+    );
+    // An address runs to the next whitespace, commas and all, as HTML reads it.
+    expect(attributeWithText("srcset", `${marker} 2x`, [{ marker, text: "https://images.example/a,b:c.png" }])).toBe(
+      "https://images.example/a,b:c.png 2x",
+    );
+    expect(attributeWithText("srcset", `a.png,, ${marker} 2x,b.png 3x`, [{ marker, text: "javascript:alert(1)" }])).toBe(
+      "a.png, b.png 3x",
+    );
+    expect(attributeWithText("srcset", "a.png (x, y) 1x, b.png 2x", [])).toBe("a.png (x, y) 1x, b.png 2x");
+    // The first ")" ends the brackets, as HTML reads them, so the comma after it starts the next candidate.
+    const gif = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+    expect(attributeWithText("srcset", `${marker} 2x`, [{ marker, text: `safe.png ((x), ${gif}` }])).toBe("safe.png ((x)");
+    // A preload link's image candidates are read as srcset's are.
+    expect(attributeWithText("imagesrcset", marker, [{ marker, text: `${gif} 2x` }])).toBe("");
+    expect(attributeWithText("imagesrcset", `${marker} 1x, b.png 2x`, [{ marker, text: "javascript:x" }])).toBe("b.png 2x");
+    expect(attributeWithText("href", "\\\\evil.example/", [])).toBe("");
   });
 
   it("is an element of its own among other words, and leaves out a block that changes its text", () => {

@@ -12,7 +12,10 @@ const MEDIA_IN_STYLE = /url\((['"]?)(\/media\/[^'")]+)\1\)/g;
 
 /** The address to show a media file from, given the site's address: other addresses are returned as they are. */
 export function mediaAddresses(siteUrl: string): (url: string) => string {
-  const base = siteUrl.replace(/\/+$/, "");
+  // Trimmed by counting back, since a pattern such as /\/+$/ takes time that grows with the square of a long run.
+  let end = siteUrl.length;
+  while (end > 0 && siteUrl.charAt(end - 1) === "/") end -= 1;
+  const base = siteUrl.slice(0, end);
   return (url) => (base && url.startsWith(MEDIA_PREFIX) ? `${base}${url}` : url);
 }
 

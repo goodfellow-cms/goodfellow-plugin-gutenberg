@@ -8,7 +8,7 @@
  * the marker, and that field is edited in the sidebar only.
  */
 import type { Field } from "./fields.js";
-import { cleanRichText } from "./rich-text.js";
+import { cleanRichText, isSafeAddress, normalizedAddress } from "./rich-text.js";
 
 /** The field types that can be edited in place. */
 const IN_PLACE_TYPES = new Set(["text", "textarea", "richtext"]);
@@ -53,6 +53,107 @@ export function plainText(field: InPlaceField, value: unknown, doc: Document): s
   return template.content.textContent ?? "";
 }
 
+/** Attributes a field's text never goes into: event handlers, styles and frames' pages, which would run or load it. */
+function runsText(name: string): boolean {
+  return /^on/.test(name) || name === "style" || name === "srcdoc";
+}
+
+/** Attributes that hold an address, which takes a field's text only where it makes one a page may have. */
+const ADDRESS_ATTRIBUTES = new Set([
+  "href",
+  "xlink:href",
+  "src",
+  "srcset",
+  "imagesrcset",
+  "action",
+  "formaction",
+  "poster",
+  "data",
+  "cite",
+  "background",
+  "ping",
+]);
+
+/**
+ * An address with no scheme of its own (`images/a.png`, `?page=2`), which the
+ * page's address is the start of, so it can't run anything. Browsers read `\`
+ * as `/`, so one starting with either is left to `isSafeAddress()`.
+ */
+function isRelativeAddress(address: string): boolean {
+  const trimmed = normalizedAddress(address);
+  if (/^[\\/]/.test(trimmed)) return false;
+  const end = trimmed.search(/[/?#\\]/);
+  return !(end === -1 ? trimmed : trimmed.slice(0, end)).includes(":");
+}
+
+/** Whether an address may stay in an attribute: one a page may have, or one with no scheme of its own. */
+function keptAddress(address: string): boolean {
+  return isSafeAddress(address) || isRelativeAddress(address);
+}
+
+/** HTML's ASCII whitespace, which separates a `srcset` candidate's address from its descriptors. */
+const isSpace = (char: string) => char === " " || char === "\t" || char === "\n" || char === "\f" || char === "\r";
+
+/**
+ * A `srcset` with only the candidates whose address may stay, each with its
+ * width or density as written. It's read as HTML reads it, in one pass: an
+ * address runs to the next whitespace, commas included, less any commas it
+ * ends with; its descriptors run to the next comma outside brackets. A link's
+ * `imagesrcset` is read the same way.
+ */
+function srcsetWithKeptAddresses(srcset: string): string {
+  const kept: string[] = [];
+  let at = 0;
+  while (at < srcset.length) {
+    while (at < srcset.length && (isSpace(srcset.charAt(at)) || srcset.charAt(at) === ",")) at += 1;
+    if (at >= srcset.length) break;
+    const start = at;
+    while (at < srcset.length && !isSpace(srcset.charAt(at))) at += 1;
+    let url = srcset.slice(start, at);
+    let descriptors = "";
+    if (url.endsWith(",")) {
+      // Commas ending the address end the candidate too, with no descriptors.
+      url = url.replace(/,+$/, "");
+    } else {
+      const from = at;
+      // Inside brackets a comma is the descriptors' own, as HTML reads them; the first `)` ends the brackets,
+      // however many `(` came before, so the next comma ends the candidate.
+      let inParens = false;
+      while (at < srcset.length && (srcset.charAt(at) !== "," || inParens)) {
+        if (srcset.charAt(at) === "(") inParens = true;
+        else if (srcset.charAt(at) === ")") inParens = false;
+        at += 1;
+      }
+      descriptors = srcset.slice(from, at).trimEnd();
+    }
+    if (url && keptAddress(url)) kept.push(`${normalizedAddress(url)}${descriptors}`);
+  }
+  return kept.join(", ");
+}
+
+/** A field's marker in the drawn HTML, and the text it stands for. */
+export interface Fill {
+  marker: string;
+  text: string;
+}
+
+/**
+ * An attribute's value with each field's text where the drawing put its
+ * marker: the block filtered its addresses while the markers stood in for the
+ * text, so an address is checked again once all the text is in it, and left
+ * empty where it isn't one a page may have, such as `javascript:`, and what
+ * runs or styles the page never takes the text at all.
+ */
+export function attributeWithText(name: string, value: string, fills: readonly Fill[]): string {
+  const lower = name.toLowerCase();
+  const runs = runsText(lower);
+  let filled = value;
+  for (const { marker, text } of fills) filled = filled.split(marker).join(runs ? "" : text);
+  if (runs || !ADDRESS_ATTRIBUTES.has(lower)) return filled;
+  if (lower === "srcset" || lower === "imagesrcset") return srcsetWithKeptAddresses(filled);
+  return keptAddress(filled) ? normalizedAddress(filled) : "";
+}
+
 /** The element a marker could be edited in, where it's all its text node holds: its parent, while it holds nothing else, but never `root`. */
 function wholeElement(node: Text, marker: string, root: Element): Element | null {
   let element = node.parentElement;
@@ -92,9 +193,8 @@ export function placeInPlace(
 
   for (const element of root.querySelectorAll("*")) {
     for (const attribute of [...element.attributes]) {
-      let value = attribute.value;
-      for (const { marker, text } of markers) value = value.split(marker).join(text);
-      if (value !== attribute.value) element.setAttribute(attribute.name, value);
+      const fills = markers.filter(({ marker }) => attribute.value.includes(marker));
+      if (fills.length > 0) element.setAttribute(attribute.name, attributeWithText(attribute.name, attribute.value, fills));
     }
   }
 
