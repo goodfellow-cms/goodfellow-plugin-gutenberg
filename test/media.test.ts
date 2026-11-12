@@ -12,6 +12,14 @@ describe("media addresses", () => {
     expect(elsewhere("/media/a.jpg")).toBe("https://parish.example/site/media/a.jpg");
   });
 
+  it("trims a long run of slashes at the end of the site's address quickly", () => {
+    const address = mediaAddresses(`https://parish.example/site${"/".repeat(100_000)}`);
+    expect(address("/media/a.jpg")).toBe("https://parish.example/site/media/a.jpg");
+    expect(mediaAddresses(`https://parish.example/${"/".repeat(100_000)}x`)("/media/a.jpg")).toHaveLength(
+      "https://parish.example/".length + 100_000 + "x/media/a.jpg".length,
+    );
+  });
+
   it("leaves addresses to Goodfellow where its session says it shows the site's media itself", () => {
     const shown = frameMediaAddresses({ showsMedia: true }, "/goodfellow-demo/");
     expect(shown("/media/church.svg")).toBe("/media/church.svg");
