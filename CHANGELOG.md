@@ -1,5 +1,12 @@
 # goodfellow-plugin-gutenberg
 
+## 0.2.3
+
+### Patch Changes
+
+- Releases reach npm again: packing the release makes the folder it's packed into, which `npm pack` doesn't, so 0.2.2 never got past packing. This release carries 0.2.2's changes. CI now packs the release as publishing does, on every change, and the workflow's pipes fail when any command in them does.
+- The plugin's WordPress packages are ranges (`^20.0.0` and the like) rather than exact releases, so a site installs one copy of each package they share, such as `@wordpress/data`. With exact releases, a site could get two copies, and Gutenberg stopped with "Cannot destructure property 'registerShortcut'". It also takes the WordPress packages' new releases: block editor 20, components 44, and icons 20.
+
 ## 0.2.2
 
 ### Patch Changes
