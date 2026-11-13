@@ -18,11 +18,18 @@
 import { execFileSync, spawn } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require("playwright");
+
+// create-goodfellow's command, from its package.json, since the package exports only its API.
+function createGoodfellowBin() {
+  const manifest = require.resolve("create-goodfellow/package.json");
+  const { bin } = JSON.parse(readFileSync(manifest, "utf8"));
+  return join(dirname(manifest), typeof bin === "string" ? bin : bin["create-goodfellow"]);
+}
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 const site = join(root, ".site");
@@ -53,7 +60,7 @@ function check(ok, what) {
 
 // The site, made once, with the plugin in its config.
 if (!existsSync(join(site, "package.json"))) {
-  run(process.execPath, [require.resolve("create-goodfellow/dist/cli.js"), site, "-y", "--no-git", "--no-install", "--blocks", "built-in"]);
+  run(process.execPath, [createGoodfellowBin(), site, "-y", "--no-git", "--no-install", "--blocks", "built-in"]);
   const config = join(site, "goodfellow.config.tsx");
   const text = readFileSync(config, "utf8")
     .replace(
