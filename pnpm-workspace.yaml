@@ -31,5 +31,10 @@ auditConfig:
     # picomatch has no fixed release, and its ReDoS needs an attacker-written
     # glob: only the plugin's development and build tools (Vite, Vitest,
     # Changesets) compile globs, from their own config, and the editor the
-    # plugin ships doesn't bundle it. As in Goodfellow's own workspace.
+    # plugin ships doesn't bundle it. Sites also get it through Goodfellow's
+    # own @goodfellow-cms/core, whose fontaine brings unplugin, but core uses
+    # only fontaine's font measurements, never its plugin, which is what would
+    # compile unplugin's include and exclude globs. As in Goodfellow's own
+    # workspace. Once picomatch has a fixed release, take this out and add an
+    # override to that release, as for glob and minimatch above.
     - GHSA-fc5q-39xc-vjpf
