@@ -48,6 +48,54 @@ describe("styling options as classes", () => {
     expect(rest).toEqual(["shadow", "md:p-8", "custom"]);
   });
 
+  it("keeps classes it couldn't write back as they are, with the rest of their property's, whatever else changes", () => {
+    const wide = "px-[max(1rem,calc((100vw_-_var(--container-width-of-this-theme))/2))]";
+    const quoted = "rounded-[var(--radius,'8px')]";
+    const classes = `${wide} ${quoted} p-[13px] rounded-tl-lg m-4`;
+    const { attributes, rest } = stylesFromClasses(classes);
+    // Margin reads; padding and corners stay as written, so Gutenberg shows nothing the kept classes win over.
+    expect(attributes).toEqual({ style: { spacing: { margin: { top: "var:preset|spacing|4", right: "var:preset|spacing|4", bottom: "var:preset|spacing|4", left: "var:preset|spacing|4" } } } });
+    expect(rest).toEqual([wide, quoted, "p-[13px]", "rounded-tl-lg"]);
+    // Choosing a background in Gutenberg keeps them.
+    const chosen = { ...attributes, backgroundColor: "muted" };
+    expect(classNameFor(classes, chosen, rest.join(" ")).split(" ")).toEqual([...rest, "bg-muted", "m-4"]);
+    // Classes for the same property this plugin doesn't read keep the rest of it as written too.
+    for (const classes of ["rounded-lg rounded-t-xl rounded-bl-sm", "mt-2 m-4 my-auto", "p-4 ps-2", "m-4 -mt-2", "!p-4 p-2", "rounded rounded-tl-lg"]) {
+      expect(stylesFromClasses(classes), classes).toEqual({ attributes: {}, rest: classes.split(" ") });
+      expect(classNameFor(classes, { backgroundColor: "muted" }, classes), classes).toBe(`${classes} bg-muted`);
+    }
+    // Variants apply only at their size, so they don't keep the plain classes from being read.
+    expect(stylesFromClasses("p-4 md:pl-2").rest).toEqual(["md:pl-2"]);
+    // A more specific class that can't be read keeps the one for every side from being read too.
+    expect(stylesFromClasses("m-4 mx-[calc(var(--a,'x'))]")).toEqual({ attributes: {}, rest: ["m-4", "mx-[calc(var(--a,'x'))]"] });
+  });
+
+  it("reads a value on Tailwind's scale written as an arbitrary one, which it writes back as the same step", () => {
+    const { attributes, rest } = stylesFromClasses("p-[1rem]");
+    expect(rest).toEqual([]);
+    expect(classesFromStyles(attributes)).toEqual(["p-4"]);
+  });
+
+  it("reads classes for some sides over one for every side, as Tailwind applies them, whatever their order", () => {
+    for (const classes of ["mx-2 m-4", "m-4 mx-2"]) {
+      const { attributes } = stylesFromClasses(classes);
+      expect(attributes.style?.spacing?.margin, classes).toEqual({
+        top: "var:preset|spacing|4",
+        right: "var:preset|spacing|2",
+        bottom: "var:preset|spacing|4",
+        left: "var:preset|spacing|2",
+      });
+      expect(classesFromStyles(attributes), classes).toEqual(["mx-2", "my-4"]);
+    }
+    const { attributes } = stylesFromClasses("rounded-tl-sm rounded-lg");
+    expect(attributes.style?.border?.radius).toEqual({
+      topLeft: "var:preset|border-radius|sm",
+      topRight: "var:preset|border-radius|lg",
+      bottomLeft: "var:preset|border-radius|lg",
+      bottomRight: "var:preset|border-radius|lg",
+    });
+  });
+
   it("keeps a second class for the same thing as one of the block's own", () => {
     const { attributes, rest } = stylesFromClasses("text-primary text-muted-foreground");
     expect(attributes).toEqual({ textColor: "primary" });

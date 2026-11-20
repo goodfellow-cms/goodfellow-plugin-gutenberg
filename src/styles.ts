@@ -368,7 +368,12 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
       border.radius = value;
       return true;
     }
-    const current = typeof border.radius === "string" ? undefined : border.radius;
+    // One corner over a radius for every corner, which the other corners keep.
+    const all = border.radius;
+    const current =
+      typeof all === "string"
+        ? (Object.fromEntries(Object.keys(CORNER_PREFIXES).map((name) => [name, all])) as Corners)
+        : all;
     border.radius = { ...current, ...Object.fromEntries(corners.map(([name]) => [name, value])) };
     return true;
   }
@@ -376,25 +381,82 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
 }
 
 /**
+ * Whether a class is one this plugin writes back: as it is (`p-4`), or as its own way of writing the same value
+ * (`p-[1rem]` as the step `p-4`, a run of `_` as one). A value it wouldn't write back at all, such as one too long
+ * or with a quote in it, would be dropped, so it isn't.
+ */
+function readsBack(token: string): boolean {
+  const read: StyleAttributes = {};
+  return readClass(token, read) && classesFromStyles(read).length > 0;
+}
+
+/** The property a kind sets (`p`, `m`, `rounded`, or its own), whose classes are read all together or not at all. */
+function propertyOf(kind: string): string {
+  if (/^[pm]/.test(kind)) return kind.slice(0, 1);
+  return kind.startsWith("rounded") ? "rounded" : kind;
+}
+
+/**
+ * The property any of Tailwind's padding, margin, or corner classes sets, read or not: `ps-4`, `-mt-2`, `!m-4`,
+ * `my-auto`, `rounded-t-xl`, and plain `rounded` too, but for variants (`md:p-4`), which apply only at their size.
+ */
+function familyOf(token: string): string | undefined {
+  // A variant's name comes first (`md:`), so none matches.
+  const plain = token.replace(/^!/, "");
+  const side = /^-?([pm])[xysetrbl]?-/.exec(plain)?.[1];
+  if (side) return side;
+  return /^rounded(?:-|$)/.test(plain) ? "rounded" : undefined;
+}
+
+/** How many sides or corners a kind doesn't cover, so classes for all of them are read first, as Tailwind applies them. */
+function specificity(kind: string | undefined): number {
+  if (!kind) return 0;
+  const property = propertyOf(kind);
+  if (property !== "p" && property !== "m" && property !== "rounded") return 0;
+  const sides = kind.slice(property.length);
+  return sides === "" ? 0 : sides === "x" || sides === "y" ? 1 : 2;
+}
+
+/**
  * A block's classes as Gutenberg's styling options and the classes that
  * aren't one, which stay as they are. A class for something already read
- * (a second text color, say) is kept as it is too.
+ * (a second text color, say) is kept as it is too, as is one that wouldn't be
+ * written back as a class that does the same (`readsBack()`), and with it,
+ * or with any other class for the same property it doesn't read (`ms-4`,
+ * `my-auto`, `rounded-t-xl`), every class for that property (padding, margin,
+ * corners), so Gutenberg never shows a value that a class it left wins over.
  */
 export function stylesFromClasses(className: string): { attributes: StyleAttributes; rest: string[] } {
   const attributes: StyleAttributes = {};
-  const rest: string[] = [];
   const seen = new Set<string>();
   const hidden = new Set<Viewport>();
-  for (const token of className.split(/\s+/).filter(Boolean)) {
+  // Variants (`md:p-4`, `hover:bg-muted`) and `!important` are the site's own, kept as written.
+  const tokens = className
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((token, index) => {
+      const kind = token.includes(":") || token.startsWith("!") ? undefined : classKind(token);
+      return { token, index, kind, rank: specificity(kind) };
+    });
+  // A property with any class this plugin doesn't read, or wouldn't write back, keeps all of its classes as written.
+  const unread = new Set(
+    tokens.flatMap(({ token, kind }) => {
+      const family = familyOf(token);
+      return family && !(kind && readsBack(token)) ? [family] : [];
+    }),
+  );
+  const kept: { token: string; index: number }[] = [];
+  // Read as Tailwind applies them, whatever order they're written in: a class for every side (`m-4`) under one for
+  // some (`mx-2`), and for every corner under one for one corner. The rest keep their place.
+  for (const each of [...tokens].sort((a, b) => a.rank - b.rank)) {
+    const { token, kind } = each;
     const hides = HIDDEN_BY_CLASS.get(token);
     if (hides) {
       for (const viewport of hides) hidden.add(viewport);
       continue;
     }
-    // Variants (`md:p-4`, `hover:bg-muted`) and `!important` are the site's own, kept as written.
-    const kind = token.includes(":") || token.startsWith("!") ? undefined : classKind(token);
-    if (!kind || seen.has(kind) || !readClass(token, attributes)) {
-      rest.push(token);
+    if (!kind || seen.has(kind) || unread.has(propertyOf(kind)) || !readClass(token, attributes)) {
+      kept.push(each);
       continue;
     }
     seen.add(kind);
@@ -404,7 +466,7 @@ export function stylesFromClasses(className: string): { attributes: StyleAttribu
       blockVisibility: { viewport: Object.fromEntries(VIEWPORTS.filter((v) => hidden.has(v)).map((v) => [v, false])) },
     };
   }
-  return { attributes, rest };
+  return { attributes, rest: kept.sort((a, b) => a.index - b.index).map(({ token }) => token) };
 }
 
 /** What a class sets, so a second class for the same thing is left as it is. */
