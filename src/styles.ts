@@ -204,11 +204,26 @@ function arbitrary(value: string): string {
 
 /**
  * An arbitrary value back from a class, or `undefined` for one that isn't: `_` is a space, as Tailwind reads it, but
- * in a custom property's name (`var(--space_wide)`), which Tailwind keeps as written.
+ * in the name of the custom property `var()` reads (`var(--space_wide)`), or that the value is, which Tailwind keeps
+ * as written.
  */
 function fromArbitrary(value: string): string | undefined {
   const match = /^\[(.+)\]$/.exec(value);
-  return match?.[1]?.replace(/--[\w-]*|_/g, (part) => (part === "_" ? " " : part));
+  return match?.[1]?.replace(/^--[\w-]*|var\(--[\w-]*|_/g, (part) => (part === "_" ? " " : part));
+}
+
+/**
+ * Whether a CSS value has more than one part, a space or `/` outside parentheses: `1rem 2rem` and `1rem/2rem` do,
+ * `calc(1rem + 2px)` doesn't.
+ */
+function hasParts(value: string): boolean {
+  let depth = 0;
+  for (const char of value.trim()) {
+    if (char === "(") depth += 1;
+    else if (char === ")") depth = Math.max(0, depth - 1);
+    else if (depth === 0 && (char === "/" || /\s/.test(char))) return true;
+  }
+  return false;
 }
 
 /** Whether an arbitrary value is a color rather than a length. */
@@ -291,7 +306,11 @@ function radiusClasses(radius: string | Corners | undefined): string[] {
     return value ? [`rounded-${value}`] : [];
   }
   const values = (Object.keys(CORNER_PREFIXES) as Corner[]).map((corner) => radiusValue(radius[corner]));
-  if (values[0] !== undefined && values.every((value) => value === values[0])) return [`rounded-${values[0]}`];
+  // One value for every corner is the shorthand, unless it has more than one part, which the shorthand shares out.
+  const shared = radius.topLeft;
+  if (values[0] !== undefined && values.every((value) => value === values[0]) && !(shared && hasParts(shared))) {
+    return [`rounded-${values[0]}`];
+  }
   return (Object.keys(CORNER_PREFIXES) as Corner[]).flatMap((corner, index) =>
     values[index] ? [`rounded-${CORNER_PREFIXES[corner]}-${values[index]}`] : [],
   );
@@ -367,7 +386,7 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
     if (value === undefined) return false;
     // A radius for every corner with more than one value (`rounded-[1rem_2rem]`) shares them out among the corners,
     // which Gutenberg's one value can't say, and copied into a corner it would draw an ellipse.
-    if (!corner && /[\s/]/.test(value)) return false;
+    if (!corner && hasParts(value)) return false;
     const corners = Object.entries(CORNER_PREFIXES).filter(([, prefix]) => !corner || prefix === corner);
     const border = ((attributes.style ??= {}).border ??= {});
     if (!corner) {

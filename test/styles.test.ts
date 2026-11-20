@@ -76,6 +76,29 @@ describe("styling options as classes", () => {
     expect(classesFromStyles(attributes)).toEqual(["p-4"]);
   });
 
+  it("reads a radius whose one value is a CSS function, and writes corners with more than one part as corners", () => {
+    for (const [classes, radius] of [
+      ["rounded-[calc(1rem_+_2px)]", "calc(1rem + 2px)"],
+      ["rounded-[min(1rem,_5vw)]", "min(1rem, 5vw)"],
+      ["rounded-[calc(1rem/2)]", "calc(1rem/2)"],
+    ] as const) {
+      const { attributes, rest } = stylesFromClasses(classes);
+      expect(rest, classes).toEqual([]);
+      expect(attributes.style?.border?.radius, classes).toBe(radius);
+      expect(classesFromStyles(attributes), classes).toEqual([classes]);
+    }
+    const ellipses = "rounded-tl-[1rem_2rem] rounded-tr-[1rem_2rem] rounded-bl-[1rem_2rem] rounded-br-[1rem_2rem]";
+    expect(classesFromStyles(stylesFromClasses(ellipses).attributes)).toEqual(ellipses.split(" "));
+  });
+
+  it("keeps underscores only in the custom property var() reads, as Tailwind does", () => {
+    expect(stylesFromClasses("p-[calc(1rem_--x_y)]").attributes.style?.spacing?.padding?.top).toBe("calc(1rem --x y)");
+  });
+
+  it("reads margins beside classes that only start like them", () => {
+    expect(stylesFromClasses("m-4 max-w-prose min-h-0 mix-blend-multiply").rest).toEqual(["max-w-prose", "min-h-0", "mix-blend-multiply"]);
+  });
+
   it("reads classes for some sides over one for every side, as Tailwind applies them, whatever their order", () => {
     for (const classes of ["mx-2 m-4", "m-4 mx-2"]) {
       const { attributes } = stylesFromClasses(classes);
