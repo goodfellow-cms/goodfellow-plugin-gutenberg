@@ -202,10 +202,13 @@ function arbitrary(value: string): string {
   return `[${value.trim().replace(/\s+/g, "_")}]`;
 }
 
-/** An arbitrary value back from a class, or `undefined` for one that isn't. */
+/**
+ * An arbitrary value back from a class, or `undefined` for one that isn't: `_` is a space, as Tailwind reads it, but
+ * in a custom property's name (`var(--space_wide)`), which Tailwind keeps as written.
+ */
 function fromArbitrary(value: string): string | undefined {
   const match = /^\[(.+)\]$/.exec(value);
-  return match?.[1]?.replace(/_/g, " ");
+  return match?.[1]?.replace(/--[\w-]*|_/g, (part) => (part === "_" ? " " : part));
 }
 
 /** Whether an arbitrary value is a color rather than a length. */
@@ -362,6 +365,9 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
     const [, corner, raw] = radius as unknown as [string, string | undefined, string];
     const value = RADIUS_SLUGS.has(raw) ? `var:preset|border-radius|${raw}` : fromArbitrary(raw);
     if (value === undefined) return false;
+    // A radius for every corner with more than one value (`rounded-[1rem_2rem]`) shares them out among the corners,
+    // which Gutenberg's one value can't say, and copied into a corner it would draw an ellipse.
+    if (!corner && /[\s/]/.test(value)) return false;
     const corners = Object.entries(CORNER_PREFIXES).filter(([, prefix]) => !corner || prefix === corner);
     const border = ((attributes.style ??= {}).border ??= {});
     if (!corner) {
@@ -398,12 +404,12 @@ function propertyOf(kind: string): string {
 
 /**
  * The property any of Tailwind's padding, margin, or corner classes sets, read or not: `ps-4`, `-mt-2`, `!m-4`,
- * `my-auto`, `rounded-t-xl`, and plain `rounded` too, but for variants (`md:p-4`), which apply only at their size.
+ * `my-auto`, `pbs-2`, `rounded-t-xl`, and plain `rounded` too, but for variants (`md:p-4`), which apply only at their size.
  */
 function familyOf(token: string): string | undefined {
   // A variant's name comes first (`md:`), so none matches.
   const plain = token.replace(/^!/, "");
-  const side = /^-?([pm])[xysetrbl]?-/.exec(plain)?.[1];
+  const side = /^-?([pm])(?:bs|be|[xysetrbl])?-/.exec(plain)?.[1];
   if (side) return side;
   return /^rounded(?:-|$)/.test(plain) ? "rounded" : undefined;
 }

@@ -60,7 +60,7 @@ describe("styling options as classes", () => {
     const chosen = { ...attributes, backgroundColor: "muted" };
     expect(classNameFor(classes, chosen, rest.join(" ")).split(" ")).toEqual([...rest, "bg-muted", "m-4"]);
     // Classes for the same property this plugin doesn't read keep the rest of it as written too.
-    for (const classes of ["rounded-lg rounded-t-xl rounded-bl-sm", "mt-2 m-4 my-auto", "p-4 ps-2", "m-4 -mt-2", "!p-4 p-2", "rounded rounded-tl-lg"]) {
+    for (const classes of ["rounded-lg rounded-t-xl rounded-bl-sm", "mt-2 m-4 my-auto", "p-4 ps-2", "m-4 -mt-2", "!p-4 p-2", "rounded rounded-tl-lg", "p-4 pbs-2", "m-4 -mbe-2", "rounded-[1rem_2rem] rounded-bl-sm", "rounded-[1rem/2rem]", "p-[var(--space__wide)]", "m-[calc(var(--gap_x)*2)] mt-4"]) {
       expect(stylesFromClasses(classes), classes).toEqual({ attributes: {}, rest: classes.split(" ") });
       expect(classNameFor(classes, { backgroundColor: "muted" }, classes), classes).toBe(`${classes} bg-muted`);
     }
