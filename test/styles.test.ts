@@ -48,6 +48,39 @@ describe("styling options as classes", () => {
     expect(rest).toEqual(["shadow", "md:p-8", "custom"]);
   });
 
+  it("keeps spacing and corner classes it couldn't write back as they are among the rest, whatever else changes", () => {
+    const wide = "px-[max(1rem,calc((100vw_-_var(--container-width-of-this-theme))/2))]";
+    const quoted = "rounded-[var(--radius,'8px')]";
+    const { attributes, rest } = stylesFromClasses(`${wide} ${quoted} p-[13px]`);
+    expect(attributes).toEqual({ style: { spacing: { padding: { top: "13px", right: "13px", bottom: "13px", left: "13px" } } } });
+    expect(rest).toEqual([wide, quoted]);
+    // Choosing a background in Gutenberg keeps them.
+    const chosen = { ...attributes, backgroundColor: "muted" };
+    expect(classNameFor(`${wide} ${quoted} p-[13px]`, chosen, rest.join(" ")).split(" ")).toEqual(
+      expect.arrayContaining([wide, quoted, "bg-muted"]),
+    );
+  });
+
+  it("reads classes for some sides over one for every side, as Tailwind applies them, whatever their order", () => {
+    for (const classes of ["mx-2 m-4", "m-4 mx-2"]) {
+      const { attributes } = stylesFromClasses(classes);
+      expect(attributes.style?.spacing?.margin, classes).toEqual({
+        top: "var:preset|spacing|4",
+        right: "var:preset|spacing|2",
+        bottom: "var:preset|spacing|4",
+        left: "var:preset|spacing|2",
+      });
+      expect(classesFromStyles(attributes), classes).toEqual(["mx-2", "my-4"]);
+    }
+    const { attributes } = stylesFromClasses("rounded-tl-sm rounded-lg");
+    expect(attributes.style?.border?.radius).toEqual({
+      topLeft: "var:preset|border-radius|sm",
+      topRight: "var:preset|border-radius|lg",
+      bottomLeft: "var:preset|border-radius|lg",
+      bottomRight: "var:preset|border-radius|lg",
+    });
+  });
+
   it("keeps a second class for the same thing as one of the block's own", () => {
     const { attributes, rest } = stylesFromClasses("text-primary text-muted-foreground");
     expect(attributes).toEqual({ textColor: "primary" });

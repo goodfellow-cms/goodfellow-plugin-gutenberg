@@ -351,7 +351,8 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
   if (spacing) {
     const [, kind, sides, raw] = spacing as unknown as [string, "p" | "m", string, string];
     const value = spacingAttribute(raw);
-    if (value === undefined) return false;
+    // Only a class written back as it is, so changing another option never drops or changes one written by hand.
+    if (value === undefined || spacingValue(value) !== raw) return false;
     for (const side of SIDE_PREFIXES[sides] ?? []) {
       setStyle(attributes, ["spacing", kind === "p" ? "padding" : "margin", side], value);
     }
@@ -361,14 +362,21 @@ function readClass(token: string, attributes: StyleAttributes): boolean {
   if (radius) {
     const [, corner, raw] = radius as unknown as [string, string | undefined, string];
     const value = RADIUS_SLUGS.has(raw) ? `var:preset|border-radius|${raw}` : fromArbitrary(raw);
-    if (value === undefined) return false;
+    if (value === undefined || radiusValue(value) !== raw) return false;
     const corners = Object.entries(CORNER_PREFIXES).filter(([, prefix]) => !corner || prefix === corner);
     const border = ((attributes.style ??= {}).border ??= {});
     if (!corner) {
       border.radius = value;
       return true;
     }
-    const current = typeof border.radius === "string" ? undefined : border.radius;
+    // One corner over a radius for every corner, which the other corners keep.
+    const all = typeof border.radius === "string" ? border.radius : undefined;
+    const current: Corners | undefined =
+      all !== undefined
+        ? (Object.fromEntries(Object.keys(CORNER_PREFIXES).map((name) => [name, all])) as Corners)
+        : typeof border.radius === "string"
+          ? undefined
+          : border.radius;
     border.radius = { ...current, ...Object.fromEntries(corners.map(([name]) => [name, value])) };
     return true;
   }
@@ -385,7 +393,12 @@ export function stylesFromClasses(className: string): { attributes: StyleAttribu
   const rest: string[] = [];
   const seen = new Set<string>();
   const hidden = new Set<Viewport>();
-  for (const token of className.split(/\s+/).filter(Boolean)) {
+  const tokens = className.split(/\s+/).filter(Boolean);
+  // Read as Tailwind applies them, whatever order they're written in: a class for every side (`m-4`) under one for
+  // some (`mx-2`), and for every corner under one for one corner, which keep their place among the rest.
+  const order = tokens.map((token, index) => ({ token, index })).sort((a, b) => specificity(a.token) - specificity(b.token));
+  const kept: { token: string; index: number }[] = [];
+  for (const { token, index } of order) {
     const hides = HIDDEN_BY_CLASS.get(token);
     if (hides) {
       for (const viewport of hides) hidden.add(viewport);
@@ -394,17 +407,25 @@ export function stylesFromClasses(className: string): { attributes: StyleAttribu
     // Variants (`md:p-4`, `hover:bg-muted`) and `!important` are the site's own, kept as written.
     const kind = token.includes(":") || token.startsWith("!") ? undefined : classKind(token);
     if (!kind || seen.has(kind) || !readClass(token, attributes)) {
-      rest.push(token);
+      kept.push({ token, index });
       continue;
     }
     seen.add(kind);
   }
+  rest.push(...kept.sort((a, b) => a.index - b.index).map(({ token }) => token));
   if (hidden.size > 0) {
     attributes.metadata = {
       blockVisibility: { viewport: Object.fromEntries(VIEWPORTS.filter((v) => hidden.has(v)).map((v) => [v, false])) },
     };
   }
   return { attributes, rest };
+}
+
+/** How many sides or corners a spacing or corner class doesn't cover, so classes for all of them are read first. */
+function specificity(token: string): number {
+  const sides = /^[pm]([xytrbl]?)-/.exec(token)?.[1];
+  if (sides !== undefined) return sides === "" ? 0 : sides === "x" || sides === "y" ? 1 : 2;
+  return /^rounded-(?:tl|tr|bl|br)-/.test(token) ? 2 : 0;
 }
 
 /** What a class sets, so a second class for the same thing is left as it is. */
